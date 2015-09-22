@@ -7,16 +7,18 @@ import org.openmrs.module.bacteriology.api.MdrtbConcepts;
 import org.openmrs.module.emrapi.concept.EmrConceptService;
 import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptor;
 import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptorField;
+import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
+import java.util.List;
 
 @Component
 public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
 
     public static final String MDRTB_CONCEPT_SOURCE_NAME = "org.openmrs.module.mdrtb";
     private Concept specimenId;
-    private Concept specimenAppearance;
-    private Concept specimenComments;
     private Concept specimenSource;//TYPE
     private Concept specimenDateCollected;
     private Concept specimenConstruct;
@@ -28,11 +30,8 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         setup(conceptService, MDRTB_CONCEPT_SOURCE_NAME,
                 ConceptSetDescriptorField.required("specimenConstruct", MdrtbConcepts.SPECIMEN_CONSTRUCT),
                 ConceptSetDescriptorField.optional("specimenId", MdrtbConcepts.SPECIMEN_ID_CODE),
-                ConceptSetDescriptorField.required("specimenAppearance", MdrtbConcepts.SPECIMEN_APPEARANCE_CODE),
-                ConceptSetDescriptorField.optional("specimenComments", MdrtbConcepts.SPECIMEN_COMMENTS_CODE),
                 ConceptSetDescriptorField.required("specimenSource", MdrtbConcepts.SAMPLE_SOURCE_CODE),
-                ConceptSetDescriptorField.required("specimenDateCollected", MdrtbConcepts.SPECIMEN_DATE_COLLECTED)
-        );
+                ConceptSetDescriptorField.required("specimenDateCollected", MdrtbConcepts.SPECIMEN_DATE_COLLECTED));
 
         this.emrConceptService = emrConceptService;
     }
@@ -61,22 +60,6 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         this.specimenId = specimenId;
     }
 
-    public Concept getSpecimenAppearance() {
-        return specimenAppearance;
-    }
-
-    public void setSpecimenAppearance(Concept specimenAppearance) {
-        this.specimenAppearance = specimenAppearance;
-    }
-
-    public Concept getSpecimenComments() {
-        return specimenComments;
-    }
-
-    public void setSpecimenComments(Concept specimenComments) {
-        this.specimenComments = specimenComments;
-    }
-
     public Concept getSpecimenSource() {
         return specimenSource;
     }
@@ -86,24 +69,29 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     }
 
     public Obs buildObsGroup(Specimen specimen) {
+        Assert.notNull(specimen.getSample());
+
         Obs dateCollected = new Obs();
         dateCollected.setConcept(getSpecimenDateCollected());
-        dateCollected.setValueDate(specimen.getDateCollected());
+        dateCollected.setValueDate(specimen.getSample().getDateCollected());
 
         Obs group = new Obs();
         group.setConcept(getSpecimenConstruct());
-        group.addGroupMember(buildValueObs(getSpecimenId(), specimen.getIdentifier()));
-        group.addGroupMember(buildCoded(getSpecimenAppearance(), specimen.getAppearance()));
-        group.addGroupMember(buildValueObs(getSpecimenComments(), specimen.getComments()));
-        group.addGroupMember(buildCoded(getSpecimenSource(), specimen.getType()));
+        group.addGroupMember(buildValueObs(getSpecimenId(), specimen.getSample().getIdentifier()));
+        group.addGroupMember(buildCoded(getSpecimenSource(), specimen.getSample().getType()));
         group.addGroupMember(dateCollected);
+        group.addGroupMember(transformETObsToObs(specimen.getSample().getObservations()));
 
         return group;
     }
 
+    private Obs transformETObsToObs(List<EncounterTransaction.Observation> observations) {
+        return null;
+    }
+
     private Obs buildCoded(Concept concept,String conceptAnswerCode){
         Obs appearance = new Obs();
-        appearance.setConcept(getSpecimenAppearance());
+        appearance.setConcept(concept);
         appearance.setValueCoded(emrConceptService.getConcept(conceptAnswerCode));
 
         return appearance;
