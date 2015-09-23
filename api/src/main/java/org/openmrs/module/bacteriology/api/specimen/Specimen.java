@@ -1,27 +1,57 @@
 package org.openmrs.module.bacteriology.api.specimen;
 
+import org.openmrs.Obs;
+import org.openmrs.module.bacteriology.api.MdrtbConcepts;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
-import org.openmrs.module.emrapi.utils.CustomJsonDateSerializer;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Specimen {
-    private Sample sample;
-
+    private Obs existingObs;
+    private Date dateCollected;
+    private String id;
+    private SampleType type;
+    private Obs additionalAttributes;
     private List<TestReport> reports;
 
-    public Sample getSample() {
-        return sample;
+    public String getId() {
+        return id;
     }
 
-    public void setSample(Sample sample) {
-        this.sample = sample;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public SampleType getType() {
+        return type;
+    }
+
+    public void setType(SampleType type) {
+        this.type = type;
+    }
+
+    public Obs getExistingObs() {
+        return existingObs;
+    }
+
+    public void setExistingObs(Obs existingObs) {
+        this.existingObs = existingObs;
+    }
+
+    public Date getDateCollected() {
+        return dateCollected;
+    }
+
+    public void setDateCollected(Date dateCollected) {
+        this.dateCollected = dateCollected;
+    }
+
+    public Obs getAdditionalAttributes() {
+        return additionalAttributes;
+    }
+
+    public void setAdditionalAttributes(Obs additionalAttributes) {
+        this.additionalAttributes = additionalAttributes;
     }
 
     public List<TestReport> getReports() {
@@ -32,126 +62,28 @@ public class Specimen {
         this.reports = reports;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Sample{
-        @JsonSerialize(using = CustomJsonDateSerializer.class)
-        private Date dateCollected;
+    public enum SampleType{
+        SPUTUM(MdrtbConcepts.SPUTUM_CONCEPT_CODE),
+        URINE(MdrtbConcepts.URINE_CONCEPT_CODE);
 
-        private String type;
+        String codeInEmrConceptSource;
 
-        private String identifier;
+        SampleType(String codeInEmrConceptSource){ this.codeInEmrConceptSource = codeInEmrConceptSource;}
 
-        private List<EncounterTransaction.Observation> observations = new ArrayList<EncounterTransaction.Observation>();
 
-        public List<EncounterTransaction.Observation> getObservations() {
-            return observations;
+        String getCodeInEmrConceptSource() {
+            return codeInEmrConceptSource;
         }
 
-        public void setObservations(List<EncounterTransaction.Observation> observations) {
-            this.observations = observations;
-        }
-
-        public Date getDateCollected() {
-            return dateCollected;
-        }
-
-        public void setDateCollected(Date dateCollected) {
-            this.dateCollected = dateCollected;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getIdentifier() {
-            return identifier;
-        }
-
-        public void setIdentifier(String identifier) {
-            this.identifier = identifier;
-        }
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class TestReport {
-
-        private String accessionNumber;
-
-        @JsonSerialize(using = CustomJsonDateSerializer.class)
-        private Date dateCollected;
-
-        @JsonSerialize(using = CustomJsonDateSerializer.class)
-        private Date dateStarted;
-
-        @JsonSerialize(using = CustomJsonDateSerializer.class)
-        private Date resultDate;
-
-        @JsonSerialize(using = CustomJsonDateSerializer.class)
-        private Date dateOrdered;
-
-        private List<EncounterTransaction.Concept> reportType = new ArrayList<EncounterTransaction.Concept>();
-        private List<EncounterTransaction.Observation> results = new ArrayList<EncounterTransaction.Observation>();
-
-        public Date getDateCollected() {
-            return dateCollected;
-        }
-
-        public void setDateCollected(Date dateCollected) {
-            this.dateCollected = dateCollected;
-        }
-
-        public String getAccessionNumber() {
-            return accessionNumber;
-        }
-
-        public void setAccessionNumber(String accessionNumber) {
-            this.accessionNumber = accessionNumber;
-        }
-
-        public Date getDateStarted() {
-            return dateStarted;
-        }
-
-        public void setDateStarted(Date dateStarted) {
-            this.dateStarted = dateStarted;
-        }
-
-        public List<EncounterTransaction.Observation> getResults() {
-            return results;
-        }
-
-        public void setResults(List<EncounterTransaction.Observation> results) {
-            this.results = results;
-        }
-
-        public List<EncounterTransaction.Concept> getReportType() {
-            return reportType;
-        }
-
-        public void setReportType(List<EncounterTransaction.Concept> reportType) {
-            this.reportType = reportType;
-        }
-
-        public Date getResultDate() {
-            return resultDate;
-        }
-
-        public void setResultDate(Date resultDate) {
-            this.resultDate = resultDate;
-        }
-
-        public Date getDateOrdered() {
-            return dateOrdered;
-        }
-
-        public void setDateOrdered(Date dateOrdered) {
-            this.dateOrdered = dateOrdered;
+        public static SampleType parseConceptReferenceCode(String code) {
+            for (SampleType candidate : values()) {
+                if (candidate.getCodeInEmrConceptSource().equals(code)) {
+                    return candidate;
+                }
+            }
+            return null;
         }
 
     }
+
 }
-

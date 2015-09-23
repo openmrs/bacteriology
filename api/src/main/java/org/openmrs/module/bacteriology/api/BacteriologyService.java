@@ -15,7 +15,8 @@ package org.openmrs.module.bacteriology.api;
 
 import org.openmrs.Encounter;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.bacteriology.api.specimen.Specimen;
+import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
+import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -37,5 +38,5 @@ public interface BacteriologyService extends OpenmrsService {
 	 * Add service methods here
 	 * 
 	 */
-	void updateEncounter(Encounter encounter,List<Specimen> specimens);
+	void updateEncounter(Encounter encounter, EncounterTransaction encounterTransaction);
 }

@@ -8,6 +8,9 @@ public class MdrtbConcepts {
 
     public static final String SPECIMEN_DATE_COLLECTED = "SAMPLE_DATE_COLLECTED";
     public final static String SPECIMEN_CONSTRUCT = "TUBERCULOSIS SPECIMEN CONSTRUCT";
+    public static final String SPUTUM_CONCEPT_CODE = "SPUTUM";
+    public static final String URINE_CONCEPT_CODE = "URINE";
+    public static final String SAMPLE_SOURCE_CODE = "TUBERCULOSIS SAMPLE SOURCE";
 
     // Vitals
     public final static String [] WEIGHT = {"WEIGHT"};
@@ -73,7 +76,7 @@ public class MdrtbConcepts {
     public final static String [] SPUTUM = {"SPUTUM"};
     public final static String [] SPUTUM_COLLECTION_DATE = {"SPUTUM COLLECTION DATE"};
     public final static String [] SAMPLE_SOURCE = {"TUBERCULOSIS SAMPLE SOURCE"};
-    public static final String SAMPLE_SOURCE_CODE = "TUBERCULOSIS SAMPLE SOURCE";
+
     public final static String [] SMEAR_CONSTRUCT = {"TUBERCULOSIS SMEAR MICROSCOPY CONSTRUCT"};
     public final static String [] SMEAR_METHOD = {"TUBERCULOSIS SMEAR MICROSCOPY METHOD"};
     public final static String [] SMEAR_RESULT = {"TUBERCULOSIS SMEAR RESULT"};

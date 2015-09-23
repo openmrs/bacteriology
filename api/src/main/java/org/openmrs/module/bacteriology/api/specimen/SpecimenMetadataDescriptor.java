@@ -1,107 +1,155 @@
 package org.openmrs.module.bacteriology.api.specimen;
 
 import org.openmrs.Concept;
+import org.openmrs.ConceptAnswer;
+import org.openmrs.ConceptMap;
+import org.openmrs.ConceptReferenceTerm;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
+import org.openmrs.module.bacteriology.BacteriologyConstants;
 import org.openmrs.module.bacteriology.api.MdrtbConcepts;
-import org.openmrs.module.emrapi.concept.EmrConceptService;
 import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptor;
 import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptorField;
-import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
+import org.openmrs.util.OpenmrsUtil;
 
-import java.util.List;
+import java.util.Date;
 
-@Component
 public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
-
-    public static final String MDRTB_CONCEPT_SOURCE_NAME = "org.openmrs.module.mdrtb";
     private Concept specimenId;
     private Concept specimenSource;//TYPE
     private Concept specimenDateCollected;
     private Concept specimenConstruct;
 
-    private EmrConceptService emrConceptService;
-
-    @Autowired
-    public SpecimenMetadataDescriptor(ConceptService conceptService,EmrConceptService emrConceptService) {
-        setup(conceptService, MDRTB_CONCEPT_SOURCE_NAME,
+    public SpecimenMetadataDescriptor(ConceptService conceptService) {
+        setup(conceptService, BacteriologyConstants.MDRTB_CONCEPT_SOURCE_NAME,
                 ConceptSetDescriptorField.required("specimenConstruct", MdrtbConcepts.SPECIMEN_CONSTRUCT),
                 ConceptSetDescriptorField.optional("specimenId", MdrtbConcepts.SPECIMEN_ID_CODE),
                 ConceptSetDescriptorField.required("specimenSource", MdrtbConcepts.SAMPLE_SOURCE_CODE),
                 ConceptSetDescriptorField.required("specimenDateCollected", MdrtbConcepts.SPECIMEN_DATE_COLLECTED));
-
-        this.emrConceptService = emrConceptService;
     }
 
-    public Concept getSpecimenDateCollected() {
-        return specimenDateCollected;
-    }
-
-    public void setSpecimenDateCollected(Concept specimenDateCollected) {
-        this.specimenDateCollected = specimenDateCollected;
-    }
-
-    public Concept getSpecimenConstruct() {
-        return specimenConstruct;
-    }
-
-    public void setSpecimenConstruct(Concept specimenConstruct) {
-        this.specimenConstruct = specimenConstruct;
-    }
-
-    public Concept getSpecimenId() {
-        return specimenId;
-    }
+    public SpecimenMetadataDescriptor(){}
 
     public void setSpecimenId(Concept specimenId) {
         this.specimenId = specimenId;
-    }
-
-    public Concept getSpecimenSource() {
-        return specimenSource;
     }
 
     public void setSpecimenSource(Concept specimenSource) {
         this.specimenSource = specimenSource;
     }
 
+    public void setSpecimenDateCollected(Concept specimenDateCollected) {
+        this.specimenDateCollected = specimenDateCollected;
+    }
+
+    public void setSpecimenConstruct(Concept specimenConstruct) {
+        this.specimenConstruct = specimenConstruct;
+    }
+
+    public Concept getSpecimenDateCollected() {
+        return specimenDateCollected;
+    }
+
+    public Concept getSpecimenConstruct() {
+        return specimenConstruct;
+    }
+
+    public Concept getSpecimenId() {
+        return specimenId;
+    }
+
+    public Concept getSpecimenSource() {
+        return specimenSource;
+    }
+
     public Obs buildObsGroup(Specimen specimen) {
-        Assert.notNull(specimen.getSample());
+        Concept sampleType = findAnswer(getSpecimenSource(), specimen.getType().getCodeInEmrConceptSource());
+        //TODO: Add liquibase migration for the pre-defined concepts.
 
-        Obs dateCollected = new Obs();
-        dateCollected.setConcept(getSpecimenDateCollected());
-        dateCollected.setValueDate(specimen.getSample().getDateCollected());
+        if(specimen.getExistingObs()!=null){
+            setCodedMember(specimen.getExistingObs(), getSpecimenSource(), sampleType, null);
+            setFreeTextMember(specimen.getExistingObs(), getSpecimenDateCollected(), specimen.getDateCollected());
+            setFreeTextMember(specimen.getExistingObs(),getSpecimenId(),specimen.getId());
+            specimen.getExistingObs().addGroupMember(specimen.getAdditionalAttributes());
+            return specimen.getExistingObs();
+        }else{
+            Obs specimenSource = buildObsFor(getSpecimenSource(), sampleType, null);
+            Obs dateCollected = buildObsFor(getSpecimenDateCollected(), specimen.getDateCollected());
+            Obs specimenId = buildObsFor(getSpecimenId(),specimen.getId());
 
-        Obs group = new Obs();
-        group.setConcept(getSpecimenConstruct());
-        group.addGroupMember(buildValueObs(getSpecimenId(), specimen.getSample().getIdentifier()));
-        group.addGroupMember(buildCoded(getSpecimenSource(), specimen.getSample().getType()));
-        group.addGroupMember(dateCollected);
-        group.addGroupMember(transformETObsToObs(specimen.getSample().getObservations()));
-
-        return group;
+            Obs obs = new Obs();
+            obs.setConcept(getSpecimenConstruct());
+            obs.addGroupMember(specimenSource);
+            obs.addGroupMember(dateCollected);
+            obs.addGroupMember(specimenId);
+            obs.addGroupMember(specimen.getAdditionalAttributes());
+            return obs;
+        }
     }
 
-    private Obs transformETObsToObs(List<EncounterTransaction.Observation> observations) {
-        return null;
+    private void setFreeTextMember(Obs obsGroup, Concept memberConcept, Date memberAnswer) {
+        Obs member = findMember(obsGroup, memberConcept);
+        boolean needToVoid = member != null && !OpenmrsUtil.nullSafeEquals(memberAnswer, member.getValueDate());
+        boolean needToCreate = memberAnswer != null && (member == null || needToVoid);
+        if (needToVoid) {
+            member.setVoided(true);
+            member.setVoidReason(getDefaultVoidReason());
+        }
+        if (needToCreate) {
+            addToObsGroup(obsGroup, buildObsFor(memberConcept, memberAnswer));
+        }
     }
 
-    private Obs buildCoded(Concept concept,String conceptAnswerCode){
-        Obs appearance = new Obs();
-        appearance.setConcept(concept);
-        appearance.setValueCoded(emrConceptService.getConcept(conceptAnswerCode));
-
-        return appearance;
+    protected Obs buildObsFor(Concept question, Date answer) {
+        Obs obs = new Obs();
+        obs.setConcept(question);
+        obs.setValueDate(answer);
+        return obs;
     }
 
-    private Obs buildValueObs(Concept concept, String answerText){
-        Obs idObs = new Obs();
-        idObs.setConcept(concept);
-        idObs.setValueText(answerText);
-        return idObs;
+    private void addToObsGroup(Obs obsGroup, Obs member) {
+        member.setPerson(obsGroup.getPerson());
+        member.setObsDatetime(obsGroup.getObsDatetime());
+        member.setLocation(obsGroup.getLocation());
+        member.setEncounter(obsGroup.getEncounter());
+        obsGroup.addGroupMember(member);
     }
+
+    private void setFreeTextMember(Obs obsGroup, Concept memberConcept, String memberAnswer) {
+        Obs member = findMember(obsGroup, memberConcept);
+        boolean needToVoid = member != null && !OpenmrsUtil.nullSafeEquals(memberAnswer, member.getValueText());
+        boolean needToCreate = memberAnswer != null && (member == null || needToVoid);
+        if (needToVoid) {
+            member.setVoided(true);
+            member.setVoidReason(getDefaultVoidReason());
+        }
+        if (needToCreate) {
+            addToObsGroup(obsGroup, buildObsFor(memberConcept, memberAnswer));
+        }
+    }
+
+    //TODO: refactor this in emrapi to allow passing of ConceptSourceName
+    protected Concept findAnswer(Concept concept, String codeForAnswer) {
+        for (ConceptAnswer conceptAnswer : concept.getAnswers()) {
+            Concept answerConcept = conceptAnswer.getAnswerConcept();
+            if (answerConcept != null) {
+                if (hasConceptMapping(answerConcept, BacteriologyConstants.MDRTB_CONCEPT_SOURCE_NAME, codeForAnswer)) {
+                    return answerConcept;
+                }
+            }
+        }
+        throw new IllegalStateException("Cannot find answer mapped with " + BacteriologyConstants.MDRTB_CONCEPT_SOURCE_NAME + ":" + codeForAnswer + " in the concept " + concept.getName());
+    }
+
+    private boolean hasConceptMapping(Concept concept, String sourceName, String codeToLookFor) {
+        for (ConceptMap conceptMap : concept.getConceptMappings()) {
+            ConceptReferenceTerm conceptReferenceTerm = conceptMap.getConceptReferenceTerm();
+            if (sourceName.equals(conceptReferenceTerm.getConceptSource().getName()) && codeToLookFor.equals(conceptReferenceTerm.getCode())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }
