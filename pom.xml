@@ -35,7 +35,10 @@
 	<properties>
 		<openMRSVersion>1.10.0</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+        <reportingModuleVersion>0.9.1</reportingModuleVersion>
+        <calculationModuleVersion>1.1</calculationModuleVersion>
+        <serializationXstreamModuleVersion>0.2.7</serializationXstreamModuleVersion>
+    </properties>
 
 	<dependencyManagement>
 		<dependencies>
@@ -56,15 +59,10 @@
 			
 						
 			<dependency>
-			
 				<groupId>org.openmrs.module</groupId>
-												
 				<artifactId>emrapi-api-1.11</artifactId>
-																								
 				<version>1.11-SNAPSHOT</version>
-												
 				<scope>provided</scope>
-				
 			</dependency>
 						
 			<!-- End OpenMRS modules -->
@@ -111,10 +109,37 @@
 				<type>pom</type>
 				<scope>test</scope>
 			</dependency>
-						
+
 			<!-- End OpenMRS core -->
 
-		</dependencies>
+            <!-- test dependencies -->
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>reporting-api</artifactId>
+                <version>${reportingModuleVersion}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>calculation-api</artifactId>
+                <version>${calculationModuleVersion}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>serialization.xstream-api</artifactId>
+                <version>${serializationXstreamModuleVersion}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openmrs.module</groupId>
+                <artifactId>providermanagement-api</artifactId>
+                <version>1.1.3</version>
+                <scope>test</scope>
+            </dependency>
+
+
+        </dependencies>
 	</dependencyManagement>
 
 	<build>

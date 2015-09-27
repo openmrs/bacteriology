@@ -6,7 +6,7 @@ package org.openmrs.module.bacteriology.api;
  */
 public class MdrtbConcepts {
 
-    public static final String SPECIMEN_DATE_COLLECTED = "SAMPLE_DATE_COLLECTED";
+    public static final String SPECIMEN_DATE_COLLECTED = "TUBERCULOSIS SPECIMEN DATE COLLECTED";
     public final static String SPECIMEN_CONSTRUCT = "TUBERCULOSIS SPECIMEN CONSTRUCT";
     public static final String SPUTUM_CONCEPT_CODE = "SPUTUM";
     public static final String URINE_CONCEPT_CODE = "URINE";

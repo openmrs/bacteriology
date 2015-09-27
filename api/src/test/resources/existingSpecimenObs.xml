@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <encounter encounter_id="102" encounter_type="1" patient_id="2" location_id="2" form_id="1"
+               encounter_datetime="2008-08-19 00:00:00.0" creator="1" date_created="2008-08-19 12:34:40.0" voided="false"
+               uuid="y403fafb-e5e4-42d0-9d11-4f52e89d12st"/>
+    <obs obs_id="100" person_id="7" concept_id="401" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-b211-f3ef6c88afaa"/>
+    <obs obs_id="102" obs_group_id="100" person_id="7" concept_id="402" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_text="SAMPLE12345" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-b211-f3ef6c88afab"/>
+    <obs obs_id="103" obs_group_id="100" person_id="7" concept_id="403" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_coded="408" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-b211-f3ef6c88afac"/>
+    <obs obs_id="104" obs_group_id="100" person_id="7" concept_id="404" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_datetime="2008-08-19 12:32:03.0" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-b211-f3ef6c88afad"/>
+</dataset>

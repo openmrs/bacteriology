@@ -22,17 +22,18 @@ import org.openmrs.module.bacteriology.BacteriologyProperties;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
 import org.openmrs.module.bacteriology.api.db.BacteriologyServiceDAO;
 import org.openmrs.module.bacteriology.api.encounter.BacteriologyMapper;
-import org.openmrs.module.bacteriology.api.encounter.EncounterObservationMapper;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
 import org.openmrs.module.bacteriology.api.specimen.SpecimenMapper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * It is a default implementation of {@link BacteriologyService}.
  */
+@Component
 public class BacteriologyServiceImpl extends BaseOpenmrsService implements BacteriologyService {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());

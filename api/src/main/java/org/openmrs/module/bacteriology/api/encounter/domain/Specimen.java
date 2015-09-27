@@ -37,7 +37,7 @@ public class Specimen {
         @JsonSerialize(using = CustomJsonDateSerializer.class)
         private Date dateCollected;
 
-        private String type;
+        private String type;//TODO: change this to uuid.
 
         private String identifier;
 
@@ -51,14 +51,14 @@ public class Specimen {
             this.existingObs = existingObs;
         }
 
-        private List<EncounterTransaction.Observation> observations = new ArrayList<EncounterTransaction.Observation>();
+        private EncounterTransaction.Observation additionalAttributes;
 
-        public List<EncounterTransaction.Observation> getObservations() {
-            return observations;
+        public EncounterTransaction.Observation getAdditionalAttributes() {
+            return additionalAttributes;
         }
 
-        public void setObservations(List<EncounterTransaction.Observation> observations) {
-            this.observations = observations;
+        public void setAdditionalAttributes(EncounterTransaction.Observation additionalAttributes) {
+            this.additionalAttributes = additionalAttributes;
         }
 
         public Date getDateCollected() {
@@ -105,7 +105,7 @@ public class Specimen {
 
         private String existingObs;
 
-        private List<EncounterTransaction.Concept> reportType = new ArrayList<EncounterTransaction.Concept>();
+        private EncounterTransaction.Concept reportType;
 
         private List<EncounterTransaction.Observation> results = new ArrayList<EncounterTransaction.Observation>();
 
@@ -149,11 +149,11 @@ public class Specimen {
             this.results = results;
         }
 
-        public List<EncounterTransaction.Concept> getReportType() {
+        public EncounterTransaction.Concept getReportType() {
             return reportType;
         }
 
-        public void setReportType(List<EncounterTransaction.Concept> reportType) {
+        public void setReportType(EncounterTransaction.Concept reportType) {
             this.reportType = reportType;
         }
 

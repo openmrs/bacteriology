@@ -1,0 +1,67 @@
+{
+  "locationUuid": "c5854fd7-3f12-11e4-adec-0800271c1b75",
+  "patientUuid": "5da6f388-12f6-406a-9f6a-30e051df788e",
+  "visitType": "OPD",
+  "bahmniDiagnoses": [],
+  "orders": [],
+  "drugOrders": [],
+  "disposition": null,
+  "extensions": {
+    "mdrtb.specimen": [
+      {
+        "sample": {
+          "dateCollected": "2015-09-18T18:59:43.000+0530",
+          "type": "d102c80f-1yz9-4da3-bb88-8122ce8868df",
+          "identifier": "SAMP1234",
+          "existingObs":"e26cea2c-1b9f-4afe-b211-f3ef6c88afaa"
+        }
+      }
+    ]
+  },
+  "observations": [
+    {
+      "concept": {
+        "uuid": "c393fd1d-3f10-11e4-adec-0800271c1b75",
+        "name": "History and Examination",
+        "dataType": "N/A"
+      },
+      "units": null,
+      "label": "History and Examination",
+      "possibleAnswers": [],
+      "groupMembers": [
+        {
+          "concept": {
+            "uuid": "c398a4be-3f10-11e4-adec-0800271c1b75",
+            "name": "Chief Complaint Notes",
+            "dataType": "Text"
+          },
+          "units": null,
+          "label": "Chief Complaint Notes",
+          "possibleAnswers": [],
+          "groupMembers": [],
+          "comment": null,
+          "isObservation": true,
+          "conceptUIConfig": [],
+          "uniqueId": "observation_5",
+          "erroneousValue": null,
+          "value": "test",
+          "_value": "test",
+          "voided": false
+        }
+      ],
+      "comment": null,
+      "isObservation": true,
+      "conceptUIConfig": [],
+      "uniqueId": "observation_11",
+      "erroneousValue": null,
+      "conceptSetName": "History and Examination",
+      "voided": false
+    }
+  ],
+  "encounterTypeUuid": "81852aee-3f10-11e4-adec-0800271c1b75",
+  "providers": [
+    {
+      "uuid": "c1c26908-3f10-11e4-adec-0800271c1b75"
+    }
+  ]
+}

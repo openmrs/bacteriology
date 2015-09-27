@@ -1,5 +1,6 @@
 package org.openmrs.module.bacteriology.api.specimen;
 
+import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.module.bacteriology.api.MdrtbConcepts;
 
@@ -10,7 +11,7 @@ public class Specimen {
     private Obs existingObs;
     private Date dateCollected;
     private String id;
-    private SampleType type;
+    private Concept type;
     private Obs additionalAttributes;
     private List<TestReport> reports;
 
@@ -22,11 +23,11 @@ public class Specimen {
         this.id = id;
     }
 
-    public SampleType getType() {
+    public Concept getType() {
         return type;
     }
 
-    public void setType(SampleType type) {
+    public void setType(Concept type) {
         this.type = type;
     }
 
@@ -60,30 +61,6 @@ public class Specimen {
 
     public void setReports(List<TestReport> reports) {
         this.reports = reports;
-    }
-
-    public enum SampleType{
-        SPUTUM(MdrtbConcepts.SPUTUM_CONCEPT_CODE),
-        URINE(MdrtbConcepts.URINE_CONCEPT_CODE);
-
-        String codeInEmrConceptSource;
-
-        SampleType(String codeInEmrConceptSource){ this.codeInEmrConceptSource = codeInEmrConceptSource;}
-
-
-        String getCodeInEmrConceptSource() {
-            return codeInEmrConceptSource;
-        }
-
-        public static SampleType parseConceptReferenceCode(String code) {
-            for (SampleType candidate : values()) {
-                if (candidate.getCodeInEmrConceptSource().equals(code)) {
-                    return candidate;
-                }
-            }
-            return null;
-        }
-
     }
 
 }

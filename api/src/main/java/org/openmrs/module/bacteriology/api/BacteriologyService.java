@@ -15,11 +15,8 @@ package org.openmrs.module.bacteriology.api;
 
 import org.openmrs.Encounter;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured in moduleApplicationContext.xml.

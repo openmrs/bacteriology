@@ -17,11 +17,10 @@ public class BacteriologyPostProcessor implements EncounterUpdatePostProcessor {
 
     @Override
     public void forRead(Encounter encounter, EncounterTransaction encounterTransaction) {
-        bacteriologyService.updateEncounter(encounter,encounterTransaction);
     }
 
     @Override
     public void forSave(Encounter encounter, EncounterTransaction encounterTransaction) {
-
+        bacteriologyService.updateEncounter(encounter,encounterTransaction);
     }
 }

@@ -63,17 +63,16 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     }
 
     public Obs buildObsGroup(Specimen specimen) {
-        Concept sampleType = findAnswer(getSpecimenSource(), specimen.getType().getCodeInEmrConceptSource());
         //TODO: Add liquibase migration for the pre-defined concepts.
 
         if(specimen.getExistingObs()!=null){
-            setCodedMember(specimen.getExistingObs(), getSpecimenSource(), sampleType, null);
+            setCodedMember(specimen.getExistingObs(), getSpecimenSource(), specimen.getType(), null);
             setFreeTextMember(specimen.getExistingObs(), getSpecimenDateCollected(), specimen.getDateCollected());
             setFreeTextMember(specimen.getExistingObs(),getSpecimenId(),specimen.getId());
             specimen.getExistingObs().addGroupMember(specimen.getAdditionalAttributes());
             return specimen.getExistingObs();
         }else{
-            Obs specimenSource = buildObsFor(getSpecimenSource(), sampleType, null);
+            Obs specimenSource = buildObsFor(getSpecimenSource(), specimen.getType(), null);
             Obs dateCollected = buildObsFor(getSpecimenDateCollected(), specimen.getDateCollected());
             Obs specimenId = buildObsFor(getSpecimenId(),specimen.getId());
 

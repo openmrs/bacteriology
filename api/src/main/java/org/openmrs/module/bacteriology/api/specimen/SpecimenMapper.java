@@ -1,7 +1,14 @@
 package org.openmrs.module.bacteriology.api.specimen;
 
+import org.apache.commons.lang3.StringUtils;
+import org.openmrs.Concept;
 import org.openmrs.Encounter;
-import org.openmrs.module.bacteriology.api.encounter.EncounterObservationMapper;
+import org.openmrs.api.ConceptService;
+import org.openmrs.api.ObsService;
+import org.openmrs.module.bacteriology.BacteriologyProperties;
+import org.openmrs.module.emrapi.encounter.EncounterObservationServiceHelper;
+import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
+import org.openmrs.module.emrapi.encounter.exception.ConceptNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -9,12 +16,78 @@ import org.springframework.stereotype.Component;
 public class SpecimenMapper {
 
     @Autowired
-    private EncounterObservationMapper encounterObservationMapper;
+    private EncounterObservationServiceHelper encounterObservationServiceHelper;
 
-    public Specimen createSpecimen(Encounter encounter,org.openmrs.module.bacteriology.api.encounter.domain.Specimen specimen){
+    @Autowired
+    private ObsService obsService;
 
+    @Autowired
+    private ConceptService conceptService;
 
-        return null;
+    public EncounterObservationServiceHelper getEncounterObservationServiceHelper() {
+        return encounterObservationServiceHelper;
     }
+
+    public void setEncounterObservationServiceHelper(EncounterObservationServiceHelper encounterObservationServiceHelper) {
+        this.encounterObservationServiceHelper = encounterObservationServiceHelper;
+    }
+
+    public ObsService getObsService() {
+        return obsService;
+    }
+
+    public void setObsService(ObsService obsService) {
+        this.obsService = obsService;
+    }
+
+    public ConceptService getConceptService() {
+        return conceptService;
+    }
+
+    public void setConceptService(ConceptService conceptService) {
+        this.conceptService = conceptService;
+    }
+
+    private void validate(org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen){
+        if(etSpecimen==null || etSpecimen.getSample()== null)
+            throw new IllegalArgumentException("sample is not available in specimen");
+
+        if(etSpecimen.getSample().getType()==null)
+            throw new IllegalArgumentException("Sample Type is mandatory");
+
+        if(etSpecimen.getSample().getDateCollected() == null)
+            throw new IllegalArgumentException("Sample Date Collected detail is mandatory");
+    }
+
+    public Specimen createSpecimen(Encounter encounter,org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen){
+        validate(etSpecimen);
+
+        Specimen bacteriologySpecimen = new Specimen();
+        bacteriologySpecimen.setId(etSpecimen.getSample().getIdentifier());
+        bacteriologySpecimen.setDateCollected(etSpecimen.getSample().getDateCollected());
+
+        if(StringUtils.isNotEmpty(etSpecimen.getSample().getExistingObs())){
+            bacteriologySpecimen.setExistingObs(obsService.getObsByUuid(etSpecimen.getSample().getExistingObs()));
+        }
+
+        if(etSpecimen.getSample().getAdditionalAttributes() != null){
+            EncounterTransaction.Observation etObs = etSpecimen.getSample().getAdditionalAttributes();
+            bacteriologySpecimen.setAdditionalAttributes(encounterObservationServiceHelper.transformEtObs(bacteriologySpecimen.getExistingObs(), etObs));
+        }
+
+        bacteriologySpecimen.setType(getSampleTypeConcept(etSpecimen.getSample().getType()));
+
+        return bacteriologySpecimen;
+    }
+
+    private Concept getSampleTypeConcept(String type) {
+        Concept sampleType = conceptService.getConceptByUuid(type);
+
+        if(sampleType == null)
+            throw new ConceptNotFoundException("Sample Type Concept "+ type +" is not available");
+
+        return sampleType;
+    }
+
 
 }
