@@ -14,7 +14,6 @@ import org.openmrs.module.emrapi.encounter.EncounterObservationServiceHelper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
@@ -48,7 +47,7 @@ public class SpecimenMapperTest {
     private SpecimenMapper mapper;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         initMocks(this);
         mapper = new SpecimenMapper();
         mapper.setConceptService(conceptService);
@@ -58,11 +57,9 @@ public class SpecimenMapperTest {
 
     @Test
     public void testCreateSpecimenWithoutAdditionalAttributesAndExistingObs() throws Exception {
-        Date sampleDateCollected = DateUtils.parseDate("2015-09-25","yyyy-MM-dd");
+        Date sampleDateCollected = DateUtils.parseDate("2015-09-25", "yyyy-MM-dd");
 
-        org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen = new Specimen();
-        etSpecimen.setSample(createSample(sampleDateCollected, "specimenId", "urine_concept_uuid", "", null));
-        etSpecimen.setReports(Arrays.asList(createReport("accessionNumber", new Date(), new Date(), new Date(), "report_type_concept_uuid", "existing_report_obs_uuid")));
+        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "", null);
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
 
@@ -77,14 +74,12 @@ public class SpecimenMapperTest {
 
     @Test
     public void testCreateSpecimenWithExistingObsAndAdditionalAttributes() throws ParseException {
-        Date sampleDateCollected = DateUtils.parseDate("2015-09-25","yyyy-MM-dd");
+        Date sampleDateCollected = DateUtils.parseDate("2015-09-25", "yyyy-MM-dd");
 
         EncounterTransaction.Observation additionalAttributes = new EncounterTransaction.Observation();
         additionalAttributes.setUuid("some_new_obs_uuid");
 
-        org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen = new Specimen();
-        etSpecimen.setSample(createSample(sampleDateCollected, "specimenId", "urine_concept_uuid", "existing_obs_uuid", additionalAttributes));
-        etSpecimen.setReports(Arrays.asList(createReport("accessionNumber", new Date(), new Date(), new Date(), "report_type_concept_uuid", "existing_report_obs_uuid")));
+        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "existing_obs_uuid", additionalAttributes);
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
         when(obsService.getObsByUuid("existing_obs_uuid")).thenReturn(existingObs);
@@ -95,20 +90,18 @@ public class SpecimenMapperTest {
         assertEquals("specimenId", specimen.getId());
         assertEquals(sampleDateCollected, specimen.getDateCollected());
         assertEquals(urineConcept, specimen.getType());
-        assertEquals(existingObs,specimen.getExistingObs());
+        assertEquals(existingObs, specimen.getExistingObs());
         assertEquals(additionalAttributeObs, specimen.getAdditionalAttributes());
     }
 
     @Test
     public void testCreateSpecimenWithAdditionalAttributes() throws ParseException {
-        Date sampleDateCollected = DateUtils.parseDate("2015-09-25","yyyy-MM-dd");
+        Date sampleDateCollected = DateUtils.parseDate("2015-09-25", "yyyy-MM-dd");
 
         EncounterTransaction.Observation additionalAttributes = new EncounterTransaction.Observation();
         additionalAttributes.setUuid("some_new_obs_uuid");
 
-        org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen = new Specimen();
-        etSpecimen.setSample(createSample(sampleDateCollected, "specimenId", "urine_concept_uuid", null, additionalAttributes));
-        etSpecimen.setReports(Arrays.asList(createReport("accessionNumber", new Date(), new Date(), new Date(), "report_type_concept_uuid", "existing_report_obs_uuid")));
+        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "", additionalAttributes);
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
         when(encounterObservationServiceHelper.transformEtObs(null, additionalAttributes)).thenReturn(additionalAttributeObs);
@@ -118,63 +111,49 @@ public class SpecimenMapperTest {
         assertEquals("specimenId", specimen.getId());
         assertEquals(sampleDateCollected, specimen.getDateCollected());
         assertEquals(urineConcept, specimen.getType());
-        assertEquals(null,specimen.getExistingObs());
+        assertEquals(null, specimen.getExistingObs());
         assertEquals(additionalAttributeObs, specimen.getAdditionalAttributes());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSpecimenWithoutValidSample(){
+    public void testSpecimenWithoutValidSample() {
         org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen = new Specimen();
-        org.openmrs.module.bacteriology.api.specimen.Specimen specimen = mapper.createSpecimen(encounter, etSpecimen);
+        mapper.createSpecimen(encounter, etSpecimen);
         fail("should throw an exception as the specimen doesn't contain sample");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSpecimenWithoutValidSampleType() throws ParseException {
-        Date sampleDateCollected = DateUtils.parseDate("2015-09-25","yyyy-MM-dd");
+        Date sampleDateCollected = DateUtils.parseDate("2015-09-25", "yyyy-MM-dd");
 
-        org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen = new Specimen();
-        etSpecimen.setSample(createSample(sampleDateCollected, "specimenId", null, null, null));
-        org.openmrs.module.bacteriology.api.specimen.Specimen specimen = mapper.createSpecimen(encounter, etSpecimen);
-        fail("should throw an exception as the specimen doesn't contain sample");
+        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", null, "", null);
+        mapper.createSpecimen(encounter, etSpecimen);
+        fail("should throw an exception as the specimen doesn't contain type");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSpecimenWithoutValidDateCollected() throws ParseException {
 
-        org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen = new Specimen();
-        etSpecimen.setSample(createSample(null, "specimenId", "urine_concept_uuid", null, null));
-        org.openmrs.module.bacteriology.api.specimen.Specimen specimen = mapper.createSpecimen(encounter, etSpecimen);
-        fail("should throw an exception as the specimen doesn't contain sample");
+        Specimen etSpecimen = createNewSpecimen(null, "specimenId", "urine_concept_uuid", "", null);
+        mapper.createSpecimen(encounter, etSpecimen);
+        fail("should throw an exception as the specimen doesn't contain date collected");
     }
-    private Specimen.Sample createSample(Date dateCollected, String identifier, String type, String existingSampleObsUuid, EncounterTransaction.Observation additionalAttributes) {
+
+    private Specimen createNewSpecimen(Date dateCollected, String identifier, String type, String existingSampleObsUuid, EncounterTransaction.Observation additionalAttributes) {
+        org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen = new Specimen();
+        etSpecimen.setDateCollected(dateCollected);
+        etSpecimen.setExistingObs(existingSampleObsUuid);
+        etSpecimen.setIdentifier(identifier);
+        etSpecimen.setType(null);
+        if (type != null) {
+            EncounterTransaction.Concept concept = new EncounterTransaction.Concept();
+            concept.setUuid(type);
+            etSpecimen.setType(concept);
+        }
         Specimen.Sample sample = new Specimen.Sample();
         sample.setAdditionalAttributes(additionalAttributes);
-        sample.setDateCollected(dateCollected);
-        sample.setExistingObs(existingSampleObsUuid);
-        sample.setIdentifier(identifier);
-        sample.setType(type);
-        return sample;
+        etSpecimen.setSample(sample);
+        return etSpecimen;
     }
 
-    private org.openmrs.module.bacteriology.api.encounter.domain.Specimen.TestReport createReport(String accessionNumber,Date dateCollected,Date dateOrdered,Date dateStarted,
-                                                                                                  String reportTypeConceptUuid, String existingObsUuid){
-
-        EncounterTransaction.Concept reportTypeConcept = new EncounterTransaction.Concept();
-        reportTypeConcept.setUuid(reportTypeConceptUuid);
-
-        org.openmrs.module.bacteriology.api.encounter.domain.Specimen.TestReport testReport = new org.openmrs.module.bacteriology.api.encounter.domain.Specimen.TestReport();
-        testReport.setAccessionNumber(accessionNumber);
-        testReport.setDateCollected(dateCollected);
-        testReport.setDateOrdered(dateOrdered);
-        testReport.setDateStarted(dateStarted);
-        testReport.setReportType(reportTypeConcept);
-        testReport.setExistingObs(existingObsUuid);
-
-        return testReport;
-    }
-
-    private Date date(String date) throws ParseException {
-        return DateUtils.parseDate(date,"yyyy-MM-dd");
-    }
 }

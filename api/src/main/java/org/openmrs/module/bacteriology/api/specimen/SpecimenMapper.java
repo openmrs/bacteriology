@@ -49,13 +49,11 @@ public class SpecimenMapper {
     }
 
     private void validate(org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen){
-        if(etSpecimen==null || etSpecimen.getSample()== null)
-            throw new IllegalArgumentException("sample is not available in specimen");
 
-        if(etSpecimen.getSample().getType()==null)
+        if(etSpecimen.getType()==null)
             throw new IllegalArgumentException("Sample Type is mandatory");
 
-        if(etSpecimen.getSample().getDateCollected() == null)
+        if(etSpecimen.getDateCollected() == null)
             throw new IllegalArgumentException("Sample Date Collected detail is mandatory");
     }
 
@@ -63,11 +61,11 @@ public class SpecimenMapper {
         validate(etSpecimen);
 
         Specimen bacteriologySpecimen = new Specimen();
-        bacteriologySpecimen.setId(etSpecimen.getSample().getIdentifier());
-        bacteriologySpecimen.setDateCollected(etSpecimen.getSample().getDateCollected());
+        bacteriologySpecimen.setId(etSpecimen.getIdentifier());
+        bacteriologySpecimen.setDateCollected(etSpecimen.getDateCollected());
 
-        if(StringUtils.isNotEmpty(etSpecimen.getSample().getExistingObs())){
-            bacteriologySpecimen.setExistingObs(obsService.getObsByUuid(etSpecimen.getSample().getExistingObs()));
+        if(StringUtils.isNotEmpty(etSpecimen.getExistingObs())){
+            bacteriologySpecimen.setExistingObs(obsService.getObsByUuid(etSpecimen.getExistingObs()));
         }
 
         if(etSpecimen.getSample().getAdditionalAttributes() != null){
@@ -75,13 +73,13 @@ public class SpecimenMapper {
             bacteriologySpecimen.setAdditionalAttributes(encounterObservationServiceHelper.transformEtObs(bacteriologySpecimen.getExistingObs(), etObs));
         }
 
-        bacteriologySpecimen.setType(getSampleTypeConcept(etSpecimen.getSample().getType()));
+        bacteriologySpecimen.setType(getSampleTypeConcept(etSpecimen.getType()));
 
         return bacteriologySpecimen;
     }
 
-    private Concept getSampleTypeConcept(String type) {
-        Concept sampleType = conceptService.getConceptByUuid(type);
+    private Concept getSampleTypeConcept(EncounterTransaction.Concept type) {
+        Concept sampleType = conceptService.getConceptByUuid(type.getUuid());
 
         if(sampleType == null)
             throw new ConceptNotFoundException("Sample Type Concept "+ type +" is not available");

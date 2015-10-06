@@ -7,14 +7,13 @@
   "drugOrders": [],
   "disposition": null,
   "extensions": {
-    "mdrtb.specimen": [
+    "mdrtbSpecimen": [
       {
-        "sample": {
-          "dateCollected": "2015-09-18T18:59:43.000+0530",
-          "type": "d102c80f-1yz9-4da3-bb88-8122ce8868df",
-          "identifier": "SAMP1234",
-          "existingObs":"e26cea2c-1b9f-4afe-b211-f3ef6c88afaa"
-        }
+        "dateCollected": "2015-09-18T18:59:43.000+0530",
+        "type": "d102c80f-1yz9-4da3-bb88-8122ce8868df",
+        "identifier": "SAMP1234",
+        "existingObs":"e26cea2c-1b9f-4afe-b211-f3ef6c88afaa",
+        "sample": {}
       }
     ]
   },

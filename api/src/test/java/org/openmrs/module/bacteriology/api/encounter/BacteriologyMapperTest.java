@@ -1,6 +1,5 @@
 package org.openmrs.module.bacteriology.api.encounter;
 
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,22 +7,30 @@ import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 public class BacteriologyMapperTest {
     @Test
     public void testMapSpecimen() throws Exception {
-
-        String extensionValue = "[{\"sample\": {\"identifier\": \"123\"}, \"reports\": [{\"accessionNumber\": \"acc123\"}, {\"accessionNumber\": \"acc134\"}]}]";
+        String extensionValue = "[\n" +
+                "      {\n" +
+                "        \"sample\": {},\n" +
+                "        \"dateCollected\": \"2015-10-14T18:30:00.000Z\",\n" +
+                "        \"type\": {\n" +
+                "          \"uuid\": \"958cd481-53cb-446a-b4c5-9d1dc00ded24\",\n" +
+                "          \"name\": \"Urine\",\n" +
+                "          \"shortName\": null,\n" +
+                "          \"description\": null,\n" +
+                "          \"dataType\": null,\n" +
+                "          \"conceptClass\": \"Sample\"\n" +
+                "        },\n" +
+                "        \"identifier\": \"123\"\n" +
+                "      }]";
 
         Map<String, Object> extensions = new HashMap<String, Object>();
-        extensions.put("mdrtb.specimen", new ObjectMapper().readValue(extensionValue, Object.class));
+        extensions.put("mdrtbSpecimen", new ObjectMapper().readValue(extensionValue, Object.class));
 
         EncounterTransaction encounterTransaction = new EncounterTransaction();
         encounterTransaction.setExtensions(extensions);
@@ -33,9 +40,8 @@ public class BacteriologyMapperTest {
 
         Assert.assertEquals(1, specimenList.size());
         Assert.assertEquals(Specimen.class, specimenList.get(0).getClass());
-        Assert.assertEquals("123", specimenList.get(0).getSample().getIdentifier());
-        Assert.assertEquals("acc123", specimenList.get(0).getReports().get(0).getAccessionNumber());
-        Assert.assertEquals("acc134", specimenList.get(0).getReports().get(1).getAccessionNumber());
+        Assert.assertEquals("123", specimenList.get(0).getIdentifier());
+        Assert.assertEquals("Urine", specimenList.get(0).getType().getName());
     }
 
     @Test
@@ -57,7 +63,7 @@ public class BacteriologyMapperTest {
         String extensionValue = "[]";
 
         Map<String, Object> extensions = new HashMap<String, Object>();
-        extensions.put("mdrtb.specimen", new ObjectMapper().readValue(extensionValue, Object.class));
+        extensions.put("mdrtbSpecimen", new ObjectMapper().readValue(extensionValue, Object.class));
 
         EncounterTransaction encounterTransaction = new EncounterTransaction();
         encounterTransaction.setExtensions(extensions);
