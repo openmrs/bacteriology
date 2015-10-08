@@ -8,8 +8,8 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
-import org.openmrs.module.bacteriology.api.BacteriologyService;
 import org.openmrs.module.bacteriology.api.BacteriologyConcepts;
+import org.openmrs.module.bacteriology.api.BacteriologyService;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.emrapi.utils.HibernateLazyLoader;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -36,6 +36,7 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
 
     @Before
     public void setup() throws Exception {
+        executeDataSet("baseBacteriologyData.xml");
         executeDataSet("specimenTestData.xml");
     }
 
@@ -60,10 +61,10 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         assertNotNull(specimenDateCollected);
         assertEquals("2015-09-18", sdf.format(specimenDateCollected.getValueDate()));
 
-        Obs specimenSource = findMember(specimenObs.getGroupMembers(),getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
+        Obs specimenSource = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
         assertNotNull(specimenSource);
         assertNotNull(specimenSource.getValueCoded());
-        assertEquals(getConcept("URINE"),specimenSource.getValueCoded());
+        assertEquals(getConcept("URINE"), specimenSource.getValueCoded());
     }
 
     @Test
@@ -88,14 +89,14 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         assertNotNull(specimenDateCollected);
         assertEquals("2015-09-18", sdf.format(specimenDateCollected.getValueDate()));
 
-        Obs specimenSource = findMember(specimenObs.getGroupMembers(),getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
+        Obs specimenSource = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
         assertNotNull(specimenSource);
         assertNotNull(specimenSource.getValueCoded());
-        assertEquals(getConcept("URINE"),specimenSource.getValueCoded());
+        assertEquals(getConcept("URINE"), specimenSource.getValueCoded());
     }
 
     @Test
-    public void ensureEncounterIsUpdatedWithAdditionalAttributes() throws Exception{
+    public void ensureEncounterIsUpdatedWithAdditionalAttributes() throws Exception {
         Encounter encounter = encounterService.getEncounter(3);
 
         Resource etRequest = new ClassPathResource("encounterTransactionWithAdditionalAttr.json");
@@ -115,21 +116,21 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         assertNotNull(specimenDateCollected);
         assertEquals("2015-09-18", sdf.format(specimenDateCollected.getValueDate()));
 
-        Obs specimenSource = findMember(specimenObs.getGroupMembers(),getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
+        Obs specimenSource = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
         assertNotNull(specimenSource);
         assertNotNull(specimenSource.getValueCoded());
         assertEquals(getConcept("URINE"), specimenSource.getValueCoded());
 
-        Obs historyAndExamination = findMember(specimenObs.getGroupMembers(),getConcept("History and Examination"));
-        assertNotNull(historyAndExamination);
+        Obs additionalAttributes = findMember(specimenObs.getGroupMembers(), getConcept("BACTERIOLOGY ADDITIONAL ATTRIBUTES"));
+        assertNotNull(additionalAttributes);
 
-        Obs chiefComplaintData = findMember(historyAndExamination.getGroupMembers(),getConcept("Chief Complaint Notes"));
-        assertNotNull(chiefComplaintData);
-        assertEquals("test", chiefComplaintData.getValueText());
+        Obs weight = findMember(additionalAttributes.getGroupMembers(), getConcept("WEIGHT (KG)"));
+        assertNotNull(weight);
+        assertEquals(45, weight.getValueNumeric().intValue());
     }
 
     @Test
-    public void ensureEncounterIsUpdatedWithAdditionalAttributesAndReports() throws Exception{
+    public void ensureEncounterIsUpdatedWithAdditionalAttributesAndReports() throws Exception {
         Encounter encounter = encounterService.getEncounter(3);
 
         Resource etRequest = new ClassPathResource("encounterTransactionWithAdditionalAttrAndReports.json");
@@ -149,27 +150,27 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         assertNotNull(specimenDateCollected);
         assertEquals("2015-09-18", sdf.format(specimenDateCollected.getValueDate()));
 
-        Obs specimenSource = findMember(specimenObs.getGroupMembers(),getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
+        Obs specimenSource = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
         assertNotNull(specimenSource);
         assertNotNull(specimenSource.getValueCoded());
         assertEquals(getConcept("URINE"), specimenSource.getValueCoded());
 
-        Obs historyAndExamination = findMember(specimenObs.getGroupMembers(),getConcept("History and Examination"));
-        assertNotNull(historyAndExamination);
+        Obs additionalAttributes = findMember(specimenObs.getGroupMembers(), getConcept("BACTERIOLOGY ADDITIONAL ATTRIBUTES"));
+        assertNotNull(additionalAttributes);
 
-        Obs chiefComplaintData = findMember(historyAndExamination.getGroupMembers(),getConcept("Chief Complaint Notes"));
-        assertNotNull(chiefComplaintData);
-        assertEquals("test", chiefComplaintData.getValueText());
+        Obs weight = findMember(additionalAttributes.getGroupMembers(), getConcept("WEIGHT (KG)"));
+        assertNotNull(weight);
+        assertEquals(45, weight.getValueNumeric().intValue());
 
-//        Obs vitals = findMember(specimenObs.getGroupMembers(),getConcept("Vitals"));
-//        assertNotNull(vitals);
-//
-//        Obs height = findMember(vitals.getGroupMembers(),getConcept("HEIGHT"));
-//        assertNotNull(height);
-//        assertEquals("170", height.getValueText());
+        Obs results = findMember(specimenObs.getGroupMembers(), getConcept("BACTERIOLOGY RESULTS"));
+        assertNotNull(results);
+
+        Obs weightResult = findMember(results.getGroupMembers(), getConcept("WEIGHT (KG)"));
+        assertNotNull(weightResult);
+        assertEquals(90, weightResult.getValueNumeric().intValue());
     }
 
-    private Concept getConcept(String name){
+    private Concept getConcept(String name) {
         Concept concept = conceptService.getConceptByName(name);
         return new HibernateLazyLoader().load(concept);
     }

@@ -1,47 +1,81 @@
 {
-  "locationUuid": "c5854fd7-3f12-11e4-adec-0800271c1b75",
-  "patientUuid": "5da6f388-12f6-406a-9f6a-30e051df788e",
-  "visitType": "OPD",
-  "bahmniDiagnoses": [],
-  "orders": [],
-  "drugOrders": [],
-  "disposition": null,
-  "extensions": {
-    "mdrtbSpecimen": [
-      {
-          "dateCollected": "2015-09-18T18:59:43.000+0530",
-          "type": "d102c80f-1yz9-4da3-bb88-8122ce8868df",
-          "identifier": "SAMP1234",
-          "sample": {
-          "additionalAttributes":    {
+    "locationUuid": "c5854fd7-3f12-11e4-adec-0800271c1b75",
+    "patientUuid": "5da6f388-12f6-406a-9f6a-30e051df788e",
+    "visitType": "OPD",
+    "bahmniDiagnoses": [],
+    "orders": [],
+    "drugOrders": [],
+    "disposition": null,
+    "extensions": {
+        "mdrtbSpecimen": [
+            {
+                "dateCollected": "2015-09-18T18:59:43.000+0530",
+                "type": "d102c80f-1yz9-4da3-bb88-8122ce8868df",
+                "identifier": "SAMP1234",
+                "sample": {
+                    "additionalAttributes": {
+                        "concept": {
+                            "uuid": "646dfcfe-5c48-49b7-8837-c40d4b6de5b3",
+                            "name": "BACTERIOLOGY ADDITIONAL ATTRIBUTES",
+                            "dataType": "N/A"
+                        },
+                        "units": null,
+                        "label": "BACTERIOLOGY ADDITIONAL ATTRIBUTES",
+                        "groupMembers": [
+                            {
+                                "concept": {
+                                    "uuid": "c607c80f-1ea9-4da3-bb88-6276ce8868dd",
+                                    "name": "WEIGHT (KG)",
+                                    "dataType": "Numeric"
+                                },
+                                "units": null,
+                                "label": "WEIGHT (KG)",
+                                "groupMembers": [],
+                                "comment": null,
+                                "isObservation": true,
+                                "value": "45",
+                                "voided": false
+                            }
+                        ],
+                        "comment": null,
+                        "isObservation": true,
+                        "conceptSetName": "BACTERIOLOGY ADDITIONAL ATTRIBUTES",
+                        "voided": false
+                    }
+                }
+            }
+        ]
+    },
+    "observations": [
+        {
             "concept": {
-              "uuid": "c393fd1d-3f10-11e4-adec-0800271c1b75",
-              "name": "History and Examination",
-              "dataType": "N/A"
+                "uuid": "c393fd1d-3f10-11e4-adec-0800271c1b75",
+                "name": "History and Examination",
+                "dataType": "N/A"
             },
             "units": null,
             "label": "History and Examination",
             "possibleAnswers": [],
             "groupMembers": [
-              {
-                "concept": {
-                  "uuid": "c398a4be-3f10-11e4-adec-0800271c1b75",
-                  "name": "Chief Complaint Notes",
-                  "dataType": "Text"
-                },
-                "units": null,
-                "label": "Chief Complaint Notes",
-                "possibleAnswers": [],
-                "groupMembers": [],
-                "comment": null,
-                "isObservation": true,
-                "conceptUIConfig": [],
-                "uniqueId": "observation_5",
-                "erroneousValue": null,
-                "value": "test",
-                "_value": "test",
-                "voided": false
-              }
+                {
+                    "concept": {
+                        "uuid": "c398a4be-3f10-11e4-adec-0800271c1b75",
+                        "name": "Chief Complaint Notes",
+                        "dataType": "Text"
+                    },
+                    "units": null,
+                    "label": "Chief Complaint Notes",
+                    "possibleAnswers": [],
+                    "groupMembers": [],
+                    "comment": null,
+                    "isObservation": true,
+                    "conceptUIConfig": [],
+                    "uniqueId": "observation_5",
+                    "erroneousValue": null,
+                    "value": "test",
+                    "_value": "test",
+                    "voided": false
+                }
             ],
             "comment": null,
             "isObservation": true,
@@ -50,55 +84,12 @@
             "erroneousValue": null,
             "conceptSetName": "History and Examination",
             "voided": false
-          }
         }
-      }
-    ]
-  },
-  "observations": [
-    {
-      "concept": {
-        "uuid": "c393fd1d-3f10-11e4-adec-0800271c1b75",
-        "name": "History and Examination",
-        "dataType": "N/A"
-      },
-      "units": null,
-      "label": "History and Examination",
-      "possibleAnswers": [],
-      "groupMembers": [
+    ],
+    "encounterTypeUuid": "81852aee-3f10-11e4-adec-0800271c1b75",
+    "providers": [
         {
-          "concept": {
-            "uuid": "c398a4be-3f10-11e4-adec-0800271c1b75",
-            "name": "Chief Complaint Notes",
-            "dataType": "Text"
-          },
-          "units": null,
-          "label": "Chief Complaint Notes",
-          "possibleAnswers": [],
-          "groupMembers": [],
-          "comment": null,
-          "isObservation": true,
-          "conceptUIConfig": [],
-          "uniqueId": "observation_5",
-          "erroneousValue": null,
-          "value": "test",
-          "_value": "test",
-          "voided": false
+            "uuid": "c1c26908-3f10-11e4-adec-0800271c1b75"
         }
-      ],
-      "comment": null,
-      "isObservation": true,
-      "conceptUIConfig": [],
-      "uniqueId": "observation_11",
-      "erroneousValue": null,
-      "conceptSetName": "History and Examination",
-      "voided": false
-    }
-  ],
-  "encounterTypeUuid": "81852aee-3f10-11e4-adec-0800271c1b75",
-  "providers": [
-    {
-      "uuid": "c1c26908-3f10-11e4-adec-0800271c1b75"
-    }
-  ]
+    ]
 }

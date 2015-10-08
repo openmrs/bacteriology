@@ -15,76 +15,62 @@
                 "sample": {
                     "additionalAttributes": {
                         "concept": {
-                            "uuid": "c393fd1d-3f10-11e4-adec-0800271c1b75",
-                            "name": "History and Examination",
+                            "uuid": "646dfcfe-5c48-49b7-8837-c40d4b6de5b3",
+                            "name": "BACTERIOLOGY ADDITIONAL ATTRIBUTES",
                             "dataType": "N/A"
                         },
                         "units": null,
-                        "label": "History and Examination",
-                        "possibleAnswers": [],
+                        "label": "BACTERIOLOGY ADDITIONAL ATTRIBUTES",
                         "groupMembers": [
                             {
                                 "concept": {
-                                    "uuid": "c398a4be-3f10-11e4-adec-0800271c1b75",
-                                    "name": "Chief Complaint Notes",
-                                    "dataType": "Text"
+                                    "uuid": "c607c80f-1ea9-4da3-bb88-6276ce8868dd",
+                                    "name": "WEIGHT (KG)",
+                                    "dataType": "Numeric"
                                 },
                                 "units": null,
-                                "label": "Chief Complaint Notes",
-                                "possibleAnswers": [],
+                                "label": "WEIGHT (KG)",
                                 "groupMembers": [],
                                 "comment": null,
                                 "isObservation": true,
-                                "conceptUIConfig": [],
-                                "uniqueId": "observation_5",
-                                "erroneousValue": null,
-                                "value": "test",
+                                "value": "45",
                                 "voided": false
                             }
                         ],
                         "comment": null,
                         "isObservation": true,
-                        "conceptUIConfig": [],
-                        "uniqueId": "observation_11",
-                        "erroneousValue": null,
-                        "conceptSetName": "History and Examination",
+                        "conceptSetName": "BACTERIOLOGY ADDITIONAL ATTRIBUTES",
                         "voided": false
                     }
                 },
-                "reports": {
+                "report": {
                     "results": {
                         "concept": {
-                            "uuid": "c393fd1d-3f10-11e4-adec-0800271c1b76",
-                            "name": "Vitals",
+                            "uuid": "646dffce-5c48-49b7-8837-c40d4b6de5b3",
+                            "name": "BACTERIOLOGY RESULTS",
                             "dataType": "N/A"
                         },
                         "units": null,
-                        "label": "Vitals",
-                        "possibleAnswers": [],
+                        "label": "BACTERIOLOGY RESULTS",
                         "groupMembers": [
                             {
                                 "concept": {
-                                    "uuid": "c398a4be-3f10-11e4-adec-0800271c1b77",
-                                    "name": "HEIGHT",
-                                    "dataType": "Text"
+                                    "uuid": "c607c80f-1ea9-4da3-bb88-6276ce8868dd",
+                                    "name": "WEIGHT (KG)",
+                                    "dataType": "Numeric"
                                 },
                                 "units": null,
-                                "label": "HEIGHT",
-                                "possibleAnswers": [],
+                                "label": "WEIGHT (KG)",
                                 "groupMembers": [],
                                 "comment": null,
                                 "isObservation": true,
-                                "conceptUIConfig": [],
-                                "erroneousValue": null,
-                                "value": "170",
+                                "value": "90",
                                 "voided": false
                             }
                         ],
                         "comment": null,
                         "isObservation": true,
-                        "conceptUIConfig": [],
-                        "erroneousValue": null,
-                        "conceptSetName": "Vitals",
+                        "conceptSetName": "BACTERIOLOGY RESULTS",
                         "voided": false
                     }
                 }
@@ -115,6 +101,7 @@
                     "comment": null,
                     "isObservation": true,
                     "conceptUIConfig": [],
+                    "uniqueId": "observation_5",
                     "erroneousValue": null,
                     "value": "test",
                     "_value": "test",
@@ -124,6 +111,7 @@
             "comment": null,
             "isObservation": true,
             "conceptUIConfig": [],
+            "uniqueId": "observation_11",
             "erroneousValue": null,
             "conceptSetName": "History and Examination",
             "voided": false
