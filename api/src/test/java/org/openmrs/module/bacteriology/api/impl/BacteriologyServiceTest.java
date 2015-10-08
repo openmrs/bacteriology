@@ -9,7 +9,7 @@ import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
-import org.openmrs.module.bacteriology.api.MdrtbConcepts;
+import org.openmrs.module.bacteriology.api.BacteriologyConcepts;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.emrapi.utils.HibernateLazyLoader;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -47,20 +47,20 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         EncounterTransaction encounterTransaction = new ObjectMapper().readValue(etRequest.getInputStream(), EncounterTransaction.class);
         bacteriologyService.updateEncounter(encounter, encounterTransaction);
 
-        Obs specimenObs = findMember(encounter.getObsAtTopLevel(false), getConcept(MdrtbConcepts.SPECIMEN_CONSTRUCT));
+        Obs specimenObs = findMember(encounter.getObsAtTopLevel(false), getConcept(BacteriologyConcepts.BACTERIOLOGY_CONCEPT_SET));
         assertNotNull(specimenObs);
 
-        Obs specimenId = findMember(specimenObs.getGroupMembers(), getConcept(MdrtbConcepts.SPECIMEN_ID_CODE));
+        Obs specimenId = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_ID_CODE));
         assertNotNull(specimenId);
         assertEquals("SAMP1234", specimenId.getValueText());
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        Obs specimenDateCollected = findMember(specimenObs.getGroupMembers(), getConcept(MdrtbConcepts.SPECIMEN_DATE_COLLECTED));
+        Obs specimenDateCollected = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_COLLECTION_DATE));
         assertNotNull(specimenDateCollected);
         assertEquals("2015-09-18", sdf.format(specimenDateCollected.getValueDate()));
 
-        Obs specimenSource = findMember(specimenObs.getGroupMembers(),getConcept(MdrtbConcepts.SAMPLE_SOURCE_CODE));
+        Obs specimenSource = findMember(specimenObs.getGroupMembers(),getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
         assertNotNull(specimenSource);
         assertNotNull(specimenSource.getValueCoded());
         assertEquals(getConcept("URINE"),specimenSource.getValueCoded());
@@ -75,20 +75,20 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         EncounterTransaction encounterTransaction = new ObjectMapper().readValue(etRequest.getInputStream(), EncounterTransaction.class);
         bacteriologyService.updateEncounter(encounter, encounterTransaction);
 
-        Obs specimenObs = findMember(encounter.getObsAtTopLevel(false), getConcept(MdrtbConcepts.SPECIMEN_CONSTRUCT));
+        Obs specimenObs = findMember(encounter.getObsAtTopLevel(false), getConcept(BacteriologyConcepts.BACTERIOLOGY_CONCEPT_SET));
         assertNotNull(specimenObs);
 
-        Obs specimenId = findMember(specimenObs.getGroupMembers(), getConcept(MdrtbConcepts.SPECIMEN_ID_CODE));
+        Obs specimenId = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_ID_CODE));
         assertNotNull(specimenId);
         assertEquals("SAMP1234", specimenId.getValueText());
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        Obs specimenDateCollected = findMember(specimenObs.getGroupMembers(), getConcept(MdrtbConcepts.SPECIMEN_DATE_COLLECTED));
+        Obs specimenDateCollected = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_COLLECTION_DATE));
         assertNotNull(specimenDateCollected);
         assertEquals("2015-09-18", sdf.format(specimenDateCollected.getValueDate()));
 
-        Obs specimenSource = findMember(specimenObs.getGroupMembers(),getConcept(MdrtbConcepts.SAMPLE_SOURCE_CODE));
+        Obs specimenSource = findMember(specimenObs.getGroupMembers(),getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
         assertNotNull(specimenSource);
         assertNotNull(specimenSource.getValueCoded());
         assertEquals(getConcept("URINE"),specimenSource.getValueCoded());
@@ -102,20 +102,20 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         EncounterTransaction encounterTransaction = new ObjectMapper().readValue(etRequest.getInputStream(), EncounterTransaction.class);
         bacteriologyService.updateEncounter(encounter, encounterTransaction);
 
-        Obs specimenObs = findMember(encounter.getObsAtTopLevel(false), getConcept(MdrtbConcepts.SPECIMEN_CONSTRUCT));
+        Obs specimenObs = findMember(encounter.getObsAtTopLevel(false), getConcept(BacteriologyConcepts.BACTERIOLOGY_CONCEPT_SET));
         assertNotNull(specimenObs);
 
-        Obs specimenId = findMember(specimenObs.getGroupMembers(), getConcept(MdrtbConcepts.SPECIMEN_ID_CODE));
+        Obs specimenId = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_ID_CODE));
         assertNotNull(specimenId);
         assertEquals("SAMP1234", specimenId.getValueText());
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        Obs specimenDateCollected = findMember(specimenObs.getGroupMembers(), getConcept(MdrtbConcepts.SPECIMEN_DATE_COLLECTED));
+        Obs specimenDateCollected = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_COLLECTION_DATE));
         assertNotNull(specimenDateCollected);
         assertEquals("2015-09-18", sdf.format(specimenDateCollected.getValueDate()));
 
-        Obs specimenSource = findMember(specimenObs.getGroupMembers(),getConcept(MdrtbConcepts.SAMPLE_SOURCE_CODE));
+        Obs specimenSource = findMember(specimenObs.getGroupMembers(),getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
         assertNotNull(specimenSource);
         assertNotNull(specimenSource.getValueCoded());
         assertEquals(getConcept("URINE"), specimenSource.getValueCoded());

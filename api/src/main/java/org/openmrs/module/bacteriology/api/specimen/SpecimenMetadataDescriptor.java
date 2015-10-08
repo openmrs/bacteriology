@@ -7,7 +7,7 @@ import org.openmrs.ConceptReferenceTerm;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.bacteriology.BacteriologyConstants;
-import org.openmrs.module.bacteriology.api.MdrtbConcepts;
+import org.openmrs.module.bacteriology.api.BacteriologyConcepts;
 import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptor;
 import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptorField;
 import org.openmrs.util.OpenmrsUtil;
@@ -21,11 +21,11 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     private Concept specimenConstruct;
 
     public SpecimenMetadataDescriptor(ConceptService conceptService) {
-        setup(conceptService, BacteriologyConstants.MDRTB_CONCEPT_SOURCE_NAME,
-                ConceptSetDescriptorField.required("specimenConstruct", MdrtbConcepts.SPECIMEN_CONSTRUCT),
-                ConceptSetDescriptorField.optional("specimenId", MdrtbConcepts.SPECIMEN_ID_CODE),
-                ConceptSetDescriptorField.required("specimenSource", MdrtbConcepts.SAMPLE_SOURCE_CODE),
-                ConceptSetDescriptorField.required("specimenDateCollected", MdrtbConcepts.SPECIMEN_DATE_COLLECTED));
+        setup(conceptService, BacteriologyConstants.BACTERIOLOGY_CONCEPT_SOURCE,
+                ConceptSetDescriptorField.required("specimenConstruct", BacteriologyConcepts.BACTERIOLOGY_CONCEPT_SET),
+                ConceptSetDescriptorField.optional("specimenId", BacteriologyConcepts.SPECIMEN_ID_CODE),
+                ConceptSetDescriptorField.required("specimenSource", BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE),
+                ConceptSetDescriptorField.required("specimenDateCollected", BacteriologyConcepts.SPECIMEN_COLLECTION_DATE));
     }
 
     public SpecimenMetadataDescriptor(){}
@@ -132,12 +132,12 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         for (ConceptAnswer conceptAnswer : concept.getAnswers()) {
             Concept answerConcept = conceptAnswer.getAnswerConcept();
             if (answerConcept != null) {
-                if (hasConceptMapping(answerConcept, BacteriologyConstants.MDRTB_CONCEPT_SOURCE_NAME, codeForAnswer)) {
+                if (hasConceptMapping(answerConcept, BacteriologyConstants.BACTERIOLOGY_CONCEPT_SOURCE, codeForAnswer)) {
                     return answerConcept;
                 }
             }
         }
-        throw new IllegalStateException("Cannot find answer mapped with " + BacteriologyConstants.MDRTB_CONCEPT_SOURCE_NAME + ":" + codeForAnswer + " in the concept " + concept.getName());
+        throw new IllegalStateException("Cannot find answer mapped with " + BacteriologyConstants.BACTERIOLOGY_CONCEPT_SOURCE + ":" + codeForAnswer + " in the concept " + concept.getName());
     }
 
     private boolean hasConceptMapping(Concept concept, String sourceName, String codeToLookFor) {

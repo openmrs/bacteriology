@@ -2,7 +2,6 @@ package org.openmrs.module.bacteriology.api.specimen;
 
 import org.openmrs.Concept;
 import org.openmrs.Obs;
-import org.openmrs.module.bacteriology.api.MdrtbConcepts;
 
 import java.util.Date;
 import java.util.List;
