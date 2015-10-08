@@ -6,15 +6,13 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.emrapi.utils.CustomJsonDateSerializer;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Specimen {
     private Sample sample;
 
-    private List<TestReport> reports;
+    private TestReport report;
 
     @JsonSerialize(using = CustomJsonDateSerializer.class)
     private Date dateCollected;
@@ -31,14 +29,6 @@ public class Specimen {
 
     public void setSample(Sample sample) {
         this.sample = sample;
-    }
-
-    public List<TestReport> getReports() {
-        return reports;
-    }
-
-    public void setReports(List<TestReport> reports) {
-        this.reports = reports;
     }
 
     public Date getDateCollected() {
@@ -73,6 +63,15 @@ public class Specimen {
         this.existingObs = existingObs;
     }
 
+    public TestReport getReport() {
+        return report;
+    }
+
+    public void setReport(TestReport report) {
+        this.report = report;
+    }
+
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Sample{
         private EncounterTransaction.Observation additionalAttributes;
@@ -88,13 +87,13 @@ public class Specimen {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TestReport {
-        private List<EncounterTransaction.Observation> results = new ArrayList<EncounterTransaction.Observation>();
+        EncounterTransaction.Observation results;
 
-        public List<EncounterTransaction.Observation> getResults() {
+        public EncounterTransaction.Observation getResults() {
             return results;
         }
 
-        public void setResults(List<EncounterTransaction.Observation> results) {
+        public void setResults(EncounterTransaction.Observation results) {
             this.results = results;
         }
     }

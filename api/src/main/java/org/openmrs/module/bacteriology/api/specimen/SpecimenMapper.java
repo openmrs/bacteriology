@@ -75,6 +75,11 @@ public class SpecimenMapper {
 
         bacteriologySpecimen.setType(getSampleTypeConcept(etSpecimen.getType()));
 
+        if(etSpecimen.getReport() != null && etSpecimen.getReport().getResults() != null){
+            EncounterTransaction.Observation etObs = etSpecimen.getReport().getResults();
+            bacteriologySpecimen.setReports(encounterObservationServiceHelper.transformEtObs(bacteriologySpecimen.getReports(), etObs));
+        }
+
         return bacteriologySpecimen;
     }
 

@@ -38,5 +38,12 @@
 
     <concept concept_id="410" retired="false" datatype_id="3" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="c398a4be-3f10-11e4-adec-0800271c1b75"/>
     <concept_name concept_id="410" concept_name_id="1411" name="Chief Complaint Notes" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="c398a4be-3f10-11e4-adec-0800271c1b75"/>
+    <concept_set concept_set_id="20000" concept_id="410" concept_set="411" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
 
+    <concept concept_id="511" retired="false" datatype_id="10" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="c393fd1d-3f10-11e4-adec-0800271c1b76"/>
+    <concept_name concept_id="511" concept_name_id="1413" name="Vitals" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="c393fd1d-3f10-11e4-adec-0800271c1b76"/>
+
+    <concept concept_id="510" retired="false" datatype_id="3" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="c398a4be-3f10-11e4-adec-0800271c1b77"/>
+    <concept_name concept_id="510" concept_name_id="1414" name="HEIGHT" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="c398a4be-3f10-11e4-adec-0800271c1b77"/>
+    <concept_set concept_set_id="20000" concept_id="510" concept_set="511" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
 </dataset>

@@ -42,6 +42,9 @@ public class SpecimenMapperTest {
     private Obs additionalAttributeObs;
 
     @Mock
+    private Obs resultsObs;
+
+    @Mock
     private Obs existingObs;
 
     private SpecimenMapper mapper;
@@ -59,7 +62,7 @@ public class SpecimenMapperTest {
     public void testCreateSpecimenWithoutAdditionalAttributesAndExistingObs() throws Exception {
         Date sampleDateCollected = DateUtils.parseDate("2015-09-25", "yyyy-MM-dd");
 
-        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "", null);
+        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "", null,null);
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
 
@@ -79,7 +82,7 @@ public class SpecimenMapperTest {
         EncounterTransaction.Observation additionalAttributes = new EncounterTransaction.Observation();
         additionalAttributes.setUuid("some_new_obs_uuid");
 
-        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "existing_obs_uuid", additionalAttributes);
+        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "existing_obs_uuid", additionalAttributes,null);
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
         when(obsService.getObsByUuid("existing_obs_uuid")).thenReturn(existingObs);
@@ -101,7 +104,7 @@ public class SpecimenMapperTest {
         EncounterTransaction.Observation additionalAttributes = new EncounterTransaction.Observation();
         additionalAttributes.setUuid("some_new_obs_uuid");
 
-        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "", additionalAttributes);
+        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "", additionalAttributes,null);
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
         when(encounterObservationServiceHelper.transformEtObs(null, additionalAttributes)).thenReturn(additionalAttributeObs);
@@ -126,7 +129,7 @@ public class SpecimenMapperTest {
     public void testSpecimenWithoutValidSampleType() throws ParseException {
         Date sampleDateCollected = DateUtils.parseDate("2015-09-25", "yyyy-MM-dd");
 
-        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", null, "", null);
+        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", null, "", null,null);
         mapper.createSpecimen(encounter, etSpecimen);
         fail("should throw an exception as the specimen doesn't contain type");
     }
@@ -134,12 +137,33 @@ public class SpecimenMapperTest {
     @Test(expected = IllegalArgumentException.class)
     public void testSpecimenWithoutValidDateCollected() throws ParseException {
 
-        Specimen etSpecimen = createNewSpecimen(null, "specimenId", "urine_concept_uuid", "", null);
+        Specimen etSpecimen = createNewSpecimen(null, "specimenId", "urine_concept_uuid", "", null,null);
         mapper.createSpecimen(encounter, etSpecimen);
         fail("should throw an exception as the specimen doesn't contain date collected");
     }
 
-    private Specimen createNewSpecimen(Date dateCollected, String identifier, String type, String existingSampleObsUuid, EncounterTransaction.Observation additionalAttributes) {
+    @Test
+    public void testCreateSpecimenWithResults() throws ParseException {
+        Date sampleDateCollected = DateUtils.parseDate("2015-09-25", "yyyy-MM-dd");
+
+        EncounterTransaction.Observation results = new EncounterTransaction.Observation();
+        results.setUuid("some_new_obs_uuid");
+
+        Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "", null,results);
+
+        when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
+        when(encounterObservationServiceHelper.transformEtObs(null, results)).thenReturn(resultsObs);
+
+        org.openmrs.module.bacteriology.api.specimen.Specimen specimen = mapper.createSpecimen(encounter, etSpecimen);
+
+        assertEquals("specimenId", specimen.getId());
+        assertEquals(sampleDateCollected, specimen.getDateCollected());
+        assertEquals(urineConcept, specimen.getType());
+        assertEquals(null, specimen.getExistingObs());
+        assertEquals(resultsObs, specimen.getReports());
+    }
+
+    private Specimen createNewSpecimen(Date dateCollected, String identifier, String type, String existingSampleObsUuid, EncounterTransaction.Observation additionalAttributes, EncounterTransaction.Observation resultObs) {
         org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen = new Specimen();
         etSpecimen.setDateCollected(dateCollected);
         etSpecimen.setExistingObs(existingSampleObsUuid);
@@ -153,6 +177,10 @@ public class SpecimenMapperTest {
         Specimen.Sample sample = new Specimen.Sample();
         sample.setAdditionalAttributes(additionalAttributes);
         etSpecimen.setSample(sample);
+
+        Specimen.TestReport report = new Specimen.TestReport();
+        report.setResults(resultObs);
+        etSpecimen.setReport(report);
         return etSpecimen;
     }
 

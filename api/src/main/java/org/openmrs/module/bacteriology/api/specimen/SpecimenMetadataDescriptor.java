@@ -68,8 +68,9 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         if(specimen.getExistingObs()!=null){
             setCodedMember(specimen.getExistingObs(), getSpecimenSource(), specimen.getType(), null);
             setFreeTextMember(specimen.getExistingObs(), getSpecimenDateCollected(), specimen.getDateCollected());
-            setFreeTextMember(specimen.getExistingObs(),getSpecimenId(),specimen.getId());
+            setFreeTextMember(specimen.getExistingObs(), getSpecimenId(), specimen.getId());
             specimen.getExistingObs().addGroupMember(specimen.getAdditionalAttributes());
+            specimen.getExistingObs().addGroupMember(specimen.getReports());
             return specimen.getExistingObs();
         }else{
             Obs specimenSource = buildObsFor(getSpecimenSource(), specimen.getType(), null);
@@ -82,6 +83,7 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
             obs.addGroupMember(dateCollected);
             obs.addGroupMember(specimenId);
             obs.addGroupMember(specimen.getAdditionalAttributes());
+            obs.addGroupMember(specimen.getReports());
             return obs;
         }
     }

@@ -12,7 +12,7 @@ public class Specimen {
     private String id;
     private Concept type;
     private Obs additionalAttributes;
-    private List<TestReport> reports;
+    private Obs reports;
 
     public String getId() {
         return id;
@@ -54,11 +54,11 @@ public class Specimen {
         this.additionalAttributes = additionalAttributes;
     }
 
-    public List<TestReport> getReports() {
+    public Obs getReports() {
         return reports;
     }
 
-    public void setReports(List<TestReport> reports) {
+    public void setReports(Obs reports) {
         this.reports = reports;
     }
 

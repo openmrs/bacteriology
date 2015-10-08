@@ -128,6 +128,47 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         assertEquals("test", chiefComplaintData.getValueText());
     }
 
+    @Test
+    public void ensureEncounterIsUpdatedWithAdditionalAttributesAndReports() throws Exception{
+        Encounter encounter = encounterService.getEncounter(3);
+
+        Resource etRequest = new ClassPathResource("encounterTransactionWithAdditionalAttrAndReports.json");
+        EncounterTransaction encounterTransaction = new ObjectMapper().readValue(etRequest.getInputStream(), EncounterTransaction.class);
+        bacteriologyService.updateEncounter(encounter, encounterTransaction);
+
+        Obs specimenObs = findMember(encounter.getObsAtTopLevel(false), getConcept(BacteriologyConcepts.BACTERIOLOGY_CONCEPT_SET));
+        assertNotNull(specimenObs);
+
+        Obs specimenId = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_ID_CODE));
+        assertNotNull(specimenId);
+        assertEquals("SAMP1234", specimenId.getValueText());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Obs specimenDateCollected = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_COLLECTION_DATE));
+        assertNotNull(specimenDateCollected);
+        assertEquals("2015-09-18", sdf.format(specimenDateCollected.getValueDate()));
+
+        Obs specimenSource = findMember(specimenObs.getGroupMembers(),getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
+        assertNotNull(specimenSource);
+        assertNotNull(specimenSource.getValueCoded());
+        assertEquals(getConcept("URINE"), specimenSource.getValueCoded());
+
+        Obs historyAndExamination = findMember(specimenObs.getGroupMembers(),getConcept("History and Examination"));
+        assertNotNull(historyAndExamination);
+
+        Obs chiefComplaintData = findMember(historyAndExamination.getGroupMembers(),getConcept("Chief Complaint Notes"));
+        assertNotNull(chiefComplaintData);
+        assertEquals("test", chiefComplaintData.getValueText());
+
+//        Obs vitals = findMember(specimenObs.getGroupMembers(),getConcept("Vitals"));
+//        assertNotNull(vitals);
+//
+//        Obs height = findMember(vitals.getGroupMembers(),getConcept("HEIGHT"));
+//        assertNotNull(height);
+//        assertEquals("170", height.getValueText());
+    }
+
     private Concept getConcept(String name){
         Concept concept = conceptService.getConceptByName(name);
         return new HibernateLazyLoader().load(concept);

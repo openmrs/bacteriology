@@ -107,7 +107,7 @@ public class SpecimenMetadataDescriptorTest {
     }
 
     @Test
-    public void buildSpecimenObsWithoutAdditionalAttributes(){
+    public void buildSpecimenObsWithoutAdditionalAttributesAndReports(){
         Date dateCollected = new Date();
 
         Specimen specimen = new Specimen();
@@ -116,6 +116,7 @@ public class SpecimenMetadataDescriptorTest {
         specimen.setDateCollected(dateCollected);
         specimen.setAdditionalAttributes(null);
         specimen.setExistingObs(null);
+        specimen.setReports(null);
 
         Obs specimenObs = metadataDescriptor.buildObsGroup(specimen);
         assertEquals(specimenConstruct, specimenObs.getConcept());
@@ -126,6 +127,42 @@ public class SpecimenMetadataDescriptorTest {
         Obs specId = getObsWithConcept(childObs, specimenId);
         Assert.assertNotNull(specId);
         Assert.assertEquals("id", specId.getValueText());
+    }
+
+    @Test
+    public void buildSpecimenObsWithReports(){
+        Date dateCollected = new Date();
+
+        Specimen specimen = new Specimen();
+        specimen.setId("latestid");
+        specimen.setType(sputum);
+        specimen.setDateCollected(dateCollected);
+        specimen.setReports(setupAdditionalAttributes());
+        specimen.setExistingObs(getExistingObsInDb());
+
+        Obs specimenObs = metadataDescriptor.buildObsGroup(specimen);
+        assertEquals(specimenConstruct, specimenObs.getConcept());
+        Set<Obs> childObs = specimenObs.getGroupMembers();
+
+        Obs dateCollectedObs = getObsWithConcept(childObs, specimenDateCollected);
+        Assert.assertNotNull(dateCollectedObs);
+        Assert.assertEquals(dateCollected, dateCollectedObs.getValueDate());
+
+        Obs specId = getObsWithConcept(childObs,specimenId);
+        Assert.assertNotNull(specId);
+        Assert.assertEquals("latestid", specId.getValueText()); //id is modified from what is being setup
+
+        Obs additonalAttributes = getObsWithConcept(childObs, extraAttributes);
+        Assert.assertNotNull(additonalAttributes);
+
+        Obs labNameObs = getObsWithConcept(additonalAttributes.getGroupMembers(), labName);
+        Assert.assertNotNull(labNameObs);
+        Assert.assertEquals("Some Lab Name", labNameObs.getValueText());
+
+        Obs typeOfVisitObs = getObsWithConcept(additonalAttributes.getGroupMembers(),typeOfVisit);
+        Assert.assertNotNull(typeOfVisitObs);
+        Assert.assertEquals("Scheduled",typeOfVisitObs.getValueText());
+
     }
 
 
