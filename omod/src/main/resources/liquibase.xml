@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="BACT-08102015044642" author="Hemanth">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM concept_class where name = 'Bacteriology Attributes';
+            </sqlCheck>
+        </preConditions>
+        <comment>Creating a Bacteriology attributes concept class</comment>
+        <sql>
+            set @uuid = '';
+            set @date = '';
+            select uuid() into @uuid;
+            select curdate() into @date;
+            insert into concept_class (name, description, creator, date_created, retired, uuid)
+            values ('Bacteriology Attributes', 'Bacteriology Attributes Concept Class', 1, @date, 0, @uuid);
+        </sql>
+    </changeSet>
+
+    <changeSet id="BACT-08102015045449" author="Hemanth">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM concept_class where name = 'Bacteriology Results';
+            </sqlCheck>
+        </preConditions>
+        <comment>Creating a Bacteriology Results concept class</comment>
+        <sql>
+            set @uuid = '';
+            set @date = '';
+            select uuid() into @uuid;
+            select curdate() into @date;
+            insert into concept_class (name, description, creator, date_created, retired, uuid)
+            values ('Bacteriology Results', 'Bacteriology Results Concept Class', 1, @date, 0, @uuid);
+        </sql>
+    </changeSet>
+
+    <changeSet id="BACT-08102015054945" author="Hemanth">
+        <comment>Insert concept reference source for CEIL concepts</comment>
+        <sql>
+            set @uuid = '';
+            set @date = '';
+            select uuid() into @uuid;
+            select curdate() into @date;
+
+            insert into concept_reference_source (name, description, hl7_code, creator, date_created, uuid)
+            values('CEIL', 'CEIL Bacteriology concept source', 'CEIL', 1, @date, @uuid);
+        </sql>
+    </changeSet>
+
+    <changeSet id="BACT-08102015054956" author="Hemanth">
+        <comment>Insert concept reference source for org.openmrs.module.bacteriology concepts</comment>
+        <sql>
+            set @uuid = '';
+            set @date = '';
+            select uuid() into @uuid;
+            select curdate() into @date;
+
+            insert into concept_reference_source (name, description, hl7_code, creator, date_created, uuid)
+            values('org.openmrs.module.bacteriology', 'concept source for bacteriology module', 'BACT', 1, @date, @uuid);
+        </sql>
+    </changeSet>
+
+    <changeSet id="BACT-08102015055156" author="Hemanth">
+        <comment>Adding reference term for ceil concept source</comment>
+        <sql>
+            set @uuid = '';
+            set @date = '';
+            set @source_id = 0;
+            select curdate() into @date;
+
+            select concept_source_id from concept_reference_source where name='CEIL' into @source_id;
+
+            select uuid() into @uuid;
+            insert into concept_reference_term(concept_source_id, name, code, description, creator, date_created, uuid)
+            values(@source_id, 'SPECIMEN ID', '159968', 'Specimen Id', 1, @date, @uuid);
+
+            select uuid() into @uuid;
+            insert into concept_reference_term(concept_source_id, name, code, description, creator, date_created, uuid)
+            values(@source_id, 'SPECIMEN COLLECTION DATE', '159951', 'Specimen Collection Date', 1, @date, @uuid);
+
+            select uuid() into @uuid;
+            insert into concept_reference_term(concept_source_id, name, code, description, creator, date_created, uuid)
+            values(@source_id, 'SPECIMEN SAMPLE SOURCE', '159959', 'Specimen Sample Source', 1, @date, @uuid);
+        </sql>
+    </changeSet>
+
+    <changeSet id="BACT-08102015063652" author="Hemanth">
+        <comment>Adding reference term for org.openmrs.module.bacteriology concept source</comment>
+        <sql>
+            set @uuid = '';
+            set @date = '';
+            set @source_id = 0;
+            select curdate() into @date;
+
+            select concept_source_id from concept_reference_source where name='org.openmrs.module.bacteriology' into
+            @source_id;
+
+            select uuid() into @uuid;
+            insert into concept_reference_term(concept_source_id, name, code, description, creator, date_created, uuid)
+            values(@source_id, 'SPECIMEN ID', 'SPECIMEN_ID', 'Specimen Id', 1, @date, @uuid);
+
+            select uuid() into @uuid;
+            insert into concept_reference_term(concept_source_id, name, code, description, creator, date_created, uuid)
+            values(@source_id, 'SPECIMEN COLLECTION DATE', 'SPECIMEN_COLLECTION_DATE', 'Specimen Collection Date', 1,
+            @date, @uuid);
+
+            select uuid() into @uuid;
+            insert into concept_reference_term(concept_source_id, name, code, description, creator, date_created, uuid)
+            values(@source_id, 'SPECIMEN SAMPLE SOURCE', 'SPECIMEN_SAMPLE_SOURCE', 'Specimen Sample Source', 1, @date,
+            @uuid);
+
+            select uuid() into @uuid;
+            insert into concept_reference_term(concept_source_id, name, code, description, creator, date_created, uuid)
+            values(@source_id, 'BACTERIOLOGY CONCEPT SET', 'BACTERIOLOGY_CONCEPT_SET', 'Bacteriology Concept Set', 1,
+            @date, @uuid);
+        </sql>
+    </changeSet>
+
+    <changeSet id="BACT-08102015071559" author="Hemanth">
+        <comment>creating specimen sample source</comment>
+        <sql>
+            set @concept_id = 0;
+            set @concept_name_short_id = 0;
+            set @concept_name_full_id = 0;
+            set @concept_map_type_id = 0;
+            set @ceil_concept_reference_term_id = 0;
+            set @bacteriology_concept_reference_term_id = 0;
+            set @uuid = '';
+            set @date = '';
+            select curdate() into @date;
+
+            select concept_map_type_id from concept_map_type where name='SAME-AS' into @concept_map_type_id;
+
+            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'BACTERIOLOGY CONCEPT SET', 'Bacteriology Concept Set', 'N/A', 'Misc', true);
+            set @set_concept_id = @concept_id;
+
+            select concept_reference_term_id from concept_reference_term where code='BACTERIOLOGY_CONCEPT_SET' into @bacteriology_concept_reference_term_id;
+            select uuid() into @uuid;
+            insert into concept_reference_map (concept_reference_term_id, concept_map_type_id, concept_id, date_created, creator, uuid)
+                values (@bacteriology_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
+
+
+            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Collection Date', 'Collection Date', 'Date', 'Misc', false);
+            call add_concept_set_members (@set_concept_id,@concept_id,1);
+
+            select concept_reference_term_id from concept_reference_term where code='159951' into @ceil_concept_reference_term_id;
+            select concept_reference_term_id from concept_reference_term where code='SPECIMEN_COLLECTION_DATE' into @bacteriology_concept_reference_term_id;
+            select uuid() into @uuid;
+            insert into concept_reference_map (concept_reference_term_id, concept_map_type_id, concept_id, date_created, creator, uuid)
+                values (@ceil_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
+            select uuid() into @uuid;
+            insert into concept_reference_map (concept_reference_term_id, concept_map_type_id, concept_id, date_created, creator, uuid)
+                values (@bacteriology_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
+
+            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Sample Source', 'Sample Source', 'Coded', 'Misc', false);
+            call add_concept_set_members (@set_concept_id,@concept_id,2);
+
+            select concept_reference_term_id from concept_reference_term where code='159959' into @ceil_concept_reference_term_id;
+            select concept_reference_term_id from concept_reference_term where code='SPECIMEN_SAMPLE_SOURCE' into @bacteriology_concept_reference_term_id;
+            select uuid() into @uuid;
+            insert into concept_reference_map (concept_reference_term_id, concept_map_type_id, concept_id, date_created, creator, uuid)
+                values (@ceil_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
+            select uuid() into @uuid;
+            insert into concept_reference_map (concept_reference_term_id, concept_map_type_id, concept_id, date_created, creator, uuid)
+                values (@bacteriology_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
+
+            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Id', 'Id', 'Text', 'Specimen', false);
+            call add_concept_set_members (@set_concept_id,@concept_id,3);
+
+            select concept_reference_term_id from concept_reference_term where code='159968' into @ceil_concept_reference_term_id;
+            select concept_reference_term_id from concept_reference_term where code='SPECIMEN_ID' into @bacteriology_concept_reference_term_id;
+            select uuid() into @uuid;
+            insert into concept_reference_map (concept_reference_term_id, concept_map_type_id, concept_id, date_created, creator, uuid)
+                values (@ceil_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
+            select uuid() into @uuid;
+            insert into concept_reference_map (concept_reference_term_id, concept_map_type_id, concept_id, date_created, creator, uuid)
+                values (@bacteriology_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
+
+            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Bacteriology Additional Attributes', 'Additional Attributes', 'N/A', 'Bacteriology Attributes', true);
+            call add_concept_set_members (@set_concept_id,@concept_id,4);
+
+            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Bacteriology Results', 'Results', 'N/A', 'Bacteriology Results', true);
+            call add_concept_set_members (@set_concept_id,@concept_id,5);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
