@@ -5,27 +5,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.MockSettings;
-import org.mockito.Mockito;
 import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.ConceptMap;
-import org.openmrs.ConceptReferenceTerm;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
-import org.openmrs.module.bacteriology.BacteriologyConstants;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SpecimenMetadataDescriptorTest {
@@ -46,7 +35,10 @@ public class SpecimenMetadataDescriptorTest {
     private Concept specimenSource;
 
     @Mock
-    private Concept extraAttributes;
+    private Concept specimenAdditionalAttributes;
+
+    @Mock
+    private Concept specimenTestResults;
 
     @Mock
     private Concept labName;
@@ -57,10 +49,13 @@ public class SpecimenMetadataDescriptorTest {
     @Mock
     private Concept sputum;
 
+    @Mock
+    private Concept tuberculosisSpecimenConstruct;
+
     private SpecimenMetadataDescriptor metadataDescriptor;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         initMocks(this);
 
         metadataDescriptor = new SpecimenMetadataDescriptor();
@@ -68,17 +63,19 @@ public class SpecimenMetadataDescriptorTest {
         metadataDescriptor.setSpecimenConstruct(specimenConstruct);
         metadataDescriptor.setSpecimenDateCollected(specimenDateCollected);
         metadataDescriptor.setSpecimenId(specimenId);
+        metadataDescriptor.setSpecimenAdditionalAttributes(specimenAdditionalAttributes);
+        metadataDescriptor.setSpecimenTestResults(specimenTestResults);
     }
 
     @Test
-    public void buildSpecimenObsWithoutAnyExistingObs(){
+    public void buildSpecimenObsWithoutAnyExistingObs() {
         Date dateCollected = new Date();
 
         Specimen specimen = new Specimen();
         specimen.setId("id");
         specimen.setType(sputum);
         specimen.setDateCollected(dateCollected);
-        specimen.setAdditionalAttributes(setupAdditionalAttributes());
+        specimen.setAdditionalAttributes(setupSpecimenAdditionalAttributes());
         specimen.setExistingObs(null);
 
         Obs specimenObs = metadataDescriptor.buildObsGroup(specimen);
@@ -89,25 +86,25 @@ public class SpecimenMetadataDescriptorTest {
         Assert.assertNotNull(dateCollectedObs);
         Assert.assertEquals(dateCollected, dateCollectedObs.getValueDate());
 
-        Obs specId = getObsWithConcept(childObs,specimenId);
+        Obs specId = getObsWithConcept(childObs, specimenId);
         Assert.assertNotNull(specId);
         Assert.assertEquals("id", specId.getValueText());
 
-        Obs additionalAttributes = getObsWithConcept(childObs,extraAttributes);
+        Obs additionalAttributes = getObsWithConcept(childObs, specimenAdditionalAttributes);
         Assert.assertNotNull(additionalAttributes);
 
-        Obs labNameObs = getObsWithConcept(additionalAttributes.getGroupMembers(),labName);
+        Obs labNameObs = getObsWithConcept(additionalAttributes.getGroupMembers(), labName);
         Assert.assertNotNull(labNameObs);
         Assert.assertEquals("Some Lab Name", labNameObs.getValueText());
 
-        Obs typeOfVisitObs = getObsWithConcept(additionalAttributes.getGroupMembers(),typeOfVisit);
+        Obs typeOfVisitObs = getObsWithConcept(additionalAttributes.getGroupMembers(), typeOfVisit);
         Assert.assertNotNull(typeOfVisitObs);
-        Assert.assertEquals("Scheduled",typeOfVisitObs.getValueText());
+        Assert.assertEquals("Scheduled", typeOfVisitObs.getValueText());
 
     }
 
     @Test
-    public void buildSpecimenObsWithoutAdditionalAttributesAndReports(){
+    public void buildSpecimenObsWithoutAdditionalAttributesAndReports() {
         Date dateCollected = new Date();
 
         Specimen specimen = new Specimen();
@@ -130,14 +127,14 @@ public class SpecimenMetadataDescriptorTest {
     }
 
     @Test
-    public void buildSpecimenObsWithReports(){
+    public void buildSpecimenObsWithReports() {
         Date dateCollected = new Date();
 
         Specimen specimen = new Specimen();
         specimen.setId("latestid");
         specimen.setType(sputum);
         specimen.setDateCollected(dateCollected);
-        specimen.setReports(setupAdditionalAttributes());
+        specimen.setReports(setupSpecimenAdditionalAttributes());
         specimen.setExistingObs(getExistingObsInDb());
 
         Obs specimenObs = metadataDescriptor.buildObsGroup(specimen);
@@ -148,33 +145,33 @@ public class SpecimenMetadataDescriptorTest {
         Assert.assertNotNull(dateCollectedObs);
         Assert.assertEquals(dateCollected, dateCollectedObs.getValueDate());
 
-        Obs specId = getObsWithConcept(childObs,specimenId);
+        Obs specId = getObsWithConcept(childObs, specimenId);
         Assert.assertNotNull(specId);
         Assert.assertEquals("latestid", specId.getValueText()); //id is modified from what is being setup
 
-        Obs additonalAttributes = getObsWithConcept(childObs, extraAttributes);
+        Obs additonalAttributes = getObsWithConcept(childObs, specimenAdditionalAttributes);
         Assert.assertNotNull(additonalAttributes);
 
         Obs labNameObs = getObsWithConcept(additonalAttributes.getGroupMembers(), labName);
         Assert.assertNotNull(labNameObs);
         Assert.assertEquals("Some Lab Name", labNameObs.getValueText());
 
-        Obs typeOfVisitObs = getObsWithConcept(additonalAttributes.getGroupMembers(),typeOfVisit);
+        Obs typeOfVisitObs = getObsWithConcept(additonalAttributes.getGroupMembers(), typeOfVisit);
         Assert.assertNotNull(typeOfVisitObs);
-        Assert.assertEquals("Scheduled",typeOfVisitObs.getValueText());
+        Assert.assertEquals("Scheduled", typeOfVisitObs.getValueText());
 
     }
 
 
     @Test
-    public void buildSpecimenObsWithSomeExistingObs(){
+    public void buildSpecimenObsWithSomeExistingObs() {
         Date dateCollected = new Date();
 
         Specimen specimen = new Specimen();
         specimen.setId("latestid");
         specimen.setType(sputum);
         specimen.setDateCollected(dateCollected);
-        specimen.setAdditionalAttributes(setupAdditionalAttributes());
+        specimen.setAdditionalAttributes(setupSpecimenAdditionalAttributes());
         specimen.setExistingObs(getExistingObsInDb());
 
         Obs specimenObs = metadataDescriptor.buildObsGroup(specimen);
@@ -185,40 +182,65 @@ public class SpecimenMetadataDescriptorTest {
         Assert.assertNotNull(dateCollectedObs);
         Assert.assertEquals(dateCollected, dateCollectedObs.getValueDate());
 
-        Obs specId = getObsWithConcept(childObs,specimenId);
+        Obs specId = getObsWithConcept(childObs, specimenId);
         Assert.assertNotNull(specId);
         Assert.assertEquals("latestid", specId.getValueText()); //id is modified from what is being setup
 
-        Obs additonalAttributes = getObsWithConcept(childObs, extraAttributes);
+        Obs additonalAttributes = getObsWithConcept(childObs, specimenAdditionalAttributes);
         Assert.assertNotNull(additonalAttributes);
 
         Obs labNameObs = getObsWithConcept(additonalAttributes.getGroupMembers(), labName);
         Assert.assertNotNull(labNameObs);
         Assert.assertEquals("Some Lab Name", labNameObs.getValueText());
 
-        Obs typeOfVisitObs = getObsWithConcept(additonalAttributes.getGroupMembers(),typeOfVisit);
+        Obs typeOfVisitObs = getObsWithConcept(additonalAttributes.getGroupMembers(), typeOfVisit);
         Assert.assertNotNull(typeOfVisitObs);
-        Assert.assertEquals("Scheduled",typeOfVisitObs.getValueText());
+        Assert.assertEquals("Scheduled", typeOfVisitObs.getValueText());
 
     }
 
 
-    private Obs getObsWithConcept(Set<Obs> allObs, Concept concept){
-        for(Obs obs: allObs){
-            if(obs.getConcept().equals(concept))
+    @Test
+    public void buildSpecimenUsingObsGroup() {
+        Obs obsGroup = new Obs();
+        obsGroup.setConcept(tuberculosisSpecimenConstruct);
+        Obs idObs = new Obs();
+        idObs.setConcept(specimenId);
+        idObs.setValueText("123");
+        obsGroup.addGroupMember(idObs);
+        Obs dateCollectedObs = new Obs();
+        dateCollectedObs.setConcept(specimenDateCollected);
+        dateCollectedObs.setValueDatetime(new Date());
+        obsGroup.addGroupMember(dateCollectedObs);
+        Obs additionalAttributes = new Obs();
+        additionalAttributes.setConcept(specimenAdditionalAttributes);
+        obsGroup.addGroupMember(additionalAttributes);
+        Specimen specimen = metadataDescriptor.buildSpecimen(obsGroup);
+
+
+        assertEquals(specimen.getId(), idObs.getValueText());
+        assertEquals(specimen.getAdditionalAttributes(), additionalAttributes);
+        assertEquals(specimen.getDateCollected(), dateCollectedObs.getValueDatetime());
+
+    }
+
+
+    private Obs getObsWithConcept(Set<Obs> allObs, Concept concept) {
+        for (Obs obs : allObs) {
+            if (obs.getConcept().equals(concept))
                 return obs;
         }
         return null;
     }
 
-    private Obs getExistingObsInDb(){
+    private Obs getExistingObsInDb() {
         Obs obs = createObs(specimenConstruct, "");
-        obs.addGroupMember(createObs(specimenId,"initialId"));
-        obs.addGroupMember(createObs(specimenSource,sputum));
+        obs.addGroupMember(createObs(specimenId, "initialId"));
+        obs.addGroupMember(createObs(specimenSource, sputum));
         return obs;
     }
 
-    private Obs createObs(Concept concept, String value){
+    private Obs createObs(Concept concept, String value) {
         Obs obs = new Obs();
         obs.setId(RandomUtils.nextInt());
         obs.setUuid(UUID.randomUUID().toString());
@@ -227,7 +249,7 @@ public class SpecimenMetadataDescriptorTest {
         return obs;
     }
 
-    private Obs createObs(Concept concept, Concept value){
+    private Obs createObs(Concept concept, Concept value) {
         Obs obs = new Obs();
         obs.setId(RandomUtils.nextInt());
         obs.setUuid(UUID.randomUUID().toString());
@@ -237,7 +259,7 @@ public class SpecimenMetadataDescriptorTest {
     }
 
 
-    private Obs setupAdditionalAttributes(){
+    private Obs setupSpecimenAdditionalAttributes() {
         Obs labNameObs = new Obs();
         labNameObs.setConcept(labName);
         labNameObs.setValueText("Some Lab Name");
@@ -247,7 +269,7 @@ public class SpecimenMetadataDescriptorTest {
         typeOfVisitObs.setValueText("Scheduled");
 
         Obs obsGroup = new Obs();
-        obsGroup.setConcept(extraAttributes);
+        obsGroup.setConcept(specimenAdditionalAttributes);
         obsGroup.addGroupMember(labNameObs);
         obsGroup.addGroupMember(typeOfVisitObs);
 

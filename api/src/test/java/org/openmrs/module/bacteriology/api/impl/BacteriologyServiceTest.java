@@ -8,11 +8,14 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.bacteriology.api.BacteriologyService;
 import org.openmrs.module.bacteriology.api.BacteriologyConcepts;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.emrapi.utils.HibernateLazyLoader;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -25,7 +28,6 @@ import static org.junit.Assert.assertNotNull;
 
 public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
 
-    @Autowired
     private BacteriologyService bacteriologyService;
 
     @Autowired
@@ -38,6 +40,7 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
     public void setup() throws Exception {
         executeDataSet("baseBacteriologyData.xml");
         executeDataSet("specimenTestData.xml");
+        bacteriologyService =  Context.getService(BacteriologyService.class);
     }
 
     @Test
@@ -184,4 +187,6 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         }
         return null;
     }
+
+
 }

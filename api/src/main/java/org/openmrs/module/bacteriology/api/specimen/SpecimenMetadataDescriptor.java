@@ -1,10 +1,6 @@
 package org.openmrs.module.bacteriology.api.specimen;
 
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.ConceptMap;
-import org.openmrs.ConceptReferenceTerm;
-import org.openmrs.Obs;
+import org.openmrs.*;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.bacteriology.BacteriologyConstants;
 import org.openmrs.module.bacteriology.api.BacteriologyConcepts;
@@ -13,12 +9,15 @@ import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptorField;
 import org.openmrs.util.OpenmrsUtil;
 
 import java.util.Date;
+import java.util.List;
 
 public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     private Concept specimenId;
-    private Concept specimenSource;//TYPE
+    private Concept specimenSource;
     private Concept specimenDateCollected;
     private Concept specimenConstruct;
+    private Concept specimenAdditionalAttributes;
+    private Concept specimenTestResults;
 
     public SpecimenMetadataDescriptor(ConceptService conceptService) {
         setup(conceptService, BacteriologyConstants.BACTERIOLOGY_CONCEPT_SOURCE,
@@ -26,9 +25,14 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
                 ConceptSetDescriptorField.optional("specimenId", BacteriologyConcepts.SPECIMEN_ID_CODE),
                 ConceptSetDescriptorField.required("specimenSource", BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE),
                 ConceptSetDescriptorField.required("specimenDateCollected", BacteriologyConcepts.SPECIMEN_COLLECTION_DATE));
+
+        setSpecimenAdditionalAttributes(getConceptByClass(conceptService,BacteriologyConstants.BACTERIOLOGY_ATTRIBUTES_CONCEPT_CLASS));
+        setSpecimenTestResults(getConceptByClass(conceptService,BacteriologyConstants.BACTERIOLOGY_RESULTS_CONCEPT_CLASS));
     }
 
-    public SpecimenMetadataDescriptor(){}
+
+    public SpecimenMetadataDescriptor() {
+    }
 
     public void setSpecimenId(Concept specimenId) {
         this.specimenId = specimenId;
@@ -44,6 +48,10 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
 
     public void setSpecimenConstruct(Concept specimenConstruct) {
         this.specimenConstruct = specimenConstruct;
+    }
+
+    public void setSpecimenAdditionalAttributes(Concept specimenAdditionalAttributes) {
+        this.specimenAdditionalAttributes = specimenAdditionalAttributes;
     }
 
     public Concept getSpecimenDateCollected() {
@@ -62,30 +70,58 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         return specimenSource;
     }
 
+
+    public Concept getSpecimenAdditionalAttributes() {
+        return specimenAdditionalAttributes;
+    }
+
+    public Concept getSpecimenTestResults() {
+        return specimenTestResults;
+    }
+
+    public void setSpecimenTestResults(Concept specimenTestResults) {
+        this.specimenTestResults = specimenTestResults;
+    }
+
     public Obs buildObsGroup(Specimen specimen) {
         //TODO: Add liquibase migration for the pre-defined concepts.
 
-        if(specimen.getExistingObs()!=null){
+        if (specimen.getExistingObs() != null) {
             setCodedMember(specimen.getExistingObs(), getSpecimenSource(), specimen.getType(), null);
             setFreeTextMember(specimen.getExistingObs(), getSpecimenDateCollected(), specimen.getDateCollected());
             setFreeTextMember(specimen.getExistingObs(), getSpecimenId(), specimen.getId());
             specimen.getExistingObs().addGroupMember(specimen.getAdditionalAttributes());
             specimen.getExistingObs().addGroupMember(specimen.getReports());
             return specimen.getExistingObs();
-        }else{
+        } else {
             Obs specimenSource = buildObsFor(getSpecimenSource(), specimen.getType(), null);
             Obs dateCollected = buildObsFor(getSpecimenDateCollected(), specimen.getDateCollected());
-            Obs specimenId = buildObsFor(getSpecimenId(),specimen.getId());
+            Obs specimenId = buildObsFor(getSpecimenId(), specimen.getId());
+            Obs additionalAttributes = specimen.getAdditionalAttributes();
 
             Obs obs = new Obs();
             obs.setConcept(getSpecimenConstruct());
             obs.addGroupMember(specimenSource);
             obs.addGroupMember(dateCollected);
             obs.addGroupMember(specimenId);
-            obs.addGroupMember(specimen.getAdditionalAttributes());
             obs.addGroupMember(specimen.getReports());
+            obs.addGroupMember(additionalAttributes);
             return obs;
         }
+    }
+
+    public Specimen buildSpecimen(Obs obsGroup) {
+        Specimen specimen = new Specimen();
+        specimen.setExistingObs(obsGroup);
+        specimen.setUuid(obsGroup.getUuid());
+        specimen.setDateCollected(findMember(obsGroup, getSpecimenDateCollected()).getValueDate());
+        specimen.setId(findMember(obsGroup, getSpecimenId()).getValueText());
+
+        if (getSpecimenAdditionalAttributes() != null) {
+            specimen.setAdditionalAttributes(findMember(obsGroup, getSpecimenAdditionalAttributes()));
+        }
+
+        return specimen;
     }
 
     private void setFreeTextMember(Obs obsGroup, Concept memberConcept, Date memberAnswer) {
@@ -152,5 +188,14 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         return false;
     }
 
-
+    private Concept getConceptByClass(ConceptService conceptService, String conceptClassName) {
+        ConceptClass conceptClass = conceptService.getConceptClassByName(conceptClassName);
+        List<Concept> children = specimenConstruct.getSetMembers();
+        for (Concept child : children) {
+            if (child.getConceptClass().equals(conceptClass)) {
+                return child;
+            }
+        }
+        return null;
+    }
 }

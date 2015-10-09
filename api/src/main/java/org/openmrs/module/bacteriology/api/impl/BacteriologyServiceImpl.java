@@ -33,7 +33,6 @@ import java.util.List;
 /**
  * It is a default implementation of {@link BacteriologyService}.
  */
-@Component
 public class BacteriologyServiceImpl extends BaseOpenmrsService implements BacteriologyService {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
@@ -74,4 +73,10 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
             encounter.addObs(bacteriologyObs);
         }
     }
+
+    @Override
+    public org.openmrs.module.bacteriology.api.specimen.Specimen getSpecimenFromObs(Obs obsGroup){
+        return bacteriologyProperties.getSpecimenMetadata().buildSpecimen(obsGroup);
+    }
+
 }

@@ -9,13 +9,16 @@
 	<name>Bacteriology Module</name>
 	<description>Helps to start writing OpenMRS modules</description>
 	<url>https://wiki.openmrs.org/display/docs/Bacteriology+Module+Module</url>
-	
-	<developers>
-		<developer>
-			<name>bharatak</name>
-		</developer>
-	</developers>
-	
+
+	<properties>
+		<openMRSWebServicesVersion>2.12</openMRSWebServicesVersion>
+		<reportingModuleVersion>0.9.1</reportingModuleVersion>
+		<openMRSVersion>1.10.0</openMRSVersion>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<calculationModuleVersion>1.1</calculationModuleVersion>
+		<serializationXstreamModuleVersion>0.2.7</serializationXstreamModuleVersion>
+	</properties>
+
 	<organization>
 		<name>OpenMRS</name>
 		<url>http://openmrs.org</url>
@@ -31,14 +34,6 @@
 		<module>api</module>
 		<module>omod</module>
 	</modules>
-	
-	<properties>
-		<openMRSVersion>1.10.0</openMRSVersion>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <reportingModuleVersion>0.9.1</reportingModuleVersion>
-        <calculationModuleVersion>1.1</calculationModuleVersion>
-        <serializationXstreamModuleVersion>0.2.7</serializationXstreamModuleVersion>
-    </properties>
 
 	<dependencyManagement>
 		<dependencies>
@@ -112,6 +107,23 @@
 
 			<!-- End OpenMRS core -->
 
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>webservices.rest-omod</artifactId>
+				<version>${openMRSWebServicesVersion}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>webservices.rest-omod-common</artifactId>
+				<version>${openMRSWebServicesVersion}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
             <!-- test dependencies -->
             <dependency>
                 <groupId>org.openmrs.module</groupId>
@@ -137,9 +149,7 @@
                 <version>1.1.3</version>
                 <scope>test</scope>
             </dependency>
-
-
-        </dependencies>
+		</dependencies>
 	</dependencyManagement>
 
 	<build>

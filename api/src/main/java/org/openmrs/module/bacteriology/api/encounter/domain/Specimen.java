@@ -23,6 +23,16 @@ public class Specimen {
 
     private String existingObs;
 
+    private String uuid;
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     public Sample getSample() {
         return sample;
     }

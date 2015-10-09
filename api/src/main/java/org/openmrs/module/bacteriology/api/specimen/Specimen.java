@@ -7,12 +7,21 @@ import java.util.Date;
 import java.util.List;
 
 public class Specimen {
+    private String uuid;
     private Obs existingObs;
     private Date dateCollected;
     private String id;
     private Concept type;
     private Obs additionalAttributes;
     private Obs reports;
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public String getId() {
         return id;
