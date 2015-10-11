@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class BacteriologyPostProcessor implements EncounterUpdatePostProcessor {
 
-    private BacteriologyService bacteriologyService;
-
     public BacteriologyPostProcessor(){
     }
 

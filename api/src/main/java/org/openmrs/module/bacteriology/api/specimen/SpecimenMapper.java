@@ -6,6 +6,7 @@ import org.openmrs.ConceptName;
 import org.openmrs.Encounter;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.ObsService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.emrapi.encounter.ConceptMapper;
 import org.openmrs.module.emrapi.encounter.EncounterObservationServiceHelper;
 import org.openmrs.module.emrapi.encounter.ObservationMapper;
@@ -104,7 +105,7 @@ public class SpecimenMapper {
 
     public org.openmrs.module.bacteriology.api.encounter.domain.Specimen createDomainSpecimen(Specimen specimen) {
         org.openmrs.module.bacteriology.api.encounter.domain.Specimen domainSpecimen = new org.openmrs.module.bacteriology.api.encounter.domain.Specimen();
-//        validate(specimen);
+        validate(specimen);
 
         domainSpecimen.setIdentifier(specimen.getId());
         domainSpecimen.setDateCollected(specimen.getDateCollected());
@@ -119,11 +120,12 @@ public class SpecimenMapper {
             domainSpecimen.getSample().setAdditionalAttributes(observationMapper.map(specimen.getAdditionalAttributes()));
         }
         if (specimen.getType() != null) {
+            ConceptMapper conceptMapper = new ConceptMapper();
             domainSpecimen.setType(conceptMapper.map(specimen.getType()));
         }
 
         if (specimen.getReports() != null) {
-//            domainSpecimen.setReport(new org.openmrs.module.bacteriology.api.encounter.domain.Specimen.TestReport());
+            domainSpecimen.setReport(new org.openmrs.module.bacteriology.api.encounter.domain.Specimen.TestReport());
             domainSpecimen.getReport().setResults(observationMapper.map(specimen.getReports()));
         }
         return domainSpecimen;

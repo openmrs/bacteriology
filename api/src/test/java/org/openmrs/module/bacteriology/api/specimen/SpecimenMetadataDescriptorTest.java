@@ -215,6 +215,10 @@ public class SpecimenMetadataDescriptorTest {
         Obs additionalAttributes = new Obs();
         additionalAttributes.setConcept(specimenAdditionalAttributes);
         obsGroup.addGroupMember(additionalAttributes);
+        Obs specimenTypeObs = new Obs();
+        specimenTypeObs.setConcept(specimenSource);
+        specimenTypeObs.setValueCoded(sputum);
+        obsGroup.addGroupMember(specimenTypeObs);
         Specimen specimen = metadataDescriptor.buildSpecimen(obsGroup);
 
 

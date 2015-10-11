@@ -26,8 +26,8 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
                 ConceptSetDescriptorField.required("specimenSource", BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE),
                 ConceptSetDescriptorField.required("specimenDateCollected", BacteriologyConcepts.SPECIMEN_COLLECTION_DATE));
 
-        setSpecimenAdditionalAttributes(getConceptByClass(conceptService,BacteriologyConstants.BACTERIOLOGY_ATTRIBUTES_CONCEPT_CLASS));
-        setSpecimenTestResults(getConceptByClass(conceptService,BacteriologyConstants.BACTERIOLOGY_RESULTS_CONCEPT_CLASS));
+        setSpecimenAdditionalAttributes(getConceptByClass(conceptService, BacteriologyConstants.BACTERIOLOGY_ATTRIBUTES_CONCEPT_CLASS));
+        setSpecimenTestResults(getConceptByClass(conceptService, BacteriologyConstants.BACTERIOLOGY_RESULTS_CONCEPT_CLASS));
     }
 
 
@@ -116,6 +116,9 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         specimen.setUuid(obsGroup.getUuid());
         specimen.setDateCollected(findMember(obsGroup, getSpecimenDateCollected()).getValueDate());
         specimen.setId(findMember(obsGroup, getSpecimenId()).getValueText());
+        if (getSpecimenSource() != null) {
+            specimen.setType(findMember(obsGroup, getSpecimenSource()).getValueCoded());
+        }
 
         if (getSpecimenAdditionalAttributes() != null) {
             specimen.setAdditionalAttributes(findMember(obsGroup, getSpecimenAdditionalAttributes()));

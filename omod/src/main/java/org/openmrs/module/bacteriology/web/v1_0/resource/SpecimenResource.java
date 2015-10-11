@@ -57,7 +57,7 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
             description.addProperty("identifier");
             description.addProperty("uuid");
             description.addProperty("existingObs",Representation.REF);
-//            description.addProperty("type");
+            description.addProperty("type");
             description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
             return description;
         } else if (rep instanceof FullRepresentation) {
@@ -65,8 +65,7 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
             description.addProperty("identifier");
             description.addProperty("uuid");
             description.addProperty("existingObs",Representation.REF);
-//            description.addProperty("type");
-//            description.addProperty("auditInfo", findMethod("getAuditInfo"));
+            description.addProperty("type");
             description.addSelfLink();
             return description;
 
