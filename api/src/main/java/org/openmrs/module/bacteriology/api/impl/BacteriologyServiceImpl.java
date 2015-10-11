@@ -18,6 +18,7 @@ import org.openmrs.Obs;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.module.bacteriology.BacteriologyConstants;
 import org.openmrs.module.bacteriology.BacteriologyProperties;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
 import org.openmrs.module.bacteriology.api.db.BacteriologyServiceDAO;
@@ -28,7 +29,10 @@ import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * It is a default implementation of {@link BacteriologyService}.
@@ -77,6 +81,20 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     @Override
     public org.openmrs.module.bacteriology.api.specimen.Specimen getSpecimenFromObs(Obs obsGroup){
         return bacteriologyProperties.getSpecimenMetadata().buildSpecimen(obsGroup);
+    }
+
+    @Override
+    public void updateEncounterTransaction(Encounter encounter, EncounterTransaction encounterTransaction) {
+        List<org.openmrs.module.bacteriology.api.specimen.Specimen> bacteriologySpecimenList =  bacteriologyProperties.getSpecimenMetadata().getSpecimenFromObs(encounter.getObsAtTopLevel(false));
+
+        List<Specimen> specimens = new ArrayList<Specimen>();
+        for(org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen: bacteriologySpecimenList) {
+            specimens.add(specimenMapper.createDomainSpecimen(bacteriologySpecimen));
+        }
+
+        Map<String,Object> extensions = new HashMap<String, Object>();
+        extensions.put(BacteriologyConstants.BACTERIOLOGY_EXTENSION_KEY,specimens);
+        encounterTransaction.setExtensions(extensions);
     }
 
 }

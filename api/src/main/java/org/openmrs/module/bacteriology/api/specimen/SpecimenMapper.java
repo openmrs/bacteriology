@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
 import org.openmrs.Encounter;
+import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.context.Context;
@@ -105,6 +106,7 @@ public class SpecimenMapper {
 
     public org.openmrs.module.bacteriology.api.encounter.domain.Specimen createDomainSpecimen(Specimen specimen) {
         org.openmrs.module.bacteriology.api.encounter.domain.Specimen domainSpecimen = new org.openmrs.module.bacteriology.api.encounter.domain.Specimen();
+
         validate(specimen);
 
         domainSpecimen.setIdentifier(specimen.getId());

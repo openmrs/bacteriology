@@ -41,4 +41,5 @@ public interface BacteriologyService extends OpenmrsService {
 
 	Specimen getSpecimenFromObs(Obs obsGroup);
 
+	void updateEncounterTransaction(Encounter encounter, EncounterTransaction encounterTransaction);
 }

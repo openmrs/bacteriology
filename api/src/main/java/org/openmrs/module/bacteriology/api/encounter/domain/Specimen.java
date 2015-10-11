@@ -17,7 +17,7 @@ public class Specimen {
     @JsonSerialize(using = CustomJsonDateSerializer.class)
     private Date dateCollected;
 
-    private EncounterTransaction.Concept type;//TODO: change this to uuid.
+    private EncounterTransaction.Concept type;
 
     private String identifier;
 

@@ -8,8 +8,10 @@ import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptor;
 import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptorField;
 import org.openmrs.util.OpenmrsUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     private Concept specimenId;
@@ -84,8 +86,6 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     }
 
     public Obs buildObsGroup(Specimen specimen) {
-        //TODO: Add liquibase migration for the pre-defined concepts.
-
         if (specimen.getExistingObs() != null) {
             setCodedMember(specimen.getExistingObs(), getSpecimenSource(), specimen.getType(), null);
             setFreeTextMember(specimen.getExistingObs(), getSpecimenDateCollected(), specimen.getDateCollected());
@@ -110,7 +110,14 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         }
     }
 
+    public boolean isSpecimen(Obs obsGroup) {
+        return obsGroup.getConcept().equals(this.specimenConstruct);
+    }
+
     public Specimen buildSpecimen(Obs obsGroup) {
+        if(!isSpecimen(obsGroup))
+            return null;
+
         Specimen specimen = new Specimen();
         specimen.setExistingObs(obsGroup);
         specimen.setUuid(obsGroup.getUuid());
@@ -200,5 +207,17 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
             }
         }
         return null;
+    }
+
+    public List<Specimen> getSpecimenFromObs(Set<Obs> obsAtTopLevel) {
+
+        List<Specimen> specimens = new ArrayList<Specimen>();
+
+        for(Obs obs: obsAtTopLevel){
+            if(isSpecimen(obs)){
+                specimens.add(buildSpecimen(obs));
+            }
+        }
+        return specimens;
     }
 }
