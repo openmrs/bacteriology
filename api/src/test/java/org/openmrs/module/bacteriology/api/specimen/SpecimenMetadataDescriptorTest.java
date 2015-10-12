@@ -49,9 +49,6 @@ public class SpecimenMetadataDescriptorTest {
     @Mock
     private Concept sputum;
 
-    @Mock
-    private Concept tuberculosisSpecimenConstruct;
-
     private SpecimenMetadataDescriptor metadataDescriptor;
 
     @Before
@@ -203,7 +200,7 @@ public class SpecimenMetadataDescriptorTest {
     @Test
     public void buildSpecimenUsingObsGroup() {
         Obs obsGroup = new Obs();
-        obsGroup.setConcept(tuberculosisSpecimenConstruct);
+        obsGroup.setConcept(specimenConstruct);
         Obs idObs = new Obs();
         idObs.setConcept(specimenId);
         idObs.setValueText("123");
