@@ -13,7 +13,7 @@
 	<properties>
 		<openMRSWebServicesVersion>2.12</openMRSWebServicesVersion>
 		<reportingModuleVersion>0.9.1</reportingModuleVersion>
-		<openMRSVersion>1.10.0</openMRSVersion>
+		<openMRSVersion>1.11.4</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<calculationModuleVersion>1.1</calculationModuleVersion>
 		<serializationXstreamModuleVersion>0.2.7</serializationXstreamModuleVersion>

@@ -13,6 +13,7 @@ import org.openmrs.module.emrapi.encounter.EncounterObservationServiceHelper;
 import org.openmrs.module.emrapi.encounter.ObservationMapper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.emrapi.encounter.exception.ConceptNotFoundException;
+import org.openmrs.module.emrapi.encounter.mapper.ObsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class SpecimenMapper {
 
     @Autowired
-    private EncounterObservationServiceHelper encounterObservationServiceHelper;
+    private ObsMapper obsMapper;
 
     @Autowired
     private ConceptMapper conceptMapper;
@@ -34,12 +35,12 @@ public class SpecimenMapper {
     @Autowired
     private ConceptService conceptService;
 
-    public EncounterObservationServiceHelper getEncounterObservationServiceHelper() {
-        return encounterObservationServiceHelper;
+    public ObsMapper getObsMapper() {
+        return obsMapper;
     }
 
-    public void setEncounterObservationServiceHelper(EncounterObservationServiceHelper encounterObservationServiceHelper) {
-        this.encounterObservationServiceHelper = encounterObservationServiceHelper;
+    public void setObsMapper(ObsMapper obsMapper) {
+        this.obsMapper = obsMapper;
     }
 
     public ObsService getObsService() {
@@ -90,14 +91,14 @@ public class SpecimenMapper {
 
         if (etSpecimen.getSample() != null && etSpecimen.getSample().getAdditionalAttributes() != null) {
             EncounterTransaction.Observation etObs = etSpecimen.getSample().getAdditionalAttributes();
-            bacteriologySpecimen.setAdditionalAttributes(encounterObservationServiceHelper.transformEtObs(bacteriologySpecimen.getExistingObs(), etObs));
+            bacteriologySpecimen.setAdditionalAttributes(obsMapper.transformEtObs(bacteriologySpecimen.getExistingObs(), etObs));
         }
 
         bacteriologySpecimen.setType(getSampleTypeConcept(etSpecimen.getType()));
 
         if (etSpecimen.getReport() != null && etSpecimen.getReport().getResults() != null) {
             EncounterTransaction.Observation etObs = etSpecimen.getReport().getResults();
-            bacteriologySpecimen.setReports(encounterObservationServiceHelper.transformEtObs(bacteriologySpecimen.getReports(), etObs));
+            bacteriologySpecimen.setReports(obsMapper.transformEtObs(bacteriologySpecimen.getReports(), etObs));
         }
 
         return bacteriologySpecimen;

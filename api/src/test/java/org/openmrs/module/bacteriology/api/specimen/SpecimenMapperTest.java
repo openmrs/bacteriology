@@ -10,8 +10,8 @@ import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.ObsService;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
-import org.openmrs.module.emrapi.encounter.EncounterObservationServiceHelper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
+import org.openmrs.module.emrapi.encounter.mapper.ObsMapper;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -33,7 +33,7 @@ public class SpecimenMapperTest {
     private Concept urineConcept;
 
     @Mock
-    private EncounterObservationServiceHelper encounterObservationServiceHelper;
+    private ObsMapper obsMapper;
 
     @Mock
     private ObsService obsService;
@@ -54,7 +54,7 @@ public class SpecimenMapperTest {
         initMocks(this);
         mapper = new SpecimenMapper();
         mapper.setConceptService(conceptService);
-        mapper.setEncounterObservationServiceHelper(encounterObservationServiceHelper);
+        mapper.setObsMapper(obsMapper);
         mapper.setObsService(obsService);
     }
 
@@ -86,7 +86,8 @@ public class SpecimenMapperTest {
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
         when(obsService.getObsByUuid("existing_obs_uuid")).thenReturn(existingObs);
-        when(encounterObservationServiceHelper.transformEtObs(existingObs, additionalAttributes)).thenReturn(additionalAttributeObs);
+        when(obsMapper.transformEtObs(existingObs, additionalAttributes)).thenReturn(
+                additionalAttributeObs);
 
         org.openmrs.module.bacteriology.api.specimen.Specimen specimen = mapper.createSpecimen(encounter, etSpecimen);
 
@@ -107,7 +108,7 @@ public class SpecimenMapperTest {
         Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "", additionalAttributes,null);
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
-        when(encounterObservationServiceHelper.transformEtObs(null, additionalAttributes)).thenReturn(additionalAttributeObs);
+        when(obsMapper.transformEtObs(null, additionalAttributes)).thenReturn(additionalAttributeObs);
 
         org.openmrs.module.bacteriology.api.specimen.Specimen specimen = mapper.createSpecimen(encounter, etSpecimen);
 
@@ -152,7 +153,7 @@ public class SpecimenMapperTest {
         Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "", null,results);
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
-        when(encounterObservationServiceHelper.transformEtObs(null, results)).thenReturn(resultsObs);
+        when(obsMapper.transformEtObs(null, results)).thenReturn(resultsObs);
 
         org.openmrs.module.bacteriology.api.specimen.Specimen specimen = mapper.createSpecimen(encounter, etSpecimen);
 
