@@ -88,7 +88,7 @@ public class SpecimenMapper {
             bacteriologySpecimen.setExistingObs(obsService.getObsByUuid(etSpecimen.getExistingObs()));
         }
 
-        if (etSpecimen.getSample().getAdditionalAttributes() != null) {
+        if (etSpecimen.getSample() != null && etSpecimen.getSample().getAdditionalAttributes() != null) {
             EncounterTransaction.Observation etObs = etSpecimen.getSample().getAdditionalAttributes();
             bacteriologySpecimen.setAdditionalAttributes(encounterObservationServiceHelper.transformEtObs(bacteriologySpecimen.getExistingObs(), etObs));
         }
