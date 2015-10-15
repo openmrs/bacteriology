@@ -13,6 +13,8 @@
  */
 package org.openmrs.module.bacteriology.api.impl;
 
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -25,9 +27,10 @@ import org.openmrs.module.bacteriology.api.db.BacteriologyServiceDAO;
 import org.openmrs.module.bacteriology.api.encounter.BacteriologyMapper;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
 import org.openmrs.module.bacteriology.api.specimen.SpecimenMapper;
+import org.openmrs.module.emrapi.encounter.ConceptMapper;
+import org.openmrs.module.emrapi.encounter.ObservationMapper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,8 +54,19 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
 
     @Autowired
     private BacteriologyMapper bacteriologyMapper;
-	
-	/**
+
+    @Autowired
+    private ConceptMapper conceptMapper;
+
+    @Autowired
+    private ObservationMapper observationMapper;
+
+    @Autowired
+    private SessionFactory sessionFactory;
+
+
+
+    /**
      * @param dao the dao to set
      */
     public void setDao(BacteriologyServiceDAO dao) {
@@ -79,8 +93,9 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     }
 
     @Override
-    public org.openmrs.module.bacteriology.api.specimen.Specimen getSpecimenFromObs(Obs obsGroup){
-        return bacteriologyProperties.getSpecimenMetadata().buildSpecimen(obsGroup);
+    public Specimen getSpecimenFromObs(Obs obsGroup){
+        org.openmrs.module.bacteriology.api.specimen.Specimen specimen = bacteriologyProperties.getSpecimenMetadata().buildSpecimen(obsGroup);
+        return createDomainSpecimen(specimen);
     }
 
     @Override
@@ -89,7 +104,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
 
         List<Specimen> specimens = new ArrayList<Specimen>();
         for(org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen: bacteriologySpecimenList) {
-            specimens.add(specimenMapper.createDomainSpecimen(bacteriologySpecimen));
+            specimens.add(createDomainSpecimen(bacteriologySpecimen));
         }
 
         Map<String,Object> extensions = new HashMap<String, Object>();
@@ -97,4 +112,52 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
         encounterTransaction.setExtensions(extensions);
     }
 
+
+    private void validate(org.openmrs.module.bacteriology.api.specimen.Specimen specimen) {
+
+        if (specimen.getType() == null)
+            throw new IllegalArgumentException("Sample Type is mandatory");
+
+        if (specimen.getDateCollected() == null)
+            throw new IllegalArgumentException("Sample Date Collected detail is mandatory");
+    }
+
+    public org.openmrs.module.bacteriology.api.encounter.domain.Specimen createDomainSpecimen(org.openmrs.module.bacteriology.api.specimen.Specimen specimen) {
+        org.openmrs.module.bacteriology.api.encounter.domain.Specimen domainSpecimen = new org.openmrs.module.bacteriology.api.encounter.domain.Specimen();
+        validate(specimen);
+        domainSpecimen.setIdentifier(specimen.getId());
+        domainSpecimen.setDateCollected(specimen.getDateCollected());
+
+
+        if (specimen.getExistingObs() != null) {
+            domainSpecimen.setExistingObs(specimen.getExistingObs().getUuid());
+            domainSpecimen.setUuid(specimen.getExistingObs().getUuid());
+        }
+
+        if (specimen.getAdditionalAttributes() != null) {
+            domainSpecimen.getSample().setAdditionalAttributes(observationMapper.map(specimen.getAdditionalAttributes()));
+        }
+        if (specimen.getType() != null) {
+            domainSpecimen.setType(conceptMapper.map(specimen.getType()));
+        }
+
+        if (specimen.getReports() != null) {
+            domainSpecimen.setReport(new org.openmrs.module.bacteriology.api.encounter.domain.Specimen.TestReport());
+            domainSpecimen.getReport().setResults(observationMapper.map(specimen.getReports()));
+        }
+        return domainSpecimen;
+    }
+
+    @Override
+    public Obs getObsFor(String patientUuid, String conceptName) {
+
+        Query queryToGetObservations = sessionFactory.getCurrentSession().createQuery(
+                "select *  from Obs as obs, ConceptName as cn " +
+                        " where obs.person.uuid = :patientUuid " +
+                        " and cn.conceptId = obs.conceptId " +
+                        " and cn.name = (:conceptName) " +
+                        " and cn.voided = false " +
+                        " and obs.voided = false");
+        return (Obs) queryToGetObservations;
+    }
 }

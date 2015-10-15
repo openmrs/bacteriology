@@ -39,7 +39,11 @@ public interface BacteriologyService extends OpenmrsService {
 	 */
 	void updateEncounter(Encounter encounter, EncounterTransaction encounterTransaction);
 
-	Specimen getSpecimenFromObs(Obs obsGroup);
+	org.openmrs.module.bacteriology.api.encounter.domain.Specimen getSpecimenFromObs(Obs obsGroup);
 
 	void updateEncounterTransaction(Encounter encounter, EncounterTransaction encounterTransaction);
+
+	 org.openmrs.module.bacteriology.api.encounter.domain.Specimen createDomainSpecimen(org.openmrs.module.bacteriology.api.specimen.Specimen specimen);
+
+	Obs getObsFor(String patientUuid, String conceptName);
 }

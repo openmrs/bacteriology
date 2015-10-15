@@ -131,6 +131,9 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
             specimen.setAdditionalAttributes(findMember(obsGroup, getSpecimenAdditionalAttributes()));
         }
 
+        if (getSpecimenTestResults() != null) {
+            specimen.setReports(findMember(obsGroup, getSpecimenTestResults()));
+        }
         return specimen;
     }
 

@@ -19,7 +19,7 @@
 
 	<!-- Add here beans related to the API context -->
 
-	
+	<context:component-scan base-package="org.openmrs.module.bacteriology" />
 	<!-- Services accessible via Context.getService() -->
 	<bean parent="serviceContext">
 		<property name="moduleService">
@@ -51,5 +51,4 @@
 			</list>
 		</property>
 	</bean>
-	
 </beans>

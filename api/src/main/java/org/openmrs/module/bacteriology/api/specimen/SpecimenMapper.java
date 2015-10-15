@@ -8,7 +8,9 @@ import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.bacteriology.api.BacteriologyService;
 import org.openmrs.module.emrapi.encounter.ConceptMapper;
+import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.emrapi.encounter.EncounterObservationServiceHelper;
 import org.openmrs.module.emrapi.encounter.ObservationMapper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
@@ -22,12 +24,6 @@ public class SpecimenMapper {
 
     @Autowired
     private ObsMapper obsMapper;
-
-    @Autowired
-    private ConceptMapper conceptMapper;
-
-    @Autowired
-    private ObservationMapper observationMapper;
 
     @Autowired
     private ObsService obsService;
@@ -68,14 +64,7 @@ public class SpecimenMapper {
             throw new IllegalArgumentException("Sample Date Collected detail is mandatory");
     }
 
-    private void validate(Specimen specimen) {
 
-        if (specimen.getType() == null)
-            throw new IllegalArgumentException("Sample Type is mandatory");
-
-        if (specimen.getDateCollected() == null)
-            throw new IllegalArgumentException("Sample Date Collected detail is mandatory");
-    }
 
     public Specimen createSpecimen(Encounter encounter, org.openmrs.module.bacteriology.api.encounter.domain.Specimen etSpecimen) {
         validate(etSpecimen);
@@ -104,35 +93,6 @@ public class SpecimenMapper {
         return bacteriologySpecimen;
     }
 
-
-    public org.openmrs.module.bacteriology.api.encounter.domain.Specimen createDomainSpecimen(Specimen specimen) {
-        org.openmrs.module.bacteriology.api.encounter.domain.Specimen domainSpecimen = new org.openmrs.module.bacteriology.api.encounter.domain.Specimen();
-
-        validate(specimen);
-
-        domainSpecimen.setIdentifier(specimen.getId());
-        domainSpecimen.setDateCollected(specimen.getDateCollected());
-
-
-        if (specimen.getExistingObs() != null) {
-            domainSpecimen.setExistingObs(specimen.getExistingObs().getUuid());
-            domainSpecimen.setUuid(specimen.getExistingObs().getUuid());
-        }
-
-        if (specimen.getAdditionalAttributes() != null) {
-            domainSpecimen.getSample().setAdditionalAttributes(observationMapper.map(specimen.getAdditionalAttributes()));
-        }
-        if (specimen.getType() != null) {
-            ConceptMapper conceptMapper = new ConceptMapper();
-            domainSpecimen.setType(conceptMapper.map(specimen.getType()));
-        }
-
-        if (specimen.getReports() != null) {
-            domainSpecimen.setReport(new org.openmrs.module.bacteriology.api.encounter.domain.Specimen.TestReport());
-            domainSpecimen.getReport().setResults(observationMapper.map(specimen.getReports()));
-        }
-        return domainSpecimen;
-    }
 
     private Concept getSampleTypeConcept(EncounterTransaction.Concept type) {
         Concept sampleType = conceptService.getConceptByUuid(type.getUuid());
