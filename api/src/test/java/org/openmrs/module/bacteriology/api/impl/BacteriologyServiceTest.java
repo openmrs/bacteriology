@@ -96,6 +96,20 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         assertNotNull(specimenSource);
         assertNotNull(specimenSource.getValueCoded());
         assertEquals(getConcept("URINE"), specimenSource.getValueCoded());
+
+        Obs additionalAttributes = findMember(specimenObs.getGroupMembers(), getConcept("BACTERIOLOGY ADDITIONAL ATTRIBUTES"));
+        assertNotNull(additionalAttributes);
+
+        Obs weight = findMember(additionalAttributes.getGroupMembers(), getConcept("WEIGHT (KG)"));
+        assertNotNull(weight);
+        assertEquals(70, weight.getValueNumeric().intValue());
+
+        Obs results = findMember(specimenObs.getGroupMembers(), getConcept("BACTERIOLOGY RESULTS"));
+        assertNotNull(results);
+
+        Obs weightResult = findMember(results.getGroupMembers(), getConcept("WEIGHT (KG)"));
+        assertNotNull(weightResult);
+        assertEquals(360, weightResult.getValueNumeric().intValue());
     }
 
     @Test

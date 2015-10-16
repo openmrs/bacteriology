@@ -1,74 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
+    <concept_set concept_set_id="1007" concept_id="5089" concept_set="405" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
+    <concept_set concept_set_id="1008" concept_id="5089" concept_set="406" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
 
-    <concept_class concept_class_id="1001" name="Bacteriology Attributes" description="attributes for bacteriology" creator="1" date_created="2004-02-02 00:00:00.0" retired="false" uuid="97097dd9-b092-4b68-cda2-e5e5be961d42"/>
-    <concept_class concept_class_id="1008" name="Bacteriology Results" description="results for bacteriology" creator="1" date_created="2004-02-02 00:00:00.0" retired="false" uuid="97097dd9-b092-4b68-abfc-e5e5be961d42"/>
-
-    <concept_map_type concept_map_type_id="1" name="SAME-AS" creator="1" date_created="2004-08-12 00:00:00.0" uuid="b5e44116-778f-11e2-ad73-903c7bb72694"/>
-    <concept_reference_source concept_source_id="1" name="org.openmrs.module.bacteriology" creator="1" date_created="2004-08-12 00:00:00.0" uuid="b5e44116-778f-11e2-ad73-903c7bb72694"/>
-
-    <concept concept_id="601" retired="false" datatype_id="4" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="baef67ac-b24e-4b04-ac83-c3b994132b85"/>
-    <concept_name concept_id="601" concept_name_id="1601" name="BACTERIOLOGY CONCEPT SET" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="baef67ac-b24e-4b04-ac83-c3b994132b85"/>
-    <concept_reference_term concept_reference_term_id="1" concept_source_id="1" code="BACTERIOLOGY_CONCEPT_SET" creator="1" date_created="2004-08-12 00:00:00.0"></concept_reference_term>
-    <concept_reference_map concept_map_id="1" concept_id="601" concept_reference_term_id="1" concept_map_type_id="1" creator="1" date_created="2004-08-12 00:00:00.0"></concept_reference_map>
-
-    <concept concept_id="602" retired="false" datatype_id="2" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="74a4c3d3-e6d0-407d-8ed3-3895e4b61f5b"/>
-    <concept_name concept_id="602" concept_name_id="1602" name="SPECIMEN ID" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="74a4c3d3-e6d0-407d-8ed3-3895e4b61f5b"/>
-    <concept_reference_term concept_reference_term_id="2" concept_source_id="1" code="SPECIMEN_ID" creator="1" date_created="2004-08-12 00:00:00.0"></concept_reference_term>
-    <concept_reference_map concept_map_id="2" concept_id="602" concept_reference_term_id="2" concept_map_type_id="1" creator="1" date_created="2004-08-12 00:00:00.0"></concept_reference_map>
-    <concept_set concept_set_id="2" concept_id="602" concept_set="601" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
-
-    <concept concept_id="603" retired="false" datatype_id="1" class_id="5" is_set="false" creator="1" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="646dfcfe-c548-49b7-8837-c40d4b6de5bd"/>
-    <concept_name concept_id="603" concept_name_id="1603" name="SPECIMEN SAMPLE SOURCE" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="646dfcfe-c548-49b7-8837-c40d4b6de5bd"/>
-    <concept_reference_term concept_reference_term_id="3" concept_source_id="1" code="SPECIMEN_SAMPLE_SOURCE" creator="1" date_created="2004-08-12 00:00:00.0"></concept_reference_term>
-    <concept_reference_map concept_map_id="3" concept_id="603" concept_reference_term_id="3" concept_map_type_id="1" creator="1" date_created="2004-08-12 00:00:00.0"></concept_reference_map>
-    <concept_set concept_set_id="3" concept_id="603" concept_set="601" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
-
-    <concept concept_id="604" retired="false" datatype_id="1" class_id="5" is_set="false" creator="1" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="646dfcfe-c548-49b7-8837-c40d4b6de5b3"/>
-    <concept_name concept_id="604" concept_name_id="1604" name="SPECIMEN COLLECTION DATE" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="646dfcfe-c548-49b7-8837-c40d4b6de5b3"/>
-    <concept_reference_term concept_reference_term_id="4" concept_source_id="1" code="SPECIMEN_COLLECTION_DATE" creator="1" date_created="2004-08-12 00:00:00.0"></concept_reference_term>
-    <concept_reference_map concept_map_id="4" concept_id="604" concept_reference_term_id="4" concept_map_type_id="1" creator="1" date_created="2004-08-12 00:00:00.0"></concept_reference_map>
-    <concept_set concept_set_id="4" concept_id="604" concept_set="601" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
-
-    <concept concept_id="605" retired="false" datatype_id="1" class_id="1008" is_set="false" creator="1" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="646dfcfe-5c48-49b7-8837-c40d4b6de5b3"/>
-    <concept_name concept_id="605" concept_name_id="1605" name="Bacteriology Results"  locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="646dfcfe-5c48-49b7-8837-c40d4b6de5b3"/>
-    <concept_set concept_set_id="1005" concept_id="605" concept_set="601" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
-
-    <concept concept_id="406" retired="false" datatype_id="1" is_set="false" creator="1" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="646dffce-5c48-49b7-8837-c40d4b6de5b3"/>
-    <concept_name concept_id="406" concept_name_id="1406" name="Test RESULTS" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="646dcffe-5c48-49b7-8837-c40d4b6de5b3"/>
-    <concept_set concept_set_id="1006" concept_id="406" concept_set="605" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
-
-
-
-    <concept concept_id="408" retired="false" datatype_id="2" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="d102c80f-1yz9-4da3-bb88-8122ce8868df"/>
-    <concept_name concept_id="408" concept_name_id="1408" name="URINE" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="d102c80f-1yz9-4da3-bb88-8122ce8868df"/>
-
-    <concept concept_id="409" retired="false" datatype_id="3" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="d102c80f-1yz9-4da3-bb88-8122ce8868dg"/>
-    <concept_name concept_id="409" concept_name_id="1409" name="SPUTUM" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="d102c80f-1yz9-4da3-bb88-8122ce8868dg"/>
-
-    <concept concept_id="411" retired="false" datatype_id="10" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="c393fd1d-3f10-11e4-adec-0800271c1b75"/>
-    <concept_name concept_id="411" concept_name_id="1410" name="History and Examination" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="c393fd1d-3f10-11e4-adec-0800271c1b75"/>
-
-    <concept concept_id="410" retired="false" datatype_id="3" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="c398a4be-3f10-11e4-adec-0800271c1b75"/>
-    <concept_name concept_id="410" concept_name_id="1411" name="Chief Complaint Notes" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="c398a4be-3f10-11e4-adec-0800271c1b75"/>
-    <concept_set concept_set_id="20000" concept_id="410" concept_set="411" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
-
-    <concept concept_id="511" retired="false" datatype_id="10" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="c393fd1d-3f10-11e4-adec-0800271c1b76"/>
-    <concept_name concept_id="511" concept_name_id="1413" name="Vitals" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="c393fd1d-3f10-11e4-adec-0800271c1b76"/>
-
-    <concept concept_id="510" retired="false" datatype_id="3" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="c398a4be-3f10-11e4-adec-0800271c1b77"/>
-    <concept_name concept_id="510" concept_name_id="1414" name="HEIGHT" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="c398a4be-3f10-11e4-adec-0800271c1b77"/>
-    <concept_set concept_set_id="20000" concept_id="510" concept_set="511" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"></concept_set>
-
-    <!-- Test Data -->
     <encounter encounter_id="102" encounter_type="1" patient_id="2" location_id="2" form_id="1"
                encounter_datetime="2008-08-19 00:00:00.0" creator="1" date_created="2008-08-19 12:34:40.0" voided="false"
-               uuid="y603fafb-e5e4-42d0-9d11-4f52e89d12st"/>
-    <obs obs_id="100" person_id="7" concept_id="601" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-b211-f3ef6c88afaa"/>
-    <obs obs_id="102" obs_group_id="100" person_id="7" concept_id="602" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_text="SAMPLE12345" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-b211-f3ef6c88afab"/>
-    <obs obs_id="103" obs_group_id="100" person_id="7" concept_id="603" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_coded="408" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-b211-f3ef6c88afac"/>
-    <obs obs_id="104" obs_group_id="100" person_id="7" concept_id="604" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_datetime="2008-08-19 12:32:03.0" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-b211-f3ef6c88afad"/>
-    <obs obs_id="105" obs_group_id="100" person_id="7" concept_id="605" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_text="Sample test" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-b211-f3ef6c88afae"/>
-    <obs obs_id="106" obs_group_id="105" person_id="7" concept_id="406" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_text="Sample result" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-b211-f3ef6c88afaf"/>
+               uuid="y403fafb-e5e4-42d0-9d11-4f52e89d12st"/>
+    <obs obs_id="1000" person_id="7" concept_id="401" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="896cea2c-1b9f-4afe-b211-f3ef6c88afaa"/>
+
+    <obs obs_id="1002" obs_group_id="1000" person_id="7" concept_id="402" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_text="SAMPLE12345" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b3f-4afe-b211-f3ef6c88afab"/>
+    <obs obs_id="1003" obs_group_id="1000" person_id="7" concept_id="403" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_coded="5" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-b2v1-f3ef6c88afac"/>
+    <obs obs_id="1004" obs_group_id="1000" person_id="7" concept_id="404" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" value_datetime="2008-08-19 12:32:03.0" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-199f-4afe-b211-f3ef6c88afad"/>
+
+    <obs obs_id="1005" obs_group_id="1000" person_id="7" concept_id="405" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4afe-bb11-f3ef6c88afae"/>
+    <obs obs_id="1006" obs_group_id="1000" person_id="7" concept_id="406" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cfa2c-1b9f-4afe-b291-f2ef6c88afae"/>
+
+    <obs obs_id="1007" obs_group_id="1005" person_id="7" concept_id="5089" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cea2c-1b9f-4cve-b211-f3ef6c99afae" value_numeric="90"/>
+    <obs obs_id="1008" obs_group_id="1006" person_id="7" concept_id="5089" encounter_id="102" obs_datetime="2008-08-15 00:00:00.0" location_id="1" comments="" creator="1" date_created="2008-08-19 12:32:03.0" voided="false" uuid="e26cva2c-1b9f-423e-b211-f9ef6c99afae" value_numeric="180"/>
 
 </dataset>

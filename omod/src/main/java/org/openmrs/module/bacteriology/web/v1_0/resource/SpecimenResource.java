@@ -74,6 +74,7 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
             description.addProperty("uuid");
             description.addProperty("existingObs", Representation.REF);
             description.addProperty("type");
+            description.addProperty("report");
             description.addSelfLink();
             return description;
 

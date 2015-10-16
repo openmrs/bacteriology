@@ -13,8 +13,54 @@
         "type": "d102c80f-1yz9-4da3-bb88-8122ce8868df",
         "identifier": "SAMP1234",
         "existingObs":"e26cea2c-1b9f-4afe-b211-f3ef6c88afaa",
-        "sample": {},
-        "report":{}
+        "sample": {
+          "additionalAttributes": {
+            "uuid": "e26cea2c-1b9f-4afe-b211-f3ef6c88afae",
+            "concept": {
+              "uuid": "646dfcfe-5c48-49b7-8837-c40d4b6de5b3",
+              "name": "BACTERIOLOGY ADDITIONAL ATTRIBUTES",
+              "dataType": "N/A"
+            },
+            "value": null,
+            "voided": false,
+            "groupMembers": [
+              {
+                "uuid": "e26cea2c-1b9f-4afe-b211-f3ef6c99afae",
+                "concept": {
+                  "uuid": "c607c80f-1ea9-4da3-bb88-6276ce8868dd",
+                  "name": "WEIGHT (KG)",
+                  "dataType": "Numeric"
+                },
+                "value": 70,
+                "voided": false
+              }
+            ]
+          }
+        },
+        "report": {
+          "results": {
+            "uuid": "e26cfa2c-1b9f-4afe-b211-f2ef6c88afae",
+            "concept": {
+              "uuid": "646dfcfe-5c48-49b7-8837-c40d4b6de5b3",
+              "name": "BACTERIOLOGY ADDITIONAL ATTRIBUTES",
+              "dataType": "N/A"
+            },
+            "value": null,
+            "voided": false,
+            "groupMembers": [
+              {
+                "uuid": "e26cva2c-1b9f-4afe-b211-f9ef6c99afae",
+                "concept": {
+                  "uuid": "c607c80f-1ea9-4da3-bb88-6276ce8868dd",
+                  "name": "WEIGHT (KG)",
+                  "dataType": "Numeric"
+                },
+                "value": 360,
+                "voided": false
+              }
+            ]
+          }
+        }
       }
     ]
   },

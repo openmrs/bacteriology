@@ -2,17 +2,10 @@ package org.openmrs.module.bacteriology.api.specimen;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
-import org.openmrs.ConceptName;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.ObsService;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.bacteriology.api.BacteriologyService;
-import org.openmrs.module.emrapi.encounter.ConceptMapper;
-import org.openmrs.module.emrapi.encounter.EmrEncounterService;
-import org.openmrs.module.emrapi.encounter.EncounterObservationServiceHelper;
-import org.openmrs.module.emrapi.encounter.ObservationMapper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.emrapi.encounter.exception.ConceptNotFoundException;
 import org.openmrs.module.emrapi.encounter.mapper.ObsMapper;
@@ -80,19 +73,30 @@ public class SpecimenMapper {
 
         if (etSpecimen.getSample() != null && etSpecimen.getSample().getAdditionalAttributes() != null) {
             EncounterTransaction.Observation etObs = etSpecimen.getSample().getAdditionalAttributes();
-            bacteriologySpecimen.setAdditionalAttributes(obsMapper.transformEtObs(bacteriologySpecimen.getExistingObs(), etObs));
+            bacteriologySpecimen.setAdditionalAttributes(obsMapper.transformEtObs(getMatchingMember(bacteriologySpecimen.getExistingObs(), etObs), etObs));
         }
 
         bacteriologySpecimen.setType(getSampleTypeConcept(etSpecimen.getType()));
 
         if (etSpecimen.getReport() != null && etSpecimen.getReport().getResults() != null) {
             EncounterTransaction.Observation etObs = etSpecimen.getReport().getResults();
-            bacteriologySpecimen.setReports(obsMapper.transformEtObs(bacteriologySpecimen.getReports(), etObs));
+            bacteriologySpecimen.setReports(obsMapper.transformEtObs(getMatchingMember(bacteriologySpecimen.getExistingObs(), etObs), etObs));
         }
 
         return bacteriologySpecimen;
     }
 
+    private Obs getMatchingMember(Obs existingObs, EncounterTransaction.Observation etObs) {
+        if (existingObs == null){
+            return null;
+        }
+        for (Obs obs : existingObs.getGroupMembers()) {
+            if (obs.getUuid().equals(etObs.getUuid())) {
+                return obs;
+            }
+        }
+        return null;
+    }
 
     private Concept getSampleTypeConcept(EncounterTransaction.Concept type) {
         Concept sampleType = conceptService.getConceptByUuid(type.getUuid());

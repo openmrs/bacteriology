@@ -18,6 +18,9 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -86,11 +89,12 @@ public class SpecimenMapperTest {
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
         when(obsService.getObsByUuid("existing_obs_uuid")).thenReturn(existingObs);
-        when(obsMapper.transformEtObs(existingObs, additionalAttributes)).thenReturn(
+        when(obsMapper.transformEtObs(null, additionalAttributes)).thenReturn(
                 additionalAttributeObs);
 
         org.openmrs.module.bacteriology.api.specimen.Specimen specimen = mapper.createSpecimen(encounter, etSpecimen);
 
+        verify(obsMapper, timeout(1)).transformEtObs(null, additionalAttributes);
         assertEquals("specimenId", specimen.getId());
         assertEquals(sampleDateCollected, specimen.getDateCollected());
         assertEquals(urineConcept, specimen.getType());

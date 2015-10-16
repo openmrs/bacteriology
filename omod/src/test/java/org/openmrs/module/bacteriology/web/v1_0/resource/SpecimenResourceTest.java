@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 public class SpecimenResourceTest extends MainResourceControllerTest {
 
-    private static final String SPECIMEN_DATA_SET_XML = "specimenDataSet.xml";
-
     @Before
     public void init() throws Exception {
-        executeDataSet(SPECIMEN_DATA_SET_XML);
+        executeDataSet("baseBacteriologyData.xml");
+        executeDataSet("specimenDataSet.xml");
     }
 
 
@@ -35,7 +34,7 @@ public class SpecimenResourceTest extends MainResourceControllerTest {
 
     @Test
     public void shouldReturnDefaultAndSelfLinkForCustomUuid() throws Exception {
-        String obsGroupUUid = "e26cea2c-1b9f-4afe-b211-f3ef6c88afaa";
+        String obsGroupUUid = "896cea2c-1b9f-4afe-b211-f3ef6c88afaa";
 
         MockHttpServletRequest request = request(RequestMethod.GET, getURI() + "/" + obsGroupUUid);
         MockHttpServletResponse response = handle(request);

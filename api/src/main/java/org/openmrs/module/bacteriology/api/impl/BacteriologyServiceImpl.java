@@ -135,6 +135,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
         }
 
         if (specimen.getAdditionalAttributes() != null) {
+            domainSpecimen.setSample(new org.openmrs.module.bacteriology.api.encounter.domain.Specimen.Sample());
             domainSpecimen.getSample().setAdditionalAttributes(observationMapper.map(specimen.getAdditionalAttributes()));
         }
         if (specimen.getType() != null) {
