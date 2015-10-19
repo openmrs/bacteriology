@@ -14,6 +14,7 @@ public class Specimen {
     private Concept type;
     private Obs additionalAttributes;
     private Obs reports;
+    private boolean voided;
 
     public String getUuid() {
         return uuid;
@@ -71,4 +72,11 @@ public class Specimen {
         this.reports = reports;
     }
 
+    public void setVoided(boolean voided) {
+        this.voided = voided;
+    }
+
+    public boolean isVoided() {
+        return voided;
+    }
 }

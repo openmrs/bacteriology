@@ -87,6 +87,7 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
 
     public Obs buildObsGroup(Specimen specimen) {
         if (specimen.getExistingObs() != null) {
+            specimen.getExistingObs().setVoided(specimen.isVoided());
             setCodedMember(specimen.getExistingObs(), getSpecimenSource(), specimen.getType(), null);
             setFreeTextMember(specimen.getExistingObs(), getSpecimenDateCollected(), specimen.getDateCollected());
             setFreeTextMember(specimen.getExistingObs(), getSpecimenId(), specimen.getId());
@@ -100,6 +101,7 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
             Obs additionalAttributes = specimen.getAdditionalAttributes();
 
             Obs obs = new Obs();
+            obs.setVoided(specimen.isVoided());
             obs.setConcept(getSpecimenConstruct());
             obs.addGroupMember(specimenSource);
             obs.addGroupMember(dateCollected);

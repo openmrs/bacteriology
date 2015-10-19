@@ -25,6 +25,8 @@ public class Specimen {
 
     private String uuid;
 
+    private boolean voided;
+
     public String getUuid() {
         return uuid;
     }
@@ -79,6 +81,14 @@ public class Specimen {
 
     public void setReport(TestReport report) {
         this.report = report;
+    }
+
+    public void setVoided(boolean voided) {
+        this.voided = voided;
+    }
+
+    public boolean isVoided() {
+        return voided;
     }
 
 
