@@ -73,14 +73,14 @@ public class SpecimenMapper {
 
         if (etSpecimen.getSample() != null && etSpecimen.getSample().getAdditionalAttributes() != null) {
             EncounterTransaction.Observation etObs = etSpecimen.getSample().getAdditionalAttributes();
-            bacteriologySpecimen.setAdditionalAttributes(obsMapper.transformEtObs(getMatchingMember(bacteriologySpecimen.getExistingObs(), etObs), etObs));
+            bacteriologySpecimen.setAdditionalAttributes(obsMapper.transformEtObs(encounter, getMatchingMember(bacteriologySpecimen.getExistingObs(), etObs), etObs));
         }
 
         bacteriologySpecimen.setType(getSampleTypeConcept(etSpecimen.getType()));
 
         if (etSpecimen.getReport() != null && etSpecimen.getReport().getResults() != null) {
             EncounterTransaction.Observation etObs = etSpecimen.getReport().getResults();
-            bacteriologySpecimen.setReports(obsMapper.transformEtObs(getMatchingMember(bacteriologySpecimen.getExistingObs(), etObs), etObs));
+            bacteriologySpecimen.setReports(obsMapper.transformEtObs(encounter, getMatchingMember(bacteriologySpecimen.getExistingObs(), etObs), etObs));
         }
 
         return bacteriologySpecimen;

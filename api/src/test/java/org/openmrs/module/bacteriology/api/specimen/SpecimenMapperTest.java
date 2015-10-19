@@ -89,12 +89,12 @@ public class SpecimenMapperTest {
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
         when(obsService.getObsByUuid("existing_obs_uuid")).thenReturn(existingObs);
-        when(obsMapper.transformEtObs(null, additionalAttributes)).thenReturn(
+        when(obsMapper.transformEtObs(encounter, null, additionalAttributes)).thenReturn(
                 additionalAttributeObs);
 
         org.openmrs.module.bacteriology.api.specimen.Specimen specimen = mapper.createSpecimen(encounter, etSpecimen);
 
-        verify(obsMapper, timeout(1)).transformEtObs(null, additionalAttributes);
+        verify(obsMapper, timeout(1)).transformEtObs(encounter, null, additionalAttributes);
         assertEquals("specimenId", specimen.getId());
         assertEquals(sampleDateCollected, specimen.getDateCollected());
         assertEquals(urineConcept, specimen.getType());
@@ -112,7 +112,7 @@ public class SpecimenMapperTest {
         Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "", additionalAttributes,null);
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
-        when(obsMapper.transformEtObs(null, additionalAttributes)).thenReturn(additionalAttributeObs);
+        when(obsMapper.transformEtObs(encounter, null, additionalAttributes)).thenReturn(additionalAttributeObs);
 
         org.openmrs.module.bacteriology.api.specimen.Specimen specimen = mapper.createSpecimen(encounter, etSpecimen);
 
@@ -157,7 +157,7 @@ public class SpecimenMapperTest {
         Specimen etSpecimen = createNewSpecimen(sampleDateCollected, "specimenId", "urine_concept_uuid", "", null,results);
 
         when(conceptService.getConceptByUuid("urine_concept_uuid")).thenReturn(urineConcept);
-        when(obsMapper.transformEtObs(null, results)).thenReturn(resultsObs);
+        when(obsMapper.transformEtObs(encounter, null, results)).thenReturn(resultsObs);
 
         org.openmrs.module.bacteriology.api.specimen.Specimen specimen = mapper.createSpecimen(encounter, etSpecimen);
 
