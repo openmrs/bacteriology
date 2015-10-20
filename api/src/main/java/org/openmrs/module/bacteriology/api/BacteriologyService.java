@@ -18,6 +18,7 @@ import org.openmrs.Obs;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.bacteriology.api.specimen.Specimen;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -31,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @see org.openmrs.api.context.Context
  */
 @Transactional
+@Service
 public interface BacteriologyService extends OpenmrsService {
      
 	/*
@@ -44,6 +46,4 @@ public interface BacteriologyService extends OpenmrsService {
 	void updateEncounterTransaction(Encounter encounter, EncounterTransaction encounterTransaction);
 
 	 org.openmrs.module.bacteriology.api.encounter.domain.Specimen createDomainSpecimen(org.openmrs.module.bacteriology.api.specimen.Specimen specimen);
-
-	Obs getObsFor(String patientUuid, String conceptName);
 }

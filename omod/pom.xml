@@ -77,9 +77,17 @@
 			<type>pom</type>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>webservices.rest-omod</artifactId>
+            <version>${openMRSWebServicesVersion}</version>
+            <type>jar</type>
+        </dependency>
+
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>webservices.rest-omod-common</artifactId>
+            <type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>

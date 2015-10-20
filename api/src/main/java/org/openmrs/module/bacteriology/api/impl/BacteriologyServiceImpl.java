@@ -135,7 +135,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
         }
 
         if (specimen.getAdditionalAttributes() != null) {
-            domainSpecimen.setSample(new org.openmrs.module.bacteriology.api.encounter.domain.Specimen.Sample());
+            domainSpecimen.setSample(new Specimen.Sample());
             domainSpecimen.getSample().setAdditionalAttributes(observationMapper.map(specimen.getAdditionalAttributes()));
         }
         if (specimen.getType() != null) {
@@ -147,18 +147,5 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
             domainSpecimen.getReport().setResults(observationMapper.map(specimen.getReports()));
         }
         return domainSpecimen;
-    }
-
-    @Override
-    public Obs getObsFor(String patientUuid, String conceptName) {
-
-        Query queryToGetObservations = sessionFactory.getCurrentSession().createQuery(
-                "select *  from Obs as obs, ConceptName as cn " +
-                        " where obs.person.uuid = :patientUuid " +
-                        " and cn.conceptId = obs.conceptId " +
-                        " and cn.name = (:conceptName) " +
-                        " and cn.voided = false " +
-                        " and obs.voided = false");
-        return (Obs) queryToGetObservations;
     }
 }
