@@ -36,7 +36,7 @@ public class SpecimenResourceTest extends MainResourceControllerTest {
         return 0;
     }
 
-
+    @Test
     public void shouldReturnSpecimenByPatientUuid() throws Exception {
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
         request.addParameter("name", "BACTERIOLOGY CONCEPT SET");
