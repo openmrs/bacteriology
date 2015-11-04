@@ -61,25 +61,10 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     @Autowired
     private ObservationMapper observationMapper;
 
-    @Autowired
-    private SessionFactory sessionFactory;
-
-
-
-    /**
-     * @param dao the dao to set
-     */
     public void setDao(BacteriologyServiceDAO dao) {
 	    this.dao = dao;
     }
     
-    /**
-     * @return the dao
-     */
-    public BacteriologyServiceDAO getDao() {
-	    return dao;
-    }
-
     @Override
     public void updateEncounter(Encounter encounter, EncounterTransaction encounterTransaction) {
 
