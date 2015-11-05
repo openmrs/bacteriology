@@ -8,9 +8,11 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
+import org.openmrs.api.ObsService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bacteriology.api.BacteriologyConcepts;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
+import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.emrapi.utils.HibernateLazyLoader;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -19,6 +21,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -33,6 +36,9 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
 
     @Autowired
     private ConceptService conceptService;
+
+    @Autowired
+    private ObsService obsService;
 
     @Before
     public void setup() throws Exception {
@@ -184,6 +190,47 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         assertNotNull(weightResult);
         assertEquals(90, weightResult.getValueNumeric().intValue());
     }
+
+    @Test
+    public void ensureEncounterIsUpdatedWithTheGivenSpecimenData() throws Exception {
+        executeDataSet("existingSpecimenObs.xml");
+
+        Obs obsGroup = obsService.getObs(100);
+        Obs sampleObs = obsService.getObs(105);
+        Obs resultsObs = obsService.getObs(106);
+
+        Specimen specimen = new Specimen();
+
+        EncounterTransaction.Observation resultsObservation = new EncounterTransaction.Observation().setUuid(resultsObs.getUuid()).setValue(72);
+        Specimen.TestReport testReport = new Specimen.TestReport();
+        testReport.setResults(resultsObservation);
+
+        Specimen.Sample sample = new Specimen.Sample();
+        EncounterTransaction.Observation additionalAttributes = new EncounterTransaction.Observation().setUuid(sampleObs.getUuid()).setValue(105);
+        sample.setAdditionalAttributes(additionalAttributes);
+
+        Concept specimenType = conceptService.getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE);
+        EncounterTransaction.Concept type = new EncounterTransaction.Concept();
+        type.setUuid(specimenType.getUuid());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse("2015-11-04");
+
+        specimen.setExistingObs(obsGroup.getUuid());
+        specimen.setType(type);
+        specimen.setSample(sample);
+        specimen.setReport(testReport);
+        specimen.setDateCollected(date);
+        specimen.setIdentifier("identifier");
+        specimen.setVoided(false);
+        specimen.setUuid("specimenUuid");
+
+        bacteriologyService.saveSpecimen(specimen);
+
+        assertEquals(sampleObs.getValueNumeric(), Double.valueOf("105"));
+        assertEquals(resultsObs.getValueNumeric(), Double.valueOf("72"));
+    }
+
 
     private Concept getConcept(String name) {
         Concept concept = conceptService.getConceptByName(name);

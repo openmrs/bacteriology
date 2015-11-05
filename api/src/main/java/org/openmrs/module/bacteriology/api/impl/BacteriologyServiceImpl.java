@@ -13,13 +13,12 @@
  */
 package org.openmrs.module.bacteriology.api.impl;
 
-import org.hibernate.Query;
-import org.hibernate.SessionFactory;
-import org.openmrs.Encounter;
-import org.openmrs.Obs;
-import org.openmrs.api.impl.BaseOpenmrsService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Encounter;
+import org.openmrs.Obs;
+import org.openmrs.api.ObsService;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.bacteriology.BacteriologyConstants;
 import org.openmrs.module.bacteriology.BacteriologyProperties;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
@@ -61,6 +60,13 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     @Autowired
     private ObservationMapper observationMapper;
 
+    @Autowired
+    private ObsService obsService;
+
+
+    /**
+     * @param dao the dao to set
+     */
     public void setDao(BacteriologyServiceDAO dao) {
 	    this.dao = dao;
     }
@@ -133,4 +139,17 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
         }
         return domainSpecimen;
     }
+
+    @Override
+    public Specimen saveSpecimen(Specimen specimen) {
+        Obs obs = obsService.getObsByUuid(specimen.getExistingObs());
+        Encounter encounter = obs.getEncounter();
+
+        org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
+        Obs bacteriologyObs = bacteriologyProperties.getSpecimenMetadata().buildObsGroup(bacteriologySpecimen);
+        encounter.addObs(bacteriologyObs);
+
+        return specimen;
+    }
+
 }

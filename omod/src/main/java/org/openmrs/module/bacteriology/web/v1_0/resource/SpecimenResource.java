@@ -1,6 +1,7 @@
 package org.openmrs.module.bacteriology.web.v1_0.resource;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
@@ -8,10 +9,12 @@ import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
+import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
+import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.api.RestService;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
@@ -28,6 +31,7 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs1_8.PatientResource1_8;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Resource(name = RestConstants.VERSION_1 + "/specimen", supportedClass = Specimen.class, supportedOpenmrsVersions = {"1.10.*", "1.11.*", "1.12.*"})
@@ -50,12 +54,12 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
 
     @Override
     public Specimen newDelegate() {
-        return null;
+        return new Specimen();
     }
 
     @Override
     public Specimen save(Specimen specimen) {
-        return null;
+        return Context.getService(BacteriologyService.class).saveSpecimen(specimen);
     }
 
     @Override
@@ -64,12 +68,27 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
     }
 
     @Override
+    public DelegatingResourceDescription getCreatableProperties() {
+        DelegatingResourceDescription description = new DelegatingResourceDescription();
+        description.addProperty("dateCollected");
+        description.addProperty("uuid");
+        description.addProperty("report");
+        description.addProperty("existingObs");
+        description.addProperty("sample");
+        description.addProperty("type");
+        description.addProperty("identifier");
+        return description;
+        }
+
+    @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
         if (rep instanceof DefaultRepresentation) {
             DelegatingResourceDescription description = new DelegatingResourceDescription();
-            description.addProperty("id");
+            description.addProperty("identifier");
             description.addProperty("uuid");
             description.addProperty("existingObs");
+            description.addProperty("dateCollected");
+            description.addProperty("sample");
             description.addProperty("type");
             description.addProperty("report");
             description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
@@ -79,6 +98,7 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
             description.addProperty("identifier");
             description.addProperty("uuid");
             description.addProperty("existingObs");
+            description.addProperty("sample");
             description.addProperty("type");
             description.addProperty("dateCollected");
             description.addProperty("report");
@@ -87,9 +107,10 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
 
         } else if (rep instanceof RefRepresentation) {
             DelegatingResourceDescription description = new DelegatingResourceDescription();
-            description.addProperty("id");
+            description.addProperty("identifier");
             description.addProperty("uuid");
             description.addProperty("existingObs");
+            description.addProperty("sample");
             description.addProperty("type");
             description.addProperty("report");
             description.addSelfLink();
@@ -102,6 +123,30 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
     @PropertyGetter("report")
     public SimpleObject getReport(Specimen specimen) {
         return new ObjectMapper().convertValue(specimen.getReport(), SimpleObject.class);
+    }
+
+    @PropertySetter("report")
+    public static void setReport(Specimen specimen, Object value) {
+        Object reportObject = new ObjectMapper().convertValue(value, new TypeReference<Specimen.TestReport>() {});
+        specimen.setReport((Specimen.TestReport) reportObject);
+    }
+
+    @PropertySetter("sample")
+    public static void setSample(Specimen specimen, Object value) {
+        Object sampleObject = new ObjectMapper().convertValue(value, new TypeReference<Specimen.Sample>() {});
+        specimen.setSample((Specimen.Sample) sampleObject);
+    }
+
+    @PropertySetter("dateCollected")
+    public static void setDateCollected(Specimen specimen, Object value) {
+        Object sampleObject = new ObjectMapper().convertValue(value, new TypeReference<Date>() {});
+        specimen.setDateCollected((Date) sampleObject);
+    }
+
+    @PropertySetter("type")
+    public static void setType(Specimen specimen, Object value) {
+        Object typeObject = new ObjectMapper().convertValue(value, new TypeReference<EncounterTransaction.Concept>() {});
+        specimen.setType((EncounterTransaction.Concept) typeObject);
     }
 
     @Override

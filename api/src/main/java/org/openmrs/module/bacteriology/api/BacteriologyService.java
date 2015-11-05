@@ -45,4 +45,6 @@ public interface BacteriologyService extends OpenmrsService {
 	void updateEncounterTransaction(Encounter encounter, EncounterTransaction encounterTransaction);
 
 	 org.openmrs.module.bacteriology.api.encounter.domain.Specimen createDomainSpecimen(org.openmrs.module.bacteriology.api.specimen.Specimen specimen);
+
+	org.openmrs.module.bacteriology.api.encounter.domain.Specimen saveSpecimen(org.openmrs.module.bacteriology.api.encounter.domain.Specimen specimen);
 }
