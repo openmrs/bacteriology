@@ -30,9 +30,7 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs1_8.PatientResource1_8;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Resource(name = RestConstants.VERSION_1 + "/specimen", supportedClass = Specimen.class, supportedOpenmrsVersions = {"1.10.*", "1.11.*", "1.12.*"})
 public class SpecimenResource extends DelegatingCrudResource<Specimen> {
@@ -166,11 +164,20 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
                         Specimen specimen = bacteriologyService.getSpecimenFromObs(obs);
                         specimenList.add(specimen);
                     }
+                    sortSpecimensByDateCollected(specimenList);
                     return new NeedsPaging<Specimen>(specimenList, context);
                 }
-
             }
         }
         return new EmptySearchResult();
+    }
+
+    private void sortSpecimensByDateCollected(List<Specimen> specimenList) {
+        Collections.sort(specimenList, new Comparator<Specimen>() {
+            @Override
+            public int compare(Specimen specimen1, Specimen specimen2) {
+                return specimen2.getDateCollected().compareTo(specimen1.getDateCollected());
+            }
+        });
     }
 }
