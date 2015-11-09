@@ -95,17 +95,18 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
             specimen.getExistingObs().addGroupMember(specimen.getReports());
             return specimen.getExistingObs();
         } else {
+            Obs obs = new Obs();
             Obs specimenSource = buildObsFor(getSpecimenSource(), specimen.getType(), null);
             Obs dateCollected = buildObsFor(getSpecimenDateCollected(), specimen.getDateCollected());
-            Obs specimenId = buildObsFor(getSpecimenId(), specimen.getId());
+            if(specimen.getId()!=null ) {
+                Obs specimenId = buildObsFor(getSpecimenId(), specimen.getId());
+                obs.addGroupMember(specimenId);
+            }
             Obs additionalAttributes = specimen.getAdditionalAttributes();
-
-            Obs obs = new Obs();
             obs.setVoided(specimen.isVoided());
             obs.setConcept(getSpecimenConstruct());
             obs.addGroupMember(specimenSource);
             obs.addGroupMember(dateCollected);
-            obs.addGroupMember(specimenId);
             obs.addGroupMember(specimen.getReports());
             obs.addGroupMember(additionalAttributes);
             return obs;
@@ -124,7 +125,9 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         specimen.setExistingObs(obsGroup);
         specimen.setUuid(obsGroup.getUuid());
         specimen.setDateCollected(findMember(obsGroup, getSpecimenDateCollected()).getValueDate());
-        specimen.setId(findMember(obsGroup, getSpecimenId()).getValueText());
+        Obs specimenIdObs=findMember(obsGroup, getSpecimenId());
+        if(specimenIdObs!=null)
+        specimen.setId(specimenIdObs.getValueText());
         if (getSpecimenSource() != null) {
             specimen.setType(findMember(obsGroup, getSpecimenSource()).getValueCoded());
         }
