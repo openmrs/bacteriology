@@ -101,6 +101,24 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
         Map<String,Object> extensions = new HashMap<String, Object>();
         extensions.put(BacteriologyConstants.BACTERIOLOGY_EXTENSION_KEY,specimens);
         encounterTransaction.setExtensions(extensions);
+
+        removeSpecimenObsFromEncounterTransactionObs(encounter, encounterTransaction);
+
+    }
+
+    private void removeSpecimenObsFromEncounterTransactionObs(Encounter encounter, EncounterTransaction encounterTransaction) {
+        List<EncounterTransaction.Observation> ETObsList= encounterTransaction.getObservations();
+        Map<String,Object> ETUuidObservationMap = new HashMap<String, Object>();
+        for(EncounterTransaction.Observation observation:ETObsList){
+            ETUuidObservationMap.put(observation.getUuid(), observation);
+        }
+
+        List<Obs> obsGroupAtSpecimenLevel = bacteriologyProperties.getSpecimenMetadata().getSpecimenObsGroups(encounter.getObsAtTopLevel(false));
+        for(Obs obsGroup: obsGroupAtSpecimenLevel) {
+         ETObsList.remove(ETUuidObservationMap.get(obsGroup.getUuid()));
+        }
+        encounterTransaction.setObservations(ETObsList);
+
     }
 
 

@@ -6,6 +6,8 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.EncounterService;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
+import org.openmrs.module.emrapi.encounter.EncounterTransactionMapper;
+import org.openmrs.module.emrapi.encounter.ObservationMapper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class BacteriologyTransactionHandlerIT extends BaseModuleContextSensitive
 
     @Autowired
     private EncounterService encounterService;
+
+    @Autowired
+    private ObservationMapper obsMapper;
 
     @Before
     public void setUp() throws Exception {
@@ -40,6 +45,29 @@ public class BacteriologyTransactionHandlerIT extends BaseModuleContextSensitive
         ArrayList mdrtbSpecimens = (ArrayList) mdrtbSpecimen;
         assertEquals(1, mdrtbSpecimens.size());
         assertEquals("e26cea2c-1b9f-4afe-b211-f3ef6c88afaa", ((Specimen) mdrtbSpecimens.get(0)).getUuid());
+    }
+
+    @Test
+    public void shouldNotContainSpecimenObsInETObs() {
+        Encounter encounterByUuid = encounterService.getEncounterByUuid("y403fafb-e5e4-42d0-9d11-4f52e89d12st");
+
+        EncounterTransaction encounterTransaction = new EncounterTransaction();
+       for(Obs obs: encounterByUuid.getObsAtTopLevel(false)) {
+        EncounterTransaction.Observation observation= obsMapper.map(obs);
+           encounterTransaction.addObservation(observation);
+       }
+
+        bacteriologyTransactionHandler.forRead(encounterByUuid, encounterTransaction);
+
+        List<EncounterTransaction.Observation> ETObsList = encounterTransaction.getObservations();
+
+        List<String> ETObsUuidList= new ArrayList();
+        for(EncounterTransaction.Observation etObs:ETObsList)
+            ETObsUuidList.add(etObs.getUuid());
+
+        assertFalse("Specimen Observations should not be a part of Encounter Transaction Observations", ETObsUuidList.contains("e26cea2c-1b9f-4afe-b211-f3ef6c88afaa"));
+        assertFalse("Specimen Observations should not be a part of Encounter Transaction Observations", ETObsUuidList.contains("e26cea2c-1b9f-4afe-b2zo-flaf6c88afaa"));
+
     }
 
     @Test

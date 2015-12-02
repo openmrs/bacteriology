@@ -228,4 +228,15 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         }
         return specimens;
     }
+
+    public List<Obs> getSpecimenObsGroups(Set<Obs> obsAtTopLevel) {
+        List<Obs> obsGroup = new ArrayList<Obs>();
+
+        for(Obs obs: obsAtTopLevel){
+            if(isSpecimen(obs)){
+                obsGroup.add(obs);
+            }
+        }
+        return obsGroup;
+    }
 }
