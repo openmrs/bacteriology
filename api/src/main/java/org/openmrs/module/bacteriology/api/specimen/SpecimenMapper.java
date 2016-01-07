@@ -67,6 +67,7 @@ public class SpecimenMapper {
         bacteriologySpecimen.setId(etSpecimen.getIdentifier());
         bacteriologySpecimen.setDateCollected(etSpecimen.getDateCollected());
         bacteriologySpecimen.setVoided(etSpecimen.isVoided());
+        bacteriologySpecimen.setTypeFreeText(etSpecimen.getTypeFreeText());
 
         if (StringUtils.isNotEmpty(etSpecimen.getExistingObs())) {
             bacteriologySpecimen.setExistingObs(obsService.getObsByUuid(etSpecimen.getExistingObs()));

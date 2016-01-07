@@ -19,6 +19,8 @@ public class Specimen {
 
     private EncounterTransaction.Concept type;
 
+    private String typeFreeText;
+
     private String identifier;
 
     private String existingObs;
@@ -91,6 +93,14 @@ public class Specimen {
         return voided;
     }
 
+
+    public String getTypeFreeText() {
+        return typeFreeText;
+    }
+
+    public void setTypeFreeText(String typeFreeText) {
+        this.typeFreeText = typeFreeText;
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Sample{

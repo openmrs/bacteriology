@@ -12,6 +12,7 @@ public class Specimen {
     private Date dateCollected;
     private String id;
     private Concept type;
+    private String typeFreeText;
     private Obs additionalAttributes;
     private Obs reports;
     private boolean voided;
@@ -78,5 +79,13 @@ public class Specimen {
 
     public boolean isVoided() {
         return voided;
+    }
+
+    public String getTypeFreeText() {
+        return typeFreeText;
+    }
+
+    public void setTypeFreeText(String typeFreeText) {
+        this.typeFreeText = typeFreeText;
     }
 }

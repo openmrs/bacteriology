@@ -65,8 +65,10 @@ public class BacteriologyTransactionHandlerIT extends BaseModuleContextSensitive
         for(EncounterTransaction.Observation etObs:ETObsList)
             ETObsUuidList.add(etObs.getUuid());
 
-        assertFalse("Specimen Observations should not be a part of Encounter Transaction Observations", ETObsUuidList.contains("e26cea2c-1b9f-4afe-b211-f3ef6c88afaa"));
-        assertFalse("Specimen Observations should not be a part of Encounter Transaction Observations", ETObsUuidList.contains("e26cea2c-1b9f-4afe-b2zo-flaf6c88afaa"));
+        assertFalse("Specimen Observations should not be a part of Encounter Transaction Observations",
+                ETObsUuidList.contains("e26cea2c-1b9f-4afe-b211-f3ef6c88afaa"));
+        assertFalse("Specimen Observations should not be a part of Encounter Transaction Observations",
+                ETObsUuidList.contains("e26cea2c-1b9f-4afe-b2zo-flaf6c88afaa"));
 
     }
 
@@ -79,8 +81,26 @@ public class BacteriologyTransactionHandlerIT extends BaseModuleContextSensitive
         bacteriologyTransactionHandler.forSave(encounterBeforeSavingSpecimen, encounterTransaction);
 
         assertNotNull(encounterBeforeSavingSpecimen.getAllObs());
-        assertEquals("baef67ac-b24e-4b04-ac83-c3b994132b85", encounterBeforeSavingSpecimen.getAllObs().iterator().next().getConcept().getUuid());
+        assertEquals("baef67ac-b24e-4b04-ac83-c3b994132b85",
+                encounterBeforeSavingSpecimen.getAllObs().iterator().next().getConcept().getUuid());
         assertFalse(encounterBeforeSavingSpecimen.getAllObs().iterator().next().getVoided());
+
+        Obs specimenObs = encounterBeforeSavingSpecimen.getAllObs().iterator().next();
+        Obs typeFreeTextObs = findChildObs(specimenObs, "SPECIMEN SAMPLE SOURCE FREE TEXT");
+        assertNotNull(typeFreeTextObs);
+        assertEquals("someSampleFreeText", typeFreeTextObs.getValueText());
+    }
+
+    private Obs findChildObs(Obs parentObs, String conceptName){
+        Iterator<Obs> iterator = parentObs.getGroupMembers().iterator();
+
+        while(iterator.hasNext()){
+            Obs obs = iterator.next();
+            if(obs.getConcept().getName().getName().equals(conceptName)){
+                return obs;
+            }
+        }
+        return null;
     }
 
     @Test
@@ -92,12 +112,18 @@ public class BacteriologyTransactionHandlerIT extends BaseModuleContextSensitive
         bacteriologyTransactionHandler.forSave(encounterBeforeSavingSpecimen, encounterTransaction);
 
         assertNotNull(encounterBeforeSavingSpecimen.getAllObs(false));
-        assertEquals("baef67ac-b24e-4b04-ac83-c3b994132b85", encounterBeforeSavingSpecimen.getObsAtTopLevel(false).iterator().next().getConcept().getUuid());
+        assertEquals("baef67ac-b24e-4b04-ac83-c3b994132b85",
+                encounterBeforeSavingSpecimen.getObsAtTopLevel(false).iterator().next().getConcept().getUuid());
         assertFalse(encounterBeforeSavingSpecimen.getAllObs().iterator().next().getVoided());
 
-        Obs member = getMember(encounterBeforeSavingSpecimen.getObsAtTopLevel(false).iterator().next().getGroupMembers(), "SPECIMEN ID");
+        Obs member = findChildObs(encounterBeforeSavingSpecimen.getObsAtTopLevel(false).iterator().next(), "SPECIMEN ID");
         assertNotNull(member);
         assertEquals("1234", member.getValueText());
+
+        Obs typeFreeTextObs = findChildObs(encounterBeforeSavingSpecimen.getObsAtTopLevel(false).iterator().next(), "SPECIMEN SAMPLE SOURCE FREE TEXT");
+        assertNotNull(typeFreeTextObs);
+        assertEquals("someSampleFreeText", typeFreeTextObs.getValueText());
+
     }
 
     @Test
@@ -119,21 +145,13 @@ public class BacteriologyTransactionHandlerIT extends BaseModuleContextSensitive
         return baseExtension;
     }
 
-    private Obs getMember(Set<Obs> allObs, String name) {
-        for (Obs obs : allObs) {
-            if(obs.getConcept().getName().getName().equals(name)){
-                return obs;
-            }
-        }
-        return null;
-    }
-
     private Map<String, Object> getBaseExtension(String existingObsUuid) {
         HashMap<String, Object> extension = new HashMap<String, Object>();
         Specimen specimen = new Specimen();
         specimen.setExistingObs(existingObsUuid);
         specimen.setDateCollected(new Date());
         specimen.setIdentifier("1234");
+        specimen.setTypeFreeText("someSampleFreeText");
         EncounterTransaction.Concept type = new EncounterTransaction.Concept();
         type.setUuid("c607c80f-1ea9-4da3-bb88-6276ce8868dd");
         type.setName("WEIGHT (KG)");
