@@ -49,9 +49,6 @@ public class SpecimenMetadataDescriptorTest {
     @Mock
     private Concept sputum;
 
-    @Mock
-    private Concept specimenSourceFreeText;
-
     private SpecimenMetadataDescriptor metadataDescriptor;
 
     @Before
@@ -65,7 +62,6 @@ public class SpecimenMetadataDescriptorTest {
         metadataDescriptor.setSpecimenId(specimenId);
         metadataDescriptor.setSpecimenAdditionalAttributes(specimenAdditionalAttributes);
         metadataDescriptor.setSpecimenTestResults(specimenTestResults);
-        metadataDescriptor.setSpecimenSourceFreeText(specimenSourceFreeText);
     }
 
     @Test
@@ -78,7 +74,6 @@ public class SpecimenMetadataDescriptorTest {
         specimen.setDateCollected(dateCollected);
         specimen.setAdditionalAttributes(setupSpecimenAdditionalAttributes());
         specimen.setExistingObs(null);
-        specimen.setTypeFreeText("sputumExtraInfo");
 
         Obs specimenObs = metadataDescriptor.buildObsGroup(specimen);
         assertEquals(specimenConstruct, specimenObs.getConcept());
@@ -92,10 +87,6 @@ public class SpecimenMetadataDescriptorTest {
         Assert.assertNotNull(specId);
         Assert.assertEquals("id", specId.getValueText());
 
-        Obs specimenSourceFreeTextObs = getObsWithConcept(childObs, specimenSourceFreeText);
-        Assert.assertNotNull(specimenSourceFreeTextObs);
-        Assert.assertEquals("sputumExtraInfo", specimenSourceFreeTextObs.getValueText());
-
         Obs additionalAttributes = getObsWithConcept(childObs, specimenAdditionalAttributes);
         Assert.assertNotNull(additionalAttributes);
 
@@ -106,47 +97,8 @@ public class SpecimenMetadataDescriptorTest {
         Obs typeOfVisitObs = getObsWithConcept(additionalAttributes.getGroupMembers(), typeOfVisit);
         Assert.assertNotNull(typeOfVisitObs);
         Assert.assertEquals("Scheduled", typeOfVisitObs.getValueText());
+
     }
-
-    @Test
-    public void buildSpecimenObsWithoutAnyExistingObsWithNullTypeFreeText() {
-        Date dateCollected = new Date();
-
-        Specimen specimen = new Specimen();
-        specimen.setId("id");
-        specimen.setType(sputum);
-        specimen.setDateCollected(dateCollected);
-        specimen.setAdditionalAttributes(setupSpecimenAdditionalAttributes());
-        specimen.setExistingObs(null);
-        specimen.setTypeFreeText(null);
-
-        Obs specimenObs = metadataDescriptor.buildObsGroup(specimen);
-        assertEquals(specimenConstruct, specimenObs.getConcept());
-        Set<Obs> childObs = specimenObs.getGroupMembers();
-
-        Obs dateCollectedObs = getObsWithConcept(childObs, specimenDateCollected);
-        Assert.assertNotNull(dateCollectedObs);
-        Assert.assertEquals(dateCollected, dateCollectedObs.getValueDate());
-
-        Obs specId = getObsWithConcept(childObs, specimenId);
-        Assert.assertNotNull(specId);
-        Assert.assertEquals("id", specId.getValueText());
-
-        Obs specimenSourceFreeTextObs = getObsWithConcept(childObs, specimenSourceFreeText);
-        Assert.assertNull(specimenSourceFreeTextObs);
-
-        Obs additionalAttributes = getObsWithConcept(childObs, specimenAdditionalAttributes);
-        Assert.assertNotNull(additionalAttributes);
-
-        Obs labNameObs = getObsWithConcept(additionalAttributes.getGroupMembers(), labName);
-        Assert.assertNotNull(labNameObs);
-        Assert.assertEquals("Some Lab Name", labNameObs.getValueText());
-
-        Obs typeOfVisitObs = getObsWithConcept(additionalAttributes.getGroupMembers(), typeOfVisit);
-        Assert.assertNotNull(typeOfVisitObs);
-        Assert.assertEquals("Scheduled", typeOfVisitObs.getValueText());
-    }
-
 
     @Test
     public void buildSpecimenObsWithoutAdditionalAttributesAndReports() {
@@ -215,7 +167,6 @@ public class SpecimenMetadataDescriptorTest {
         Specimen specimen = new Specimen();
         specimen.setId("latestid");
         specimen.setType(sputum);
-        specimen.setTypeFreeText("addnlInfo");
         specimen.setDateCollected(dateCollected);
         specimen.setAdditionalAttributes(setupSpecimenAdditionalAttributes());
         specimen.setExistingObs(getExistingObsInDb());
@@ -227,10 +178,6 @@ public class SpecimenMetadataDescriptorTest {
         Obs dateCollectedObs = getObsWithConcept(childObs, specimenDateCollected);
         Assert.assertNotNull(dateCollectedObs);
         Assert.assertEquals(dateCollected, dateCollectedObs.getValueDate());
-
-        Obs specimenSourceFreeTextObs = getObsWithConcept(childObs,specimenSourceFreeText);
-        Assert.assertNotNull(specimenSourceFreeTextObs);
-        Assert.assertEquals("addnlInfo",specimenSourceFreeTextObs.getValueText());
 
         Obs specId = getObsWithConcept(childObs, specimenId);
         Assert.assertNotNull(specId);
@@ -248,47 +195,6 @@ public class SpecimenMetadataDescriptorTest {
         Assert.assertEquals("Scheduled", typeOfVisitObs.getValueText());
 
     }
-
-    @Test
-    public void buildSpecimenObsWithSomeExistingObsAndNullTypeFreeText() {
-        Date dateCollected = new Date();
-
-        Specimen specimen = new Specimen();
-        specimen.setId("latestid");
-        specimen.setType(sputum);
-        specimen.setTypeFreeText(null);
-        specimen.setDateCollected(dateCollected);
-        specimen.setAdditionalAttributes(setupSpecimenAdditionalAttributes());
-        specimen.setExistingObs(getExistingObsInDb());
-
-        Obs specimenObs = metadataDescriptor.buildObsGroup(specimen);
-        assertEquals(specimenConstruct, specimenObs.getConcept());
-        Set<Obs> childObs = specimenObs.getGroupMembers();
-
-        Obs dateCollectedObs = getObsWithConcept(childObs, specimenDateCollected);
-        Assert.assertNotNull(dateCollectedObs);
-        Assert.assertEquals(dateCollected, dateCollectedObs.getValueDate());
-
-        Obs specimenSourceFreeTextObs = getObsWithConcept(childObs,specimenSourceFreeText);
-        Assert.assertNull(specimenSourceFreeTextObs);
-
-        Obs specId = getObsWithConcept(childObs, specimenId);
-        Assert.assertNotNull(specId);
-        Assert.assertEquals("latestid", specId.getValueText()); //id is modified from what is being setup
-
-        Obs additonalAttributes = getObsWithConcept(childObs, specimenAdditionalAttributes);
-        Assert.assertNotNull(additonalAttributes);
-
-        Obs labNameObs = getObsWithConcept(additonalAttributes.getGroupMembers(), labName);
-        Assert.assertNotNull(labNameObs);
-        Assert.assertEquals("Some Lab Name", labNameObs.getValueText());
-
-        Obs typeOfVisitObs = getObsWithConcept(additonalAttributes.getGroupMembers(), typeOfVisit);
-        Assert.assertNotNull(typeOfVisitObs);
-        Assert.assertEquals("Scheduled", typeOfVisitObs.getValueText());
-
-    }
-
 
 
     @Test

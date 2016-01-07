@@ -187,32 +187,4 @@
             call add_concept_set_members (@set_concept_id,@concept_id,5);
         </sql>
     </changeSet>
-    <changeSet id="BACT-07012016103500" author="Bharat">
-        <sql>
-            set @concept_id = 0;
-            set @concept_name_short_id = 0;
-            set @concept_name_full_id = 0;
-            set @concept_map_type_id = 0;
-            set @set_concept_id = 0;
-            set @source_id = 0;
-            set @date = '';
-            select curdate() into @date;
-            select concept_map_type_id from concept_map_type where name='SAME-AS' into @concept_map_type_id;
-            select concept_id from concept_name where name = 'BACTERIOLOGY CONCEPT SET' and concept_name_type='FULLY_SPECIFIED' into @set_concept_id;
-
-            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Sample Source NonCoded', 'Specimen Sample Source NonCoded', 'Text', 'Misc', false);
-            call add_concept_set_members (@set_concept_id,@concept_id,1);
-
-            select concept_source_id from concept_reference_source where name='org.openmrs.module.bacteriology' into
-            @source_id;
-
-            select uuid() into @uuid;
-            insert into concept_reference_term(concept_source_id, name, code, description, creator, date_created, uuid)
-            values(@source_id, 'SPECIMEN SAMPLE SOURCE NON CODED', 'SPECIMEN_SAMPLE_SOURCE_FREE_TEXT', 'Specimen Sample Source', 1, @date,
-            @uuid);
-
-
-        </sql>
-    </changeSet>
-
 </databaseChangeLog>
