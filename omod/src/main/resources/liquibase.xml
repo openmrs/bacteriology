@@ -196,6 +196,8 @@
             set @set_concept_id = 0;
             set @source_id = 0;
             set @date = '';
+            set @specimen_type_concept_reference_term_id = 0;
+
             select curdate() into @date;
             select concept_map_type_id from concept_map_type where name='SAME-AS' into @concept_map_type_id;
             select concept_id from concept_name where name = 'BACTERIOLOGY CONCEPT SET' and concept_name_type='FULLY_SPECIFIED' into @set_concept_id;
@@ -203,14 +205,17 @@
             call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Sample Source NonCoded', 'Specimen Sample Source NonCoded', 'Text', 'Misc', false);
             call add_concept_set_members (@set_concept_id,@concept_id,1);
 
-            select concept_source_id from concept_reference_source where name='org.openmrs.module.bacteriology' into
-            @source_id;
+            select concept_source_id from concept_reference_source where name='org.openmrs.module.bacteriology' into @source_id;
 
             select uuid() into @uuid;
             insert into concept_reference_term(concept_source_id, name, code, description, creator, date_created, uuid)
             values(@source_id, 'SPECIMEN SAMPLE SOURCE NON CODED', 'SPECIMEN_SAMPLE_SOURCE_FREE_TEXT', 'Specimen Sample Source', 1, @date,
             @uuid);
 
+            select concept_reference_term_id from concept_reference_term where code='SPECIMEN_SAMPLE_SOURCE_FREE_TEXT' into @specimen_type_concept_reference_term_id;
+
+            insert into concept_reference_map (concept_reference_term_id, concept_map_type_id, concept_id, date_created, creator, uuid)
+            values (@specimen_type_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
 
         </sql>
     </changeSet>

@@ -121,7 +121,8 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         Encounter encounter = encounterService.getEncounter(3);
 
         Resource etRequest = new ClassPathResource("encounterTransactionWithAdditionalAttr.json");
-        EncounterTransaction encounterTransaction = new ObjectMapper().readValue(etRequest.getInputStream(), EncounterTransaction.class);
+        EncounterTransaction encounterTransaction = new ObjectMapper().readValue(etRequest.getInputStream(),
+                EncounterTransaction.class);
         bacteriologyService.updateEncounter(encounter, encounterTransaction);
 
         Obs specimenObs = findMember(encounter.getObsAtTopLevel(false), getConcept(BacteriologyConcepts.BACTERIOLOGY_CONCEPT_SET));
@@ -158,7 +159,8 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         EncounterTransaction encounterTransaction = new ObjectMapper().readValue(etRequest.getInputStream(), EncounterTransaction.class);
         bacteriologyService.updateEncounter(encounter, encounterTransaction);
 
-        Obs specimenObs = findMember(encounter.getObsAtTopLevel(false), getConcept(BacteriologyConcepts.BACTERIOLOGY_CONCEPT_SET));
+        Obs specimenObs = findMember(encounter.getObsAtTopLevel(false),
+                getConcept(BacteriologyConcepts.BACTERIOLOGY_CONCEPT_SET));
         assertNotNull(specimenObs);
 
         Obs specimenId = findMember(specimenObs.getGroupMembers(), getConcept(BacteriologyConcepts.SPECIMEN_ID_CODE));
@@ -206,7 +208,8 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         testReport.setResults(resultsObservation);
 
         Specimen.Sample sample = new Specimen.Sample();
-        EncounterTransaction.Observation additionalAttributes = new EncounterTransaction.Observation().setUuid(sampleObs.getUuid()).setValue(105);
+        EncounterTransaction.Observation additionalAttributes = new EncounterTransaction.Observation().setUuid(sampleObs.getUuid()).setValue(
+                105);
         sample.setAdditionalAttributes(additionalAttributes);
 
         Concept specimenType = conceptService.getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE);
@@ -229,6 +232,23 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
 
         assertEquals(sampleObs.getValueNumeric(), Double.valueOf("105"));
         assertEquals(resultsObs.getValueNumeric(), Double.valueOf("72"));
+    }
+
+    @Test
+    public void ensureDomainSpecimenIsTransformed(){
+        Date dateCollected = new Date();
+
+        org.openmrs.module.bacteriology.api.specimen.Specimen specimen = new org.openmrs.module.bacteriology.api.specimen.Specimen();
+        specimen.setTypeFreeText("other type");
+        specimen.setType(getConcept("SPUTUM"));
+        specimen.setDateCollected(dateCollected);
+        specimen.setId("id");
+        specimen.setUuid("uuid");
+        Specimen specimen1 = bacteriologyService.createDomainSpecimen(specimen);
+        assertEquals("SPUTUM", specimen1.getType().getName());
+        assertEquals(dateCollected, specimen1.getDateCollected());
+        assertEquals("id", specimen1.getIdentifier());
+        assertEquals("other type", specimen1.getTypeFreeText());
     }
 
 

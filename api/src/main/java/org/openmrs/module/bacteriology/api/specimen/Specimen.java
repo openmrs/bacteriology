@@ -4,7 +4,6 @@ import org.openmrs.Concept;
 import org.openmrs.Obs;
 
 import java.util.Date;
-import java.util.List;
 
 public class Specimen {
     private String uuid;
@@ -88,4 +87,6 @@ public class Specimen {
     public void setTypeFreeText(String typeFreeText) {
         this.typeFreeText = typeFreeText;
     }
+
+
 }

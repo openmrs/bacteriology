@@ -310,6 +310,11 @@ public class SpecimenMetadataDescriptorTest {
         specimenTypeObs.setConcept(specimenSource);
         specimenTypeObs.setValueCoded(sputum);
         obsGroup.addGroupMember(specimenTypeObs);
+
+        Obs specimenTypeFreeTextObs = new Obs();
+        specimenTypeFreeTextObs.setConcept(specimenSourceFreeText);
+        specimenTypeFreeTextObs.setValueText("Other type");
+        obsGroup.addGroupMember(specimenTypeFreeTextObs);
         Specimen specimen = metadataDescriptor.buildSpecimen(obsGroup);
 
 
@@ -317,6 +322,7 @@ public class SpecimenMetadataDescriptorTest {
         assertEquals(specimen.getAdditionalAttributes(), additionalAttributes);
         assertEquals(specimen.getDateCollected(), dateCollectedObs.getValueDatetime());
 
+        assertEquals("Other type",specimen.getTypeFreeText());
     }
 
 

@@ -133,6 +133,11 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         specimen.setExistingObs(obsGroup);
         specimen.setUuid(obsGroup.getUuid());
         specimen.setDateCollected(findMember(obsGroup, getSpecimenDateCollected()).getValueDate());
+
+        Obs specimenSourceFreeText = findMember(obsGroup, getSpecimenSourceFreeText());
+        if(specimenSourceFreeText!=null){
+            specimen.setTypeFreeText(specimenSourceFreeText.getValueText());
+        }
         Obs specimenIdObs=findMember(obsGroup, getSpecimenId());
         if(specimenIdObs!=null)
         specimen.setId(specimenIdObs.getValueText());
