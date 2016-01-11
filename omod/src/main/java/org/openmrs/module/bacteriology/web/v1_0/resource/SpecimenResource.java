@@ -74,6 +74,7 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
         description.addProperty("existingObs");
         description.addProperty("sample");
         description.addProperty("type");
+        description.addProperty("typeFreeText");
         description.addProperty("identifier");
         return description;
         }
@@ -89,6 +90,7 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
             description.addProperty("sample");
             description.addProperty("type");
             description.addProperty("report");
+            description.addProperty("typeFreeText");
             description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
             return description;
         } else if (rep instanceof FullRepresentation) {
@@ -99,6 +101,7 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
             description.addProperty("sample");
             description.addProperty("type");
             description.addProperty("dateCollected");
+            description.addProperty("typeFreeText");
             description.addProperty("report");
             description.addSelfLink();
             return description;
@@ -111,6 +114,7 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
             description.addProperty("sample");
             description.addProperty("type");
             description.addProperty("report");
+            description.addProperty("typeFreeText");
             description.addSelfLink();
             return description;
 
