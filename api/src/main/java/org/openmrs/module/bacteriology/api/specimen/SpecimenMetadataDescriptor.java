@@ -184,7 +184,10 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     }
 
     private void setFreeTextMember(Obs obsGroup, Concept memberConcept, String memberAnswer) {
-        Obs member = findMember(obsGroup, memberConcept);
+        Obs member = null;
+        if(obsGroup.getGroupMembers(false)!= null) {
+            member = findMember(obsGroup, memberConcept);
+        }
         boolean needToVoid = member != null && !OpenmrsUtil.nullSafeEquals(memberAnswer, member.getValueText());
         boolean needToCreate = memberAnswer != null && (member == null || needToVoid);
         if (needToVoid) {
