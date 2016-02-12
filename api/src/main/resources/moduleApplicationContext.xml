@@ -31,7 +31,7 @@
 						<ref bean="transactionManager" />
 					</property>
 					<property name="target">
-						<bean class="org.openmrs.module.bacteriology.api.impl.BacteriologyServiceImpl">
+						<bean name="bacteriologyService" class="org.openmrs.module.bacteriology.api.impl.BacteriologyServiceImpl">
 							<property name="dao">
 								<bean class="org.openmrs.module.bacteriology.api.db.hibernate.HibernateBacteriologyServiceDAO">
 									<property name="sessionFactory">
