@@ -100,15 +100,21 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
             return specimen.getExistingObs();
         } else {
             Obs obs = new Obs();
+            obs.setObsDatetime(new Date());
             Obs specimenSource = buildObsFor(getSpecimenSource(), specimen.getType(), null);
+            specimenSource.setObsDatetime(obs.getObsDatetime());
             Obs dateCollected = buildObsFor(getSpecimenDateCollected(), specimen.getDateCollected());
+            dateCollected.setObsDatetime(obs.getObsDatetime());
             if(specimen.getId()!=null ) {
                 Obs specimenId = buildObsFor(getSpecimenId(), specimen.getId());
+                specimenId.setObsDatetime(obs.getObsDatetime());
                 obs.addGroupMember(specimenId);
             }
             setFreeTextMember(obs,getSpecimenSourceFreeText(),specimen.getTypeFreeText());
 
             Obs additionalAttributes = specimen.getAdditionalAttributes();
+            if(additionalAttributes != null)
+              additionalAttributes.setObsDatetime(obs.getObsDatetime());
             obs.setVoided(specimen.isVoided());
             obs.setConcept(getSpecimenConstruct());
             obs.addGroupMember(specimenSource);
