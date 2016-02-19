@@ -3,12 +3,12 @@
  * Version 1.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
  * http://license.openmrs.org
- *
+ * <p/>
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
  * License for the specific language governing rights and limitations
  * under the License.
- *
+ * <p/>
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 package org.openmrs.module.bacteriology.api;
@@ -19,6 +19,7 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Collection;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured in moduleApplicationContext.xml.
@@ -27,24 +28,26 @@ import org.springframework.transaction.annotation.Transactional;
  * <code>
  * Context.getService(BacteriologyServiceService.class).someMethod();
  * </code>
- * 
+ *
  * @see org.openmrs.api.context.Context
  */
 @Transactional
 @Service
 public interface BacteriologyService extends OpenmrsService {
-     
-	/*
-	 * Add service methods here
-	 * 
-	 */
-	void updateEncounter(Encounter encounter, EncounterTransaction encounterTransaction);
 
-	org.openmrs.module.bacteriology.api.encounter.domain.Specimen getSpecimenFromObs(Obs obsGroup);
+    /*
+     * Add service methods here
+     *
+     */
+    void updateEncounter(Encounter encounter, EncounterTransaction encounterTransaction);
 
-	void updateEncounterTransaction(Encounter encounter, EncounterTransaction encounterTransaction);
+    org.openmrs.module.bacteriology.api.encounter.domain.Specimen getSpecimen(Obs obsGroup);
 
-	 org.openmrs.module.bacteriology.api.encounter.domain.Specimen createDomainSpecimen(org.openmrs.module.bacteriology.api.specimen.Specimen specimen);
+    org.openmrs.module.bacteriology.api.encounter.domain.Specimens getSpecimens(Collection<Obs> observation);
 
-	org.openmrs.module.bacteriology.api.encounter.domain.Specimen saveSpecimen(org.openmrs.module.bacteriology.api.encounter.domain.Specimen specimen);
+    void updateEncounterTransaction(Encounter encounter, EncounterTransaction encounterTransaction);
+
+    org.openmrs.module.bacteriology.api.encounter.domain.Specimen createDomainSpecimen(org.openmrs.module.bacteriology.api.specimen.Specimen specimen);
+
+    org.openmrs.module.bacteriology.api.encounter.domain.Specimen saveSpecimen(org.openmrs.module.bacteriology.api.encounter.domain.Specimen specimen);
 }
