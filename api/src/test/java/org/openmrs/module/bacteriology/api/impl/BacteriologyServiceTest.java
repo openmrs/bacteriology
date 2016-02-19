@@ -13,6 +13,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.bacteriology.api.BacteriologyConcepts;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
+import org.openmrs.module.bacteriology.api.encounter.domain.Specimens;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.emrapi.utils.HibernateLazyLoader;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -23,9 +24,12 @@ import org.springframework.core.io.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
+import java.util.Collection;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
 
@@ -251,6 +255,34 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         assertEquals("other type", specimen1.getTypeFreeText());
     }
 
+    @Test
+    public void ensureGetSpecimenReturnsCorrectSpecimen() throws Exception{
+        executeDataSet("existingSpecimenObs.xml");
+
+        Obs obsGroup = obsService.getObs(100);
+
+        Specimen specimen = bacteriologyService.getSpecimen(obsGroup);
+        assertEquals("SAMPLE12345",specimen.getIdentifier());
+        assertNull(specimen.getReport());
+        assertEquals("e26cea2c-1b9f-4afe-b211-f3ef6c88afaa",specimen.getUuid());
+        assertEquals("e26cea2c-1b9f-4afe-b211-f3ef6c88afaa",specimen.getExistingObs());
+    }
+
+    @Test
+    public void ensureGetSpecimensReturnsCorrectSpecimens() throws Exception{
+        executeDataSet("existingSpecimenObs.xml");
+
+        Obs obsGroup = obsService.getObs(100);
+
+        Collection<Obs> obsGroups = Arrays.asList(obsGroup);
+        Specimens specimens = bacteriologyService.getSpecimens(obsGroups);
+
+        assertEquals("SAMPLE12345", specimens.get(0).getIdentifier());
+        assertEquals("e26cea2c-1b9f-4afe-b211-f3ef6c88afaa", specimens.get(0).getUuid());
+
+        specimens = bacteriologyService.getSpecimens(Arrays.<Obs>asList());
+        assertEquals(0, specimens.size());
+    }
 
     private Concept getConcept(String name) {
         Concept concept = conceptService.getConceptByName(name);

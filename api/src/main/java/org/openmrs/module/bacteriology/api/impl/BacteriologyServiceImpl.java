@@ -3,16 +3,18 @@
  * Version 1.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
  * http://license.openmrs.org
- *
+ * <p/>
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
  * License for the specific language governing rights and limitations
  * under the License.
- *
+ * <p/>
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 package org.openmrs.module.bacteriology.api.impl;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
@@ -22,6 +24,7 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.bacteriology.BacteriologyConstants;
 import org.openmrs.module.bacteriology.BacteriologyProperties;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
+import org.openmrs.module.bacteriology.api.encounter.domain.Specimens;
 import org.openmrs.module.bacteriology.api.db.BacteriologyServiceDAO;
 import org.openmrs.module.bacteriology.api.encounter.BacteriologyMapper;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
@@ -31,19 +34,16 @@ import org.openmrs.module.emrapi.encounter.ObservationMapper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * It is a default implementation of {@link BacteriologyService}.
  */
 public class BacteriologyServiceImpl extends BaseOpenmrsService implements BacteriologyService {
-	
-	protected final Log log = LogFactory.getLog(this.getClass());
-	
-	private BacteriologyServiceDAO dao;
+
+    protected final Log log = LogFactory.getLog(this.getClass());
+
+    private BacteriologyServiceDAO dao;
 
     @Autowired
     private SpecimenMapper specimenMapper;
@@ -68,38 +68,38 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
      * @param dao the dao to set
      */
     public void setDao(BacteriologyServiceDAO dao) {
-	    this.dao = dao;
+        this.dao = dao;
     }
-    
+
     @Override
     public void updateEncounter(Encounter encounter, EncounterTransaction encounterTransaction) {
 
         List<Specimen> specimens = bacteriologyMapper.mapSpecimen(encounterTransaction);
 
-        for(Specimen specimen:specimens){
-            org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter,specimen);
+        for (Specimen specimen : specimens) {
+            org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
             Obs bacteriologyObs = bacteriologyProperties.getSpecimenMetadata().buildObsGroup(bacteriologySpecimen);
             encounter.addObs(bacteriologyObs);
         }
     }
 
     @Override
-    public Specimen getSpecimenFromObs(Obs obsGroup){
+    public Specimen getSpecimen(Obs obsGroup){
         org.openmrs.module.bacteriology.api.specimen.Specimen specimen = bacteriologyProperties.getSpecimenMetadata().buildSpecimen(obsGroup);
         return createDomainSpecimen(specimen);
     }
 
     @Override
     public void updateEncounterTransaction(Encounter encounter, EncounterTransaction encounterTransaction) {
-        List<org.openmrs.module.bacteriology.api.specimen.Specimen> bacteriologySpecimenList =  bacteriologyProperties.getSpecimenMetadata().getSpecimenFromObs(encounter.getObsAtTopLevel(false));
+        List<org.openmrs.module.bacteriology.api.specimen.Specimen> bacteriologySpecimenList = bacteriologyProperties.getSpecimenMetadata().getSpecimenFromObs(encounter.getObsAtTopLevel(false));
 
         List<Specimen> specimens = new ArrayList<Specimen>();
-        for(org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen: bacteriologySpecimenList) {
+        for (org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen : bacteriologySpecimenList) {
             specimens.add(createDomainSpecimen(bacteriologySpecimen));
         }
 
-        Map<String,Object> extensions = new HashMap<String, Object>();
-        extensions.put(BacteriologyConstants.BACTERIOLOGY_EXTENSION_KEY,specimens);
+        Map<String, Object> extensions = new HashMap<String, Object>();
+        extensions.put(BacteriologyConstants.BACTERIOLOGY_EXTENSION_KEY, specimens);
         encounterTransaction.setExtensions(extensions);
 
         removeSpecimenObsFromEncounterTransactionObs(encounter, encounterTransaction);
@@ -107,15 +107,15 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     }
 
     private void removeSpecimenObsFromEncounterTransactionObs(Encounter encounter, EncounterTransaction encounterTransaction) {
-        List<EncounterTransaction.Observation> ETObsList= encounterTransaction.getObservations();
-        Map<String,Object> ETUuidObservationMap = new HashMap<String, Object>();
-        for(EncounterTransaction.Observation observation:ETObsList){
+        List<EncounterTransaction.Observation> ETObsList = encounterTransaction.getObservations();
+        Map<String, Object> ETUuidObservationMap = new HashMap<String, Object>();
+        for (EncounterTransaction.Observation observation : ETObsList) {
             ETUuidObservationMap.put(observation.getUuid(), observation);
         }
 
         List<Obs> obsGroupAtSpecimenLevel = bacteriologyProperties.getSpecimenMetadata().getSpecimenObsGroups(encounter.getObsAtTopLevel(false));
-        for(Obs obsGroup: obsGroupAtSpecimenLevel) {
-         ETObsList.remove(ETUuidObservationMap.get(obsGroup.getUuid()));
+        for (Obs obsGroup : obsGroupAtSpecimenLevel) {
+            ETObsList.remove(ETUuidObservationMap.get(obsGroup.getUuid()));
         }
         encounterTransaction.setObservations(ETObsList);
 
@@ -170,4 +170,13 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
         return specimen;
     }
 
+    @Override
+    public Specimens getSpecimens(Collection<Obs> observations) {
+        Specimens specimens = new Specimens();
+        for (Obs observation : observations) {
+            Specimen specimen = getSpecimen(observation);
+            specimens.add(specimen);
+        }
+        return specimens;
+    }
 }

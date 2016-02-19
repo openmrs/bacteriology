@@ -6,9 +6,12 @@ import org.openmrs.Concept;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.ConceptService;
+import org.openmrs.api.ObsService;
+import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
+import org.openmrs.module.bacteriology.api.encounter.domain.Specimens;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -35,14 +38,11 @@ import java.util.*;
 @Resource(name = RestConstants.VERSION_1 + "/specimen", supportedClass = Specimen.class, supportedOpenmrsVersions = {"1.10.*", "1.11.*", "1.12.*"})
 public class SpecimenResource extends DelegatingCrudResource<Specimen> {
 
-
-    BacteriologyService bacteriologyService;
-
     @Override
     public Specimen getByUniqueId(String uuid) {
         Obs obs = Context.getObsService().getObsByUuid(uuid);
-        bacteriologyService = Context.getService(BacteriologyService.class);
-        return bacteriologyService.getSpecimenFromObs(obs);
+        BacteriologyService bacteriologyService = Context.getService(BacteriologyService.class);
+        return bacteriologyService.getSpecimen(obs);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
         description.addProperty("typeFreeText");
         description.addProperty("identifier");
         return description;
-        }
+    }
 
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -129,59 +129,51 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
 
     @PropertySetter("report")
     public static void setReport(Specimen specimen, Object value) {
-        Object reportObject = new ObjectMapper().convertValue(value, new TypeReference<Specimen.TestReport>() {});
+        Object reportObject = new ObjectMapper().convertValue(value, new TypeReference<Specimen.TestReport>() {
+        });
         specimen.setReport((Specimen.TestReport) reportObject);
     }
 
     @PropertySetter("sample")
     public static void setSample(Specimen specimen, Object value) {
-        Object sampleObject = new ObjectMapper().convertValue(value, new TypeReference<Specimen.Sample>() {});
+        Object sampleObject = new ObjectMapper().convertValue(value, new TypeReference<Specimen.Sample>() {
+        });
         specimen.setSample((Specimen.Sample) sampleObject);
     }
 
     @PropertySetter("dateCollected")
     public static void setDateCollected(Specimen specimen, Object value) {
-        Object sampleObject = new ObjectMapper().convertValue(value, new TypeReference<Date>() {});
+        Object sampleObject = new ObjectMapper().convertValue(value, new TypeReference<Date>() {
+        });
         specimen.setDateCollected((Date) sampleObject);
     }
 
     @PropertySetter("type")
     public static void setType(Specimen specimen, Object value) {
-        Object typeObject = new ObjectMapper().convertValue(value, new TypeReference<EncounterTransaction.Concept>() {});
+        Object typeObject = new ObjectMapper().convertValue(value, new TypeReference<EncounterTransaction.Concept>() {
+        });
         specimen.setType((EncounterTransaction.Concept) typeObject);
     }
 
     @Override
-    protected PageableResult doSearch(RequestContext context) {
-        String conceptName = context.getParameter("name");
-        String patientUuid=context.getParameter("patientUuid");
-        bacteriologyService=Context.getService(BacteriologyService.class);
-        Concept concept = Context.getService(ConceptService.class).getConceptByName(conceptName);
-        if (patientUuid != null) {
-            Patient patient = ((PatientResource1_8) Context.getService(RestService.class).getResourceBySupportedClass(
-                    Patient.class)).getByUniqueId(patientUuid);
-            if (patient != null && concept != null){
-                if (concept != null) {
-                    List<Obs> obsList = Context.getObsService().getObservationsByPersonAndConcept(patient,concept);
-                    List<Specimen> specimenList=new ArrayList<Specimen>();
-                    for(Obs obs:obsList) {
-                        Specimen specimen = bacteriologyService.getSpecimenFromObs(obs);
-                        specimenList.add(specimen);
-                    }
-                    sortSpecimensByDateCollected(specimenList);
-                    return new NeedsPaging<Specimen>(specimenList, context);
-                }
-            }
-        }
-        return new EmptySearchResult();
-    }
+    protected PageableResult doSearch(RequestContext requestContext) {
+        String conceptName = requestContext.getParameter("name");
+        String patientUuid = requestContext.getParameter("patientUuid");
 
-    private void sortSpecimensByDateCollected(List<Specimen> specimenList) {
-        Collections.sort(specimenList, new Comparator<Specimen>() {
-            @Override
-            public int compare(Specimen specimen1, Specimen specimen2) {
-                return specimen2.getDateCollected().compareTo(specimen1.getDateCollected());
-            }
-        });
+        BacteriologyService bacteriologyService = Context.getService(BacteriologyService.class);
+        ConceptService conceptService = Context.getConceptService();
+        PatientService patientService = Context.getPatientService();
+        ObsService obsService = Context.getObsService();
+
+        Concept concept = conceptService.getConceptByName(conceptName);
+        Patient patient = patientService.getPatientByUuid(patientUuid);
+        if (null == concept || null == patient) {
+            return new EmptySearchResult();
+        }
+
+        List<Obs> obsList = obsService.getObservationsByPersonAndConcept(patient, concept);
+        Specimens specimens = bacteriologyService.getSpecimens(obsList);
+        Specimens sortedSpecimens = specimens.sortByDateCollected();
+        return new NeedsPaging<Specimen>(sortedSpecimens, requestContext);
     }
 }
