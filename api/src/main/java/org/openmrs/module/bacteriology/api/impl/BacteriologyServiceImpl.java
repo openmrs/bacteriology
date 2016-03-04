@@ -13,10 +13,9 @@
  */
 package org.openmrs.module.bacteriology.api.impl;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.ObsService;
@@ -174,9 +173,29 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     public Specimens getSpecimens(Collection<Obs> observations) {
         Specimens specimens = new Specimens();
         for (Obs observation : observations) {
-            Specimen specimen = getSpecimen(observation);
+            Specimen specimen = getSpecimen(sortGroupMembersByConceptId(observation));
             specimens.add(specimen);
         }
         return specimens;
+    }
+
+    private Obs sortGroupMembersByConceptId(Obs observation){
+        if(observation != null){
+            Concept concept = observation.getConcept();
+            if(concept.isSet()){
+                List<Concept> setMembers = observation.getConcept().getSetMembers();
+                Set<Obs> sortedGroupMembers = new LinkedHashSet<Obs>();
+                for (Concept setMember : setMembers) {
+                    for (Obs obs : observation.getGroupMembers()) {
+                        if (obs.getConcept().equals(setMember)) {
+                            sortedGroupMembers.add(obs);
+                            sortGroupMembersByConceptId(obs);
+                        }
+                    }
+                }
+                observation.setGroupMembers(sortedGroupMembers);
+            }
+        }
+        return observation;
     }
 }
