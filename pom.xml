@@ -11,12 +11,13 @@
 	<url>https://wiki.openmrs.org/display/docs/Bacteriology+Module+Module</url>
 
 	<properties>
-		<openMRSWebServicesVersion>2.12</openMRSWebServicesVersion>
+		<openMRSWebServicesVersion>2.14</openMRSWebServicesVersion>
 		<reportingModuleVersion>0.9.1</reportingModuleVersion>
 		<openMRSVersion>1.11.4</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<calculationModuleVersion>1.1</calculationModuleVersion>
 		<serializationXstreamModuleVersion>0.2.7</serializationXstreamModuleVersion>
+		<emrapiVersion>1.12</emrapiVersion>
 	</properties>
 
 	<organization>
@@ -56,14 +57,14 @@
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>emrapi-api-1.11</artifactId>
-				<version>1.12</version>
+				<version>${emrapiVersion}</version>
 				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>emrapi-api</artifactId>
-				<version>1.12</version>
+				<version>${emrapiVersion}</version>
 				<scope>provided</scope>
 			</dependency>
 						
