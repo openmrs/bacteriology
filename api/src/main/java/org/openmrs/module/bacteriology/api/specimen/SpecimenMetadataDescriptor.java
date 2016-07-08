@@ -1,6 +1,12 @@
 package org.openmrs.module.bacteriology.api.specimen;
 
-import org.openmrs.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.openmrs.Concept;
+import org.openmrs.ConceptAnswer;
+import org.openmrs.ConceptClass;
+import org.openmrs.ConceptMap;
+import org.openmrs.ConceptReferenceTerm;
+import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.bacteriology.BacteriologyConstants;
 import org.openmrs.module.bacteriology.api.BacteriologyConcepts;
@@ -97,10 +103,14 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
             setFreeTextMember(specimen.getExistingObs(),getSpecimenSourceFreeText(), specimen.getTypeFreeText());
             specimen.getExistingObs().addGroupMember(specimen.getAdditionalAttributes());
             specimen.getExistingObs().addGroupMember(specimen.getReports());
+            specimen.getExistingObs().setObsDatetime(specimen.getDateCollected());
+            if(CollectionUtils.isNotEmpty(specimen.getExistingObs().getGroupMembers())) {
+                setGroupMembersObsDateTime(specimen.getExistingObs().getGroupMembers(), specimen.getDateCollected());
+            }
             return specimen.getExistingObs();
         } else {
             Obs obs = new Obs();
-            obs.setObsDatetime(new Date());
+            obs.setObsDatetime(specimen.getDateCollected());
             Obs specimenSource = buildObsFor(getSpecimenSource(), specimen.getType(), null);
             specimenSource.setObsDatetime(obs.getObsDatetime());
             Obs dateCollected = buildObsFor(getSpecimenDateCollected(), specimen.getDateCollected());
@@ -121,9 +131,17 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
             obs.addGroupMember(dateCollected);
             obs.addGroupMember(specimen.getReports());
             obs.addGroupMember(additionalAttributes);
-
-
+            setGroupMembersObsDateTime(obs.getGroupMembers(), specimen.getDateCollected());
             return obs;
+        }
+    }
+
+    private void setGroupMembersObsDateTime(Set<Obs> groupMembers, Date dateCollected) {
+        for(Obs groupMemberObs : groupMembers) {
+            groupMemberObs.setObsDatetime(dateCollected);
+            if(CollectionUtils.isNotEmpty(groupMemberObs.getGroupMembers())) {
+                setGroupMembersObsDateTime(groupMemberObs.getGroupMembers(), dateCollected);
+            }
         }
     }
 
