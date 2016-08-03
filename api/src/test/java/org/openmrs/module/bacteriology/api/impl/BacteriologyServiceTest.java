@@ -121,6 +121,41 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
     }
 
     @Test
+    public void ensureExistingSpecimenObsVoidedWhenSpecimenIsVoided() throws Exception {
+        executeDataSet("existingSpecimenObs.xml");
+        Encounter encounter = encounterService.getEncounter(102);
+
+        Resource etRequest = new ClassPathResource("encounterTransactionWithSpecimenVoided.json");
+        EncounterTransaction encounterTransaction = new ObjectMapper().readValue(etRequest.getInputStream(), EncounterTransaction.class);
+        bacteriologyService.updateEncounter(encounter, encounterTransaction);
+
+        Obs specimenObs = findMember(encounter.getObsAtTopLevel(true), getConcept(BacteriologyConcepts.BACTERIOLOGY_CONCEPT_SET));
+        assertEquals(specimenObs.isVoided(), true);
+
+        Obs specimenId = findMember(specimenObs.getGroupMembers(true), getConcept(BacteriologyConcepts.SPECIMEN_ID_CODE));
+        assertNotNull(specimenId);
+        assertEquals(specimenId.isVoided(), true);
+
+        Obs specimenDateCollected = findMember(specimenObs.getGroupMembers(true), getConcept(BacteriologyConcepts.SPECIMEN_COLLECTION_DATE));
+        assertEquals(specimenDateCollected.isVoided(), true);
+
+        Obs specimenSource = findMember(specimenObs.getGroupMembers(true), getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
+        assertEquals(specimenSource.isVoided(), true);
+
+        Obs additionalAttributes = findMember(specimenObs.getGroupMembers(true), getConcept("BACTERIOLOGY ADDITIONAL ATTRIBUTES"));
+        assertEquals(additionalAttributes.isVoided(), true);
+
+        Obs weight = findMember(additionalAttributes.getGroupMembers(true), getConcept("WEIGHT (KG)"));
+        assertEquals(weight.isVoided(), true);
+
+        Obs results = findMember(specimenObs.getGroupMembers(true), getConcept("BACTERIOLOGY RESULTS"));
+        assertEquals(results.isVoided(), true);
+
+        Obs weightResult = findMember(results.getGroupMembers(true), getConcept("WEIGHT (KG)"));
+        assertEquals(weightResult.isVoided(), true);
+    }
+
+    @Test
     public void ensureEncounterIsUpdatedWithAdditionalAttributes() throws Exception {
         Encounter encounter = encounterService.getEncounter(3);
 

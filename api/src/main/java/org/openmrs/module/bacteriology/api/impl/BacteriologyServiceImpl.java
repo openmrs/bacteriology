@@ -23,17 +23,23 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.bacteriology.BacteriologyConstants;
 import org.openmrs.module.bacteriology.BacteriologyProperties;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
-import org.openmrs.module.bacteriology.api.encounter.domain.Specimens;
 import org.openmrs.module.bacteriology.api.db.BacteriologyServiceDAO;
 import org.openmrs.module.bacteriology.api.encounter.BacteriologyMapper;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
+import org.openmrs.module.bacteriology.api.encounter.domain.Specimens;
 import org.openmrs.module.bacteriology.api.specimen.SpecimenMapper;
 import org.openmrs.module.emrapi.encounter.ConceptMapper;
 import org.openmrs.module.emrapi.encounter.ObservationMapper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * It is a default implementation of {@link BacteriologyService}.
@@ -78,6 +84,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
         for (Specimen specimen : specimens) {
             org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
             Obs bacteriologyObs = bacteriologyProperties.getSpecimenMetadata().buildObsGroup(bacteriologySpecimen);
+            if(specimen.isVoided()) voidBacteriologyObsUponSpecimenVoided(bacteriologyObs);
             encounter.addObs(bacteriologyObs);
         }
     }
@@ -197,5 +204,15 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
             }
         }
         return observation;
+    }
+
+    private void voidBacteriologyObsUponSpecimenVoided(Obs bacteriologyObs) {
+        bacteriologyObs.setVoided(true);
+        Set<Obs> members = bacteriologyObs.getGroupMembers();
+        if (members != null) {
+            for (Obs member : members) {
+                voidBacteriologyObsUponSpecimenVoided(member);
+            }
+        }
     }
 }
