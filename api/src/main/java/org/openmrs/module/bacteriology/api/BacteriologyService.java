@@ -15,11 +15,16 @@ package org.openmrs.module.bacteriology.api;
 
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
+import org.openmrs.module.bacteriology.api.encounter.domain.Specimens;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
+
+import static org.openmrs.util.PrivilegeConstants.EDIT_ENCOUNTERS;
 
 /**
  * This service exposes module's core functionality. It is a Spring managed bean which is configured in moduleApplicationContext.xml.
@@ -41,13 +46,14 @@ public interface BacteriologyService extends OpenmrsService {
      */
     void updateEncounter(Encounter encounter, EncounterTransaction encounterTransaction);
 
-    org.openmrs.module.bacteriology.api.encounter.domain.Specimen getSpecimen(Obs obsGroup);
+    Specimen getSpecimen(Obs obsGroup);
 
-    org.openmrs.module.bacteriology.api.encounter.domain.Specimens getSpecimens(Collection<Obs> observation);
+    Specimens getSpecimens(Collection<Obs> observation);
 
     void updateEncounterTransaction(Encounter encounter, EncounterTransaction encounterTransaction);
 
-    org.openmrs.module.bacteriology.api.encounter.domain.Specimen createDomainSpecimen(org.openmrs.module.bacteriology.api.specimen.Specimen specimen);
+    Specimen createDomainSpecimen(org.openmrs.module.bacteriology.api.specimen.Specimen specimen);
 
-    org.openmrs.module.bacteriology.api.encounter.domain.Specimen saveSpecimen(org.openmrs.module.bacteriology.api.encounter.domain.Specimen specimen);
+    @Authorized({EDIT_ENCOUNTERS})
+    Specimen saveSpecimen(org.openmrs.module.bacteriology.api.encounter.domain.Specimen specimen);
 }
