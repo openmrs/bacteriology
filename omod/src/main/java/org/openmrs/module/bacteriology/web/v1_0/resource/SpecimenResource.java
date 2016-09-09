@@ -76,6 +76,7 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
         description.addProperty("type");
         description.addProperty("typeFreeText");
         description.addProperty("identifier");
+        description.addProperty("voided");
         return description;
     }
 
@@ -153,6 +154,13 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
         Object typeObject = new ObjectMapper().convertValue(value, new TypeReference<EncounterTransaction.Concept>() {
         });
         specimen.setType((EncounterTransaction.Concept) typeObject);
+    }
+
+    @PropertySetter("voided")
+    public static void setVoided(Specimen specimen, Object value) {
+        Object voided = new ObjectMapper().convertValue(value, new TypeReference<Boolean>() {
+        });
+        specimen.setVoided((Boolean) voided);
     }
 
     @Override
