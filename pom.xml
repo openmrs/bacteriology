@@ -12,12 +12,13 @@
 
 	<properties>
 		<openMRSWebServicesVersion>2.14</openMRSWebServicesVersion>
-		<reportingModuleVersion>0.9.1</reportingModuleVersion>
-		<openMRSVersion>1.11.4</openMRSVersion>
+		<reportingModuleVersion>0.9.10-SNAPSHOT</reportingModuleVersion>
+		<reportingCompatiblityModuleVersion>2.0.1-SNAPSHOT</reportingCompatiblityModuleVersion>
+		<openMRSVersion>2.0.0</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<calculationModuleVersion>1.1</calculationModuleVersion>
-		<serializationXstreamModuleVersion>0.2.7</serializationXstreamModuleVersion>
-		<emrapiVersion>1.12</emrapiVersion>
+		<calculationModuleVersion>1.3-SNAPSHOT</calculationModuleVersion>
+		<serializationXstreamModuleVersion>0.2.12-SNAPSHOT</serializationXstreamModuleVersion>
+		<emrapiVersion>1.17</emrapiVersion>
 	</properties>
 
 	<organization>
@@ -56,7 +57,7 @@
 						
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
-				<artifactId>emrapi-api-1.11</artifactId>
+				<artifactId>emrapi-api-1.12</artifactId>
 				<version>${emrapiVersion}</version>
 				<scope>provided</scope>
 			</dependency>
@@ -139,7 +140,13 @@
                 <version>${reportingModuleVersion}</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>reportingcompatibility-api</artifactId>
+				<version>${reportingCompatiblityModuleVersion}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>calculation-api</artifactId>
                 <version>${calculationModuleVersion}</version>
@@ -147,7 +154,7 @@
             </dependency>
             <dependency>
                 <groupId>org.openmrs.module</groupId>
-                <artifactId>serialization.xstream-api</artifactId>
+                <artifactId>serialization.xstream-api-2.0</artifactId>
                 <version>${serializationXstreamModuleVersion}</version>
                 <scope>test</scope>
             </dependency>

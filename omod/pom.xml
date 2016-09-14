@@ -34,7 +34,7 @@
 				
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
-			<artifactId>emrapi-api-1.11</artifactId>
+			<artifactId>emrapi-api-1.12</artifactId>
 		</dependency>
 
 		<dependency>
@@ -58,7 +58,12 @@
 			<artifactId>openmrs-web</artifactId>
 			<type>jar</type>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>legacyui-omod</artifactId>
+			<version>1.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.openmrs.api</groupId>
 			<artifactId>openmrs-api</artifactId>
@@ -110,7 +115,11 @@
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>reporting-api</artifactId>
-			<version>${reportingModuleVersion}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>reportingcompatibility-api</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -121,7 +130,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
-			<artifactId>serialization.xstream-api</artifactId>
+			<artifactId>serialization.xstream-api-2.0</artifactId>
 			<version>${serializationXstreamModuleVersion}</version>
 			<scope>test</scope>
 		</dependency>

@@ -34,7 +34,7 @@
 
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
-			<artifactId>emrapi-api-1.11</artifactId>
+			<artifactId>emrapi-api-1.12</artifactId>
 		</dependency>
 				
 		<!-- End OpenMRS modules -->
@@ -79,6 +79,11 @@
 			<artifactId>reporting-api</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>reportingcompatibility-api</artifactId>
+			<scope>test</scope>
+		</dependency>
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>calculation-api</artifactId>
@@ -86,7 +91,7 @@
         </dependency>
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>serialization.xstream-api</artifactId>
+            <artifactId>serialization.xstream-api-2.0</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
