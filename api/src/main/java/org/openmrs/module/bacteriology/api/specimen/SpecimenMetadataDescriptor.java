@@ -28,7 +28,17 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     private Concept specimenTestResults;
     private Concept specimenSourceFreeText;
 
-    public SpecimenMetadataDescriptor(ConceptService conceptService) {
+    private static SpecimenMetadataDescriptor specimenMetadataDescriptor;
+
+    public static SpecimenMetadataDescriptor get(ConceptService conceptService){
+        if(specimenMetadataDescriptor == null){
+            specimenMetadataDescriptor = new SpecimenMetadataDescriptor(conceptService);
+        }
+
+        return specimenMetadataDescriptor;
+    }
+
+    private SpecimenMetadataDescriptor(ConceptService conceptService) {
         setup(conceptService, BacteriologyConstants.BACTERIOLOGY_CONCEPT_SOURCE,
                 ConceptSetDescriptorField.required("specimenConstruct", BacteriologyConcepts.BACTERIOLOGY_CONCEPT_SET),
                 ConceptSetDescriptorField.optional("specimenId", BacteriologyConcepts.SPECIMEN_ID_CODE),

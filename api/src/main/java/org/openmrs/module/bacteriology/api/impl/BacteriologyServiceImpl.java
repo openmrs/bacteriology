@@ -18,16 +18,17 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.bacteriology.BacteriologyConstants;
-import org.openmrs.module.bacteriology.BacteriologyProperties;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
 import org.openmrs.module.bacteriology.api.db.BacteriologyServiceDAO;
 import org.openmrs.module.bacteriology.api.encounter.BacteriologyMapper;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimens;
 import org.openmrs.module.bacteriology.api.specimen.SpecimenMapper;
+import org.openmrs.module.bacteriology.api.specimen.SpecimenMetadataDescriptor;
 import org.openmrs.module.emrapi.encounter.ConceptMapper;
 import org.openmrs.module.emrapi.encounter.ObservationMapper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
@@ -54,9 +55,6 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     private SpecimenMapper specimenMapper;
 
     @Autowired
-    private BacteriologyProperties bacteriologyProperties;
-
-    @Autowired
     private BacteriologyMapper bacteriologyMapper;
 
     @Autowired
@@ -68,6 +66,9 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     @Autowired
     private ObsService obsService;
 
+    @Autowired
+    private ConceptService conceptService;
+    
 
     /**
      * @param dao the dao to set
@@ -83,7 +84,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
 
         for (Specimen specimen : specimens) {
             org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
-            Obs bacteriologyObs = bacteriologyProperties.getSpecimenMetadata().buildObsGroup(bacteriologySpecimen);
+            Obs bacteriologyObs = SpecimenMetadataDescriptor.get(conceptService).buildObsGroup(bacteriologySpecimen);
             if(specimen.isVoided()) voidBacteriologyObsUponSpecimenVoided(bacteriologyObs);
             encounter.addObs(bacteriologyObs);
         }
@@ -91,13 +92,13 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
 
     @Override
     public Specimen getSpecimen(Obs obsGroup){
-        org.openmrs.module.bacteriology.api.specimen.Specimen specimen = bacteriologyProperties.getSpecimenMetadata().buildSpecimen(obsGroup);
+        org.openmrs.module.bacteriology.api.specimen.Specimen specimen = SpecimenMetadataDescriptor.get(conceptService).buildSpecimen(obsGroup);
         return createDomainSpecimen(specimen);
     }
 
     @Override
     public void updateEncounterTransaction(Encounter encounter, EncounterTransaction encounterTransaction) {
-        List<org.openmrs.module.bacteriology.api.specimen.Specimen> bacteriologySpecimenList = bacteriologyProperties.getSpecimenMetadata().getSpecimenFromObs(encounter.getObsAtTopLevel(false));
+        List<org.openmrs.module.bacteriology.api.specimen.Specimen> bacteriologySpecimenList = SpecimenMetadataDescriptor.get(conceptService).getSpecimenFromObs(encounter.getObsAtTopLevel(false));
 
         List<Specimen> specimens = new ArrayList<Specimen>();
         for (org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen : bacteriologySpecimenList) {
@@ -119,7 +120,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
             ETUuidObservationMap.put(observation.getUuid(), observation);
         }
 
-        List<Obs> obsGroupAtSpecimenLevel = bacteriologyProperties.getSpecimenMetadata().getSpecimenObsGroups(encounter.getObsAtTopLevel(false));
+        List<Obs> obsGroupAtSpecimenLevel = SpecimenMetadataDescriptor.get(conceptService).getSpecimenObsGroups(encounter.getObsAtTopLevel(false));
         for (Obs obsGroup : obsGroupAtSpecimenLevel) {
             ETObsList.remove(ETUuidObservationMap.get(obsGroup.getUuid()));
         }
@@ -170,7 +171,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
         Encounter encounter = obs.getEncounter();
 
         org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
-        Obs bacteriologyObs = bacteriologyProperties.getSpecimenMetadata().buildObsGroup(bacteriologySpecimen);
+        Obs bacteriologyObs = SpecimenMetadataDescriptor.get(conceptService).buildObsGroup(bacteriologySpecimen);
         encounter.addObs(bacteriologyObs);
 
         return specimen;

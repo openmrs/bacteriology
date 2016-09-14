@@ -6,7 +6,6 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.EncounterService;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
-import org.openmrs.module.emrapi.encounter.EncounterTransactionMapper;
 import org.openmrs.module.emrapi.encounter.ObservationMapper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
