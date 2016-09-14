@@ -19,7 +19,7 @@
 	<!-- Required Modules -->
 	<require_modules>
 																											
-		<require_module version="1.11">
+		<require_module version="1.17">
 			org.openmrs.module.emrapi
 		</require_module>
 			

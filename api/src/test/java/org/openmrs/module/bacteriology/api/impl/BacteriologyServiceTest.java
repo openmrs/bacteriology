@@ -2,6 +2,7 @@ package org.openmrs.module.bacteriology.api.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
