@@ -20,6 +20,7 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.ObsService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.bacteriology.BacteriologyConstants;
 import org.openmrs.module.bacteriology.api.BacteriologyService;
@@ -81,10 +82,11 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     public void updateEncounter(Encounter encounter, EncounterTransaction encounterTransaction) {
 
         List<Specimen> specimens = bacteriologyMapper.mapSpecimen(encounterTransaction);
+        SpecimenMetadataDescriptor specimenMetadataDescriptor = SpecimenMetadataDescriptor.get(conceptService);
 
         for (Specimen specimen : specimens) {
             org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
-            Obs bacteriologyObs = SpecimenMetadataDescriptor.get(conceptService).buildObsGroup(bacteriologySpecimen);
+            Obs bacteriologyObs = specimenMetadataDescriptor.buildObsGroup(bacteriologySpecimen);
             if(specimen.isVoided()) voidBacteriologyObsUponSpecimenVoided(bacteriologyObs);
             encounter.addObs(bacteriologyObs);
         }
@@ -169,10 +171,12 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     public Specimen saveSpecimen(Specimen specimen) {
         Obs obs = obsService.getObsByUuid(specimen.getExistingObs());
         Encounter encounter = obs.getEncounter();
+        SpecimenMetadataDescriptor specimenMetadataDescriptor = SpecimenMetadataDescriptor.get(conceptService);
 
         org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
-        Obs bacteriologyObs = SpecimenMetadataDescriptor.get(conceptService).buildObsGroup(bacteriologySpecimen);
+        Obs bacteriologyObs = specimenMetadataDescriptor.buildObsGroup(bacteriologySpecimen);
         encounter.addObs(bacteriologyObs);
+        Context.getEncounterService().saveEncounter(encounter);
 
         return specimen;
     }

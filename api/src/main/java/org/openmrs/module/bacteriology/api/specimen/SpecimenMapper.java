@@ -6,6 +6,7 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.ObsService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.emrapi.encounter.exception.ConceptNotFoundException;
 import org.openmrs.module.emrapi.encounter.mapper.ObsMapper;
@@ -68,17 +69,18 @@ public class SpecimenMapper {
         bacteriologySpecimen.setDateCollected(etSpecimen.getDateCollected());
         bacteriologySpecimen.setVoided(etSpecimen.isVoided());
         bacteriologySpecimen.setTypeFreeText(etSpecimen.getTypeFreeText());
+        bacteriologySpecimen.setType(getSampleTypeConcept(etSpecimen.getType()));
 
         if (StringUtils.isNotEmpty(etSpecimen.getExistingObs())) {
-            bacteriologySpecimen.setExistingObs(obsService.getObsByUuid(etSpecimen.getExistingObs()));
+            bacteriologySpecimen.setExistingObs(Context.getObsService().getObsByUuid(etSpecimen.getExistingObs()));
         }
 
         if (etSpecimen.getSample() != null && etSpecimen.getSample().getAdditionalAttributes() != null) {
             EncounterTransaction.Observation etObs = etSpecimen.getSample().getAdditionalAttributes();
-            bacteriologySpecimen.setAdditionalAttributes(obsMapper.transformEtObs(encounter, getMatchingMember(bacteriologySpecimen.getExistingObs(), etObs), etObs));
+            Obs matchingMember = getMatchingMember(bacteriologySpecimen.getExistingObs(), etObs);
+            bacteriologySpecimen.setAdditionalAttributes(obsMapper.transformEtObs(encounter, matchingMember, etObs));
         }
 
-        bacteriologySpecimen.setType(getSampleTypeConcept(etSpecimen.getType()));
 
         if (etSpecimen.getReport() != null && etSpecimen.getReport().getResults() != null) {
             EncounterTransaction.Observation etObs = etSpecimen.getReport().getResults();

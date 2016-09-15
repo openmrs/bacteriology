@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class BacteriologyTransactionHandler implements EncounterTransactionHandler {
 
-    private BacteriologyService bacteriologyService;
-
     @Override
     public void forRead(Encounter encounter, EncounterTransaction encounterTransaction) {
         Context.getService(BacteriologyService.class).updateEncounterTransaction(encounter,encounterTransaction);
