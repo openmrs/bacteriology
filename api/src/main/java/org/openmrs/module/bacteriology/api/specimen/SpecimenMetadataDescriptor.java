@@ -12,7 +12,6 @@ import org.openmrs.module.bacteriology.BacteriologyConstants;
 import org.openmrs.module.bacteriology.api.BacteriologyConcepts;
 import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptor;
 import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptorField;
-import org.openmrs.util.OpenmrsUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -107,7 +106,7 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     public Obs buildObsGroup(Specimen specimen) {
         if (specimen.getExistingObs() != null) {
             specimen.getExistingObs().setVoided(specimen.isVoided());
-            setCodedMember(specimen.getExistingObs(), getSpecimenSource(), specimen.getType(), null);
+            setSpecimenSourceMember(specimen.getExistingObs(), getSpecimenSource(), specimen.getType());
             setFreeTextMember(specimen.getExistingObs(), getSpecimenDateCollected(), specimen.getDateCollected());
             setFreeTextMember(specimen.getExistingObs(), getSpecimenId(), specimen.getId());
             setFreeTextMember(specimen.getExistingObs(),getSpecimenSourceFreeText(), specimen.getTypeFreeText());
@@ -191,16 +190,23 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         return specimen;
     }
 
+
+    private void setSpecimenSourceMember(Obs existingObs, Concept memberConcept, Concept memberAnswer) {
+        Obs specimenSourceMember = findMember(existingObs, memberConcept);
+        boolean needToCreate = memberConcept != null && (specimenSourceMember == null);
+        if (needToCreate) {
+            existingObs.addGroupMember(buildObsFor(memberConcept, memberAnswer, null));
+        } else
+            specimenSourceMember.setValueCoded(memberAnswer);
+    }
+
     private void setFreeTextMember(Obs obsGroup, Concept memberConcept, Date memberAnswer) {
         Obs member = findMember(obsGroup, memberConcept);
-        boolean needToVoid = member != null && !OpenmrsUtil.nullSafeEquals(memberAnswer, member.getValueDate());
-        boolean needToCreate = memberAnswer != null && (member == null || needToVoid);
-        if (needToVoid) {
-            member.setVoided(true);
-            member.setVoidReason(getDefaultVoidReason());
-        }
+        boolean needToCreate = memberAnswer != null && (member == null);
         if (needToCreate) {
             addToObsGroup(obsGroup, buildObsFor(memberConcept, memberAnswer));
+        } else if (member != null) {
+            member.setValueDate(memberAnswer);
         }
     }
 
@@ -220,18 +226,12 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     }
 
     private void setFreeTextMember(Obs obsGroup, Concept memberConcept, String memberAnswer) {
-        Obs member = null;
-        if(obsGroup.getGroupMembers(false)!= null) {
-            member = findMember(obsGroup, memberConcept);
-        }
-        boolean needToVoid = member != null && !OpenmrsUtil.nullSafeEquals(memberAnswer, member.getValueText());
-        boolean needToCreate = memberAnswer != null && (member == null || needToVoid);
-        if (needToVoid) {
-            member.setVoided(true);
-            member.setVoidReason(getDefaultVoidReason());
-        }
+        Obs member = findMember(obsGroup, memberConcept);
+        boolean needToCreate = memberAnswer != null && (member == null);
         if (needToCreate) {
             addToObsGroup(obsGroup, buildObsFor(memberConcept, memberAnswer));
+        } else if(member != null){
+            member.setValueText(memberAnswer);
         }
     }
 
