@@ -90,6 +90,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
             if(specimen.isVoided()) voidBacteriologyObsUponSpecimenVoided(bacteriologyObs);
             encounter.addObs(bacteriologyObs);
         }
+        Context.getEncounterService().saveEncounter(encounter);
     }
 
     @Override
