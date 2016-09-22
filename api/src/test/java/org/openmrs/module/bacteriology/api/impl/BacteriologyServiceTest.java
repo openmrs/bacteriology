@@ -237,19 +237,20 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
     public void ensureEncounterIsUpdatedWithTheGivenSpecimenData() throws Exception {
         executeDataSet("existingSpecimenObs.xml");
 
-        Obs obsGroup = obsService.getObs(100);
-        Obs sampleObs = obsService.getObs(105);
-        Obs resultsObs = obsService.getObs(106);
+        Obs obsGroup = obsService.getObs(111);
 
-        Specimen specimen = new Specimen();
-
-        EncounterTransaction.Observation resultsObservation = new EncounterTransaction.Observation().setUuid(resultsObs.getUuid()).setValue(72);
         Specimen.TestReport testReport = new Specimen.TestReport();
+        Obs bacteriologyResults = obsService.getObs(113);
+        Obs bacteriologyResultsMember = bacteriologyResults.getGroupMembers().iterator().next();
+        EncounterTransaction.Observation resultsObservation = new EncounterTransaction.Observation().setUuid(bacteriologyResults.getUuid()).setConcept(new EncounterTransaction.Concept(bacteriologyResults.getConcept().getUuid()));
+        resultsObservation.addGroupMember(new EncounterTransaction.Observation().setUuid(bacteriologyResultsMember.getUuid()).setConcept(new EncounterTransaction.Concept(bacteriologyResultsMember.getConcept().getUuid())).setValue(105));
         testReport.setResults(resultsObservation);
 
         Specimen.Sample sample = new Specimen.Sample();
-        EncounterTransaction.Observation additionalAttributes = new EncounterTransaction.Observation().setUuid(sampleObs.getUuid()).setValue(
-                105);
+        Obs additionalAttribute = obsService.getObs(112);
+        Obs additionalAttributeMember = additionalAttribute.getGroupMembers().iterator().next();
+        EncounterTransaction.Observation additionalAttributes = new EncounterTransaction.Observation().setUuid(additionalAttribute.getUuid()).setConcept(new EncounterTransaction.Concept(additionalAttribute.getConcept().getUuid()));
+        additionalAttributes.addGroupMember(new EncounterTransaction.Observation().setUuid(additionalAttributeMember.getUuid()).setConcept(new EncounterTransaction.Concept(additionalAttributeMember.getConcept().getUuid())).setValue(72));
         sample.setAdditionalAttributes(additionalAttributes);
 
         Concept specimenType = conceptService.getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE);
@@ -259,6 +260,7 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = sdf.parse("2015-11-04");
 
+        Specimen specimen = new Specimen();
         specimen.setExistingObs(obsGroup.getUuid());
         specimen.setType(type);
         specimen.setSample(sample);
@@ -268,10 +270,10 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         specimen.setVoided(false);
         specimen.setUuid("specimenUuid");
 
-        bacteriologyService.saveSpecimen(specimen);
+        Specimen savedSpecimen = bacteriologyService.saveSpecimen(specimen);
 
-        assertEquals(sampleObs.getValueNumeric(), Double.valueOf("105"));
-        assertEquals(resultsObs.getValueNumeric(), Double.valueOf("72"));
+        assertEquals(savedSpecimen.getSample().getAdditionalAttributes().getGroupMembers().iterator().next().getValue(), Integer.valueOf("72"));
+        assertEquals(savedSpecimen.getReport().getResults().getGroupMembers().iterator().next().getValue(), Integer.valueOf("105"));
     }
 
     @Test
