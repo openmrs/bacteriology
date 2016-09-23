@@ -195,7 +195,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     private Obs sortGroupMembersByConceptId(Obs observation){
         if(observation != null){
             Concept concept = observation.getConcept();
-            if(concept.isSet()){
+            if(concept.getSet()){
                 List<Concept> setMembers = observation.getConcept().getSetMembers();
                 Set<Obs> sortedGroupMembers = new LinkedHashSet<Obs>();
                 for (Concept setMember : setMembers) {
