@@ -130,29 +130,29 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
         bacteriologyService.updateEncounter(encounter, encounterTransaction);
 
         Obs specimenObs = findMember(encounter.getObsAtTopLevel(true), getConcept(BacteriologyConcepts.BACTERIOLOGY_CONCEPT_SET));
-        assertEquals(specimenObs.isVoided(), true);
+        assertEquals(specimenObs.getVoided(), true);
 
         Obs specimenId = findMember(specimenObs.getGroupMembers(true), getConcept(BacteriologyConcepts.SPECIMEN_ID_CODE));
         assertNotNull(specimenId);
-        assertEquals(specimenId.isVoided(), true);
+        assertEquals(specimenId.getVoided(), true);
 
         Obs specimenDateCollected = findMember(specimenObs.getGroupMembers(true), getConcept(BacteriologyConcepts.SPECIMEN_COLLECTION_DATE));
-        assertEquals(specimenDateCollected.isVoided(), true);
+        assertEquals(specimenDateCollected.getVoided(), true);
 
         Obs specimenSource = findMember(specimenObs.getGroupMembers(true), getConcept(BacteriologyConcepts.SPECIMEN_SAMPLE_SOURCE));
-        assertEquals(specimenSource.isVoided(), true);
+        assertEquals(specimenSource.getVoided(), true);
 
         Obs additionalAttributes = findMember(specimenObs.getGroupMembers(true), getConcept("BACTERIOLOGY ADDITIONAL ATTRIBUTES"));
-        assertEquals(additionalAttributes.isVoided(), true);
+        assertEquals(additionalAttributes.getVoided(), true);
 
         Obs weight = findMember(additionalAttributes.getGroupMembers(true), getConcept("WEIGHT (KG)"));
-        assertEquals(weight.isVoided(), true);
+        assertEquals(weight.getVoided(), true);
 
         Obs results = findMember(specimenObs.getGroupMembers(true), getConcept("BACTERIOLOGY RESULTS"));
-        assertEquals(results.isVoided(), true);
+        assertEquals(results.getVoided(), true);
 
         Obs weightResult = findMember(results.getGroupMembers(true), getConcept("WEIGHT (KG)"));
-        assertEquals(weightResult.isVoided(), true);
+        assertEquals(weightResult.getVoided(), true);
     }
 
     @Test
