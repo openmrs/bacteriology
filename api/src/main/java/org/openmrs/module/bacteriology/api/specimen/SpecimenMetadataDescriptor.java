@@ -29,8 +29,8 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
 
     private static SpecimenMetadataDescriptor specimenMetadataDescriptor;
 
-    public static SpecimenMetadataDescriptor get(ConceptService conceptService){
-        if(specimenMetadataDescriptor == null){
+    public static SpecimenMetadataDescriptor get(ConceptService conceptService, boolean newInitialization){
+        if(specimenMetadataDescriptor == null || newInitialization){
             specimenMetadataDescriptor = new SpecimenMetadataDescriptor(conceptService);
         }
 

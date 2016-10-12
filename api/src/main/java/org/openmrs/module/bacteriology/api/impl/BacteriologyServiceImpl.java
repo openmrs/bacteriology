@@ -82,7 +82,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     public void updateEncounter(Encounter encounter, EncounterTransaction encounterTransaction) {
 
         List<Specimen> specimens = bacteriologyMapper.mapSpecimen(encounterTransaction);
-        SpecimenMetadataDescriptor specimenMetadataDescriptor = SpecimenMetadataDescriptor.get(conceptService);
+        SpecimenMetadataDescriptor specimenMetadataDescriptor = SpecimenMetadataDescriptor.get(conceptService, true);
 
         for (Specimen specimen : specimens) {
             org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
@@ -95,13 +95,13 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
 
     @Override
     public Specimen getSpecimen(Obs obsGroup){
-        org.openmrs.module.bacteriology.api.specimen.Specimen specimen = SpecimenMetadataDescriptor.get(conceptService).buildSpecimen(obsGroup);
+        org.openmrs.module.bacteriology.api.specimen.Specimen specimen = SpecimenMetadataDescriptor.get(conceptService, false).buildSpecimen(obsGroup);
         return createDomainSpecimen(specimen);
     }
 
     @Override
     public void updateEncounterTransaction(Encounter encounter, EncounterTransaction encounterTransaction) {
-        List<org.openmrs.module.bacteriology.api.specimen.Specimen> bacteriologySpecimenList = SpecimenMetadataDescriptor.get(conceptService).getSpecimenFromObs(encounter.getObsAtTopLevel(false));
+        List<org.openmrs.module.bacteriology.api.specimen.Specimen> bacteriologySpecimenList = SpecimenMetadataDescriptor.get(conceptService, false).getSpecimenFromObs(encounter.getObsAtTopLevel(false));
 
         List<Specimen> specimens = new ArrayList<Specimen>();
         for (org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen : bacteriologySpecimenList) {
@@ -123,7 +123,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
             ETUuidObservationMap.put(observation.getUuid(), observation);
         }
 
-        List<Obs> obsGroupAtSpecimenLevel = SpecimenMetadataDescriptor.get(conceptService).getSpecimenObsGroups(encounter.getObsAtTopLevel(false));
+        List<Obs> obsGroupAtSpecimenLevel = SpecimenMetadataDescriptor.get(conceptService, false).getSpecimenObsGroups(encounter.getObsAtTopLevel(false));
         for (Obs obsGroup : obsGroupAtSpecimenLevel) {
             ETObsList.remove(ETUuidObservationMap.get(obsGroup.getUuid()));
         }
@@ -172,7 +172,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     public Specimen saveSpecimen(Specimen specimen) {
         Obs obs = obsService.getObsByUuid(specimen.getExistingObs());
         Encounter encounter = obs.getEncounter();
-        SpecimenMetadataDescriptor specimenMetadataDescriptor = SpecimenMetadataDescriptor.get(conceptService);
+        SpecimenMetadataDescriptor specimenMetadataDescriptor = SpecimenMetadataDescriptor.get(conceptService, true);
 
         org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
         Obs bacteriologyObs = specimenMetadataDescriptor.buildObsGroup(bacteriologySpecimen);
