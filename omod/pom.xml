@@ -67,7 +67,6 @@
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>legacyui-omod</artifactId>
-			<version>1.0</version>
 		</dependency>
 
 		<dependency>
