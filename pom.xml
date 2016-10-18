@@ -12,8 +12,7 @@
 
 	<properties>
 		<openMRSWebServicesVersion>2.14</openMRSWebServicesVersion>
-		<reportingModuleVersion>0.9.10-SNAPSHOT</reportingModuleVersion>
-		<reportingCompatiblityModuleVersion>2.0.1-SNAPSHOT</reportingCompatiblityModuleVersion>
+		<reportingModuleVersion>0.10.4</reportingModuleVersion>
 		<openMRSVersion>2.0.1-SNAPSHOT</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<calculationModuleVersion>1.3-SNAPSHOT</calculationModuleVersion>
@@ -149,12 +148,6 @@
                 <version>${reportingModuleVersion}</version>
                 <scope>test</scope>
             </dependency>
-			<dependency>
-				<groupId>org.openmrs.module</groupId>
-				<artifactId>reportingcompatibility-api</artifactId>
-				<version>${reportingCompatiblityModuleVersion}</version>
-				<scope>test</scope>
-			</dependency>
 			<dependency>
                 <groupId>org.openmrs.module</groupId>
                 <artifactId>calculation-api</artifactId>
