@@ -1,22 +1,14 @@
 package org.openmrs.module.bacteriology.api.specimen;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.ConceptClass;
-import org.openmrs.ConceptMap;
-import org.openmrs.ConceptReferenceTerm;
-import org.openmrs.Obs;
+import org.openmrs.*;
 import org.openmrs.api.ConceptService;
 import org.openmrs.module.bacteriology.BacteriologyConstants;
 import org.openmrs.module.bacteriology.api.BacteriologyConcepts;
 import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptor;
 import org.openmrs.module.emrapi.descriptor.ConceptSetDescriptorField;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     private Concept specimenId;
@@ -120,7 +112,6 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
         } else {
             Obs obsGroup = new Obs();
             obsGroup.setObsDatetime(specimen.getDateCollected());
-//            setCodedMember(obsGroup, getSpecimenSource(), specimen.getType(), null);
             Obs specimenSource = buildObsFor(getSpecimenSource(), specimen.getType(), null);
             specimenSource.setObsDatetime(obsGroup.getObsDatetime());
             Obs dateCollected = buildObsFor(getSpecimenDateCollected(), specimen.getDateCollected());
@@ -129,7 +120,6 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
                 Obs specimenId = buildObsFor(getSpecimenId(), specimen.getId());
                 specimenId.setObsDatetime(obsGroup.getObsDatetime());
                 obsGroup.addGroupMember(specimenId);
-//                setFreeTextMember(obsGroup, getSpecimenId(), specimen.getId());
             }
             setFreeTextMember(obsGroup,getSpecimenSourceFreeText(),specimen.getTypeFreeText());
 
@@ -226,7 +216,10 @@ public class SpecimenMetadataDescriptor extends ConceptSetDescriptor {
     }
 
     private void setFreeTextMember(Obs obsGroup, Concept memberConcept, String memberAnswer) {
-        Obs member = findMember(obsGroup, memberConcept);
+        Obs member = null;
+        if(obsGroup.getGroupMembers(false)!= null) {
+            member = findMember(obsGroup, memberConcept);
+        }
         boolean needToCreate = memberAnswer != null && (member == null);
         if (needToCreate) {
             addToObsGroup(obsGroup, buildObsFor(memberConcept, memberAnswer));
