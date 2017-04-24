@@ -4,22 +4,28 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
+import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.webservices.rest.SimpleObject;
+import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class SpecimenResourceTest extends MainResourceControllerTest {
+
+    SpecimenResource specimenResource;
 
     @Before
     public void init() throws Exception {
         executeDataSet("baseBacteriologyData.xml");
         executeDataSet("specimenDataSet.xml");
+        specimenResource = new SpecimenResource();
     }
 
     @Override
@@ -63,7 +69,7 @@ public class SpecimenResourceTest extends MainResourceControllerTest {
         SimpleObject object = deserialize(response);
 
         List results = (List) object.get("results");
-        assertEquals(2, results.size());
+        assertEquals(3, results.size());
         Specimen firstSpecimen = new ObjectMapper().convertValue(results.get(0), Specimen.class);
         Specimen secondSpecimen = new ObjectMapper().convertValue(results.get(1), Specimen.class);
 
@@ -73,5 +79,22 @@ public class SpecimenResourceTest extends MainResourceControllerTest {
 
         assertEquals("2008-08-20", firstSpecimenDate);
         assertEquals("2008-08-19", secondSpecimenDate);
+    }
+
+    @Test
+    public void shouldSaveEditedSpecimen() throws Exception {
+        Specimen specimen = specimenResource.getByUniqueId("uuid300");
+        assertNotEquals(specimen, null);
+        EncounterTransaction.Observation microResultObs = specimen.getReport().getResults().getGroupMembers()
+                .stream()
+                .filter(observation -> observation.getConcept().getName().equalsIgnoreCase("Microscopy RESULTS"))
+                .findFirst().get();
+        EncounterTransaction.Observation editObs = microResultObs.getGroupMembers()
+                .stream()
+                .findFirst().get();
+        editObs.setValue("Edited Sample result");
+        specimenResource.save(specimen);
+        specimen = specimenResource.getByUniqueId("uuid300");
+        assertFalse(specimen.isVoided());
     }
 }

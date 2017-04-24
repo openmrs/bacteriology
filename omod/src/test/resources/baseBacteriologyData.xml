@@ -38,6 +38,21 @@
     <concept_name concept_id="406" concept_name_id="1406" name="BACTERIOLOGY RESULTS" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="646dcffe-5c48-49b7-8837-c40d4b6de5b3"/>
     <concept_set concept_set_id="1006" concept_id="406" concept_set="401" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
 
+        <concept concept_id="4061" retired="false" datatype_id="4" class_id="1991" is_set="true" creator="1" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid4061"/>
+        <concept_name concept_id="4061" concept_name_id="14061" name="Microscopy RESULTS" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid4061"/>
+        <concept_set concept_set_id="10061" concept_id="4061" concept_set="406" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
+
+            <concept concept_id="40611" retired="false" datatype_id="3" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid40611"/>
+            <concept_name concept_id="40611" concept_name_id="140611" name="Microscopy Sample Results" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid40611"/>
+            <concept_set concept_set_id="100611" concept_id="40611" concept_set="4061" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
+
+        <concept concept_id="4062" retired="false" datatype_id="4" class_id="1991" is_set="true" creator="1" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid4062"/>
+        <concept_name concept_id="4062" concept_name_id="14062" name="Xpert RESULTS" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid4062"/>
+        <concept_set concept_set_id="10062" concept_id="4062" concept_set="406" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
+
+            <concept concept_id="40621" retired="false" datatype_id="3" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid40621"/>
+            <concept_name concept_id="40621" concept_name_id="140621" name="Xpert Sample Results" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid40621"/>
+            <concept_set concept_set_id="100621" concept_id="40621" concept_set="4062" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
 
     <concept concept_id="510" retired="false" datatype_id="1" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="c398a4be-3f10-11e4-adec-0800271c1b77"/>
     <concept_name concept_id="510" concept_name_id="1414" name="HEIGHT" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="c398a4be-3f10-11e4-ad00-0800271c1b77"/>
@@ -45,7 +60,12 @@
 
     <concept concept_id="512" retired="false" datatype_id="3" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="c398a4be-3f10-11e4-adec-0800271c1909"/>
     <concept_name concept_id="512" concept_name_id="1415" name="Sample Results" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="c398a4be-3f10-11e4-adec-0800271c1898"/>
-    <concept_set concept_set_id="20001" concept_id="512" concept_set="405" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
+    <concept_set concept_set_id="20001" concept_id="512" concept_set="406" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
+
+    <concept concept_id="513" retired="false" datatype_id="3" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="uuid513"/>
+    <concept_name concept_id="513" concept_name_id="1416" name="Sample Results 2" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="uuid13"/>
+    <concept_set concept_set_id="20002" concept_id="513" concept_set="406" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
+
 
     <concept_numeric concept_id="510" precise="false"/>
 

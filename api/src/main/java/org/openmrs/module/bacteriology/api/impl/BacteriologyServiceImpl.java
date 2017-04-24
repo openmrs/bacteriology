@@ -15,6 +15,7 @@ package org.openmrs.module.bacteriology.api.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.FlushMode;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
@@ -30,6 +31,7 @@ import org.openmrs.module.bacteriology.api.encounter.domain.Specimen;
 import org.openmrs.module.bacteriology.api.encounter.domain.Specimens;
 import org.openmrs.module.bacteriology.api.specimen.SpecimenMapper;
 import org.openmrs.module.bacteriology.api.specimen.SpecimenMetadataDescriptor;
+import org.openmrs.module.emrapi.db.DbSessionUtil;
 import org.openmrs.module.emrapi.encounter.ConceptMapper;
 import org.openmrs.module.emrapi.encounter.ObservationMapper;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
@@ -170,16 +172,23 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
 
     @Override
     public Specimen saveSpecimen(Specimen specimen) {
-        Obs obs = obsService.getObsByUuid(specimen.getExistingObs());
-        Encounter encounter = obs.getEncounter();
-        SpecimenMetadataDescriptor specimenMetadataDescriptor = SpecimenMetadataDescriptor.get(conceptService, true);
+        FlushMode flushMode = DbSessionUtil.getCurrentFlushMode();
+        DbSessionUtil.setManualFlushMode();
+        Context.flushSession();
+        try {
+            Obs obs = obsService.getObsByUuid(specimen.getExistingObs());
+            Encounter encounter = obs.getEncounter();
+            SpecimenMetadataDescriptor specimenMetadataDescriptor = SpecimenMetadataDescriptor.get(conceptService, true);
 
-        org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
-        Obs bacteriologyObs = specimenMetadataDescriptor.buildObsGroup(bacteriologySpecimen);
-        encounter.addObs(bacteriologyObs);
-        Context.getEncounterService().saveEncounter(encounter);
+            org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
+            Obs bacteriologyObs = specimenMetadataDescriptor.buildObsGroup(bacteriologySpecimen);
+            encounter.addObs(bacteriologyObs);
+            Context.getEncounterService().saveEncounter(encounter);
 
-        return specimen;
+            return specimen;
+        }finally {
+            DbSessionUtil.setFlushMode(flushMode);
+        }
     }
 
     @Override
