@@ -182,6 +182,9 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
 
             org.openmrs.module.bacteriology.api.specimen.Specimen bacteriologySpecimen = specimenMapper.createSpecimen(encounter, specimen);
             Obs bacteriologyObs = specimenMetadataDescriptor.buildObsGroup(bacteriologySpecimen);
+            if(specimen.isVoided()) {
+                voidBacteriologyObsUponSpecimenVoided(bacteriologyObs);
+            }
             encounter.addObs(bacteriologyObs);
             Context.getEncounterService().saveEncounter(encounter);
 

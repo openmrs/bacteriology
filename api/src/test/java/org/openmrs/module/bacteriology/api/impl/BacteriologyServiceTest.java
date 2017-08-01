@@ -22,14 +22,16 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
-import java.util.Collection;
-import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
 
@@ -273,6 +275,28 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
 
         assertEquals(savedSpecimen.getSample().getAdditionalAttributes().getGroupMembers().iterator().next().getValue(), Integer.valueOf("72"));
         assertEquals(savedSpecimen.getReport().getResults().getGroupMembers().iterator().next().getValue(), Integer.valueOf("105"));
+    }
+
+    @Test
+    public void ensureEncounterAndAllObsAreVoidedWhenSpecimenIsVoidedAndSaved() throws Exception {
+
+        executeDataSet("existingSpecimenObs.xml");
+
+        Obs obsGroup = obsService.getObs(100);
+        Specimen specimen = bacteriologyService.getSpecimen(obsGroup);
+        specimen.setVoided(true);
+        bacteriologyService.saveSpecimen(specimen);
+
+        assertAllVoidedAndChildrenVoided(Collections.singleton(obsGroup));
+    }
+
+    private void assertAllVoidedAndChildrenVoided(Set<Obs> obsList) {
+        for (Obs obs : obsList) {
+            assertTrue(obs.getVoided());
+            if (obs.hasGroupMembers()) {
+                assertAllVoidedAndChildrenVoided(obs.getGroupMembers());
+            }
+        }
     }
 
     @Test
