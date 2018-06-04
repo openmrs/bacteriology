@@ -220,12 +220,17 @@
 		</pluginRepository>
 	</pluginRepositories>
 
-   <distributionManagement>
-       <snapshotRepository>
-           <id>repo.mybahmni.org</id>
-           <name>bahmni-artifactory-snapshots</name>
-           <url>s3://repo.mybahmni.org/artifactory/snapshot</url>
-       </snapshotRepository>
-   </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>openmrs-repo-modules</id>
+			<name>Modules</name>
+			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/modules/</url>
+		</repository>
+		<snapshotRepository>
+			<id>openmrs-repo-snapshots</id>
+			<name>OpenMRS Snapshots</name>
+			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
