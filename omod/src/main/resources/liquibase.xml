@@ -4,6 +4,16 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
+	<changeSet id="BACT-07012916103501" author="Samuel34">
+		<comment>Adding add_concept procedure</comment>
+		<sqlFile splitStatements="false" path="add_concept_procedure.sql"/>
+	</changeSet>
+	
+	<changeSet id="BACT-07012916100502" author="Samuel34">
+		<comment>Adding add_concept_set_members procedure</comment>
+		<sqlFile splitStatements="false" path="add_concept_set_members_procedure.sql"/>
+	</changeSet>
+	
     <changeSet id="BACT-08102015044642" author="Hemanth">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -135,7 +145,7 @@
 
             select concept_map_type_id from concept_map_type where name='SAME-AS' into @concept_map_type_id;
 
-            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'BACTERIOLOGY CONCEPT SET', 'Bacteriology Concept Set', 'N/A', 'Misc', true);
+            call bacteriology_add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'BACTERIOLOGY CONCEPT SET', 'Bacteriology Concept Set', 'N/A', 'Misc', true);
             set @set_concept_id = @concept_id;
 
             select concept_reference_term_id from concept_reference_term where code='BACTERIOLOGY_CONCEPT_SET' into @bacteriology_concept_reference_term_id;
@@ -144,8 +154,8 @@
                 values (@bacteriology_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
 
 
-            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Collection Date', 'Collection Date', 'Date', 'Misc', false);
-            call add_concept_set_members (@set_concept_id,@concept_id,1);
+            call bacteriology_add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Collection Date', 'Collection Date', 'Date', 'Misc', false);
+            call bacteriology_add_concept_set_members (@set_concept_id,@concept_id,1);
 
             select concept_reference_term_id from concept_reference_term where code='159951' into @ceil_concept_reference_term_id;
             select concept_reference_term_id from concept_reference_term where code='SPECIMEN_COLLECTION_DATE' into @bacteriology_concept_reference_term_id;
@@ -156,8 +166,8 @@
             insert into concept_reference_map (concept_reference_term_id, concept_map_type_id, concept_id, date_created, creator, uuid)
                 values (@bacteriology_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
 
-            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Sample Source', 'Sample Source', 'Coded', 'Misc', false);
-            call add_concept_set_members (@set_concept_id,@concept_id,2);
+            call bacteriology_add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Sample Source', 'Sample Source', 'Coded', 'Misc', false);
+            call bacteriology_add_concept_set_members (@set_concept_id,@concept_id,2);
 
             select concept_reference_term_id from concept_reference_term where code='159959' into @ceil_concept_reference_term_id;
             select concept_reference_term_id from concept_reference_term where code='SPECIMEN_SAMPLE_SOURCE' into @bacteriology_concept_reference_term_id;
@@ -168,8 +178,8 @@
             insert into concept_reference_map (concept_reference_term_id, concept_map_type_id, concept_id, date_created, creator, uuid)
                 values (@bacteriology_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
 
-            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Id', 'Id', 'Text', 'Specimen', false);
-            call add_concept_set_members (@set_concept_id,@concept_id,3);
+            call bacteriology_add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Id', 'Id', 'Text', 'Specimen', false);
+            call bacteriology_add_concept_set_members (@set_concept_id,@concept_id,3);
 
             select concept_reference_term_id from concept_reference_term where code='159968' into @ceil_concept_reference_term_id;
             select concept_reference_term_id from concept_reference_term where code='SPECIMEN_ID' into @bacteriology_concept_reference_term_id;
@@ -180,11 +190,11 @@
             insert into concept_reference_map (concept_reference_term_id, concept_map_type_id, concept_id, date_created, creator, uuid)
                 values (@bacteriology_concept_reference_term_id , @concept_map_type_id, @concept_id, @date,1, @uuid);
 
-            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Bacteriology Additional Attributes', 'Additional Attributes', 'N/A', 'Bacteriology Attributes', true);
-            call add_concept_set_members (@set_concept_id,@concept_id,4);
+            call bacteriology_add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Bacteriology Additional Attributes', 'Additional Attributes', 'N/A', 'Bacteriology Attributes', true);
+            call bacteriology_add_concept_set_members (@set_concept_id,@concept_id,4);
 
-            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Bacteriology Results', 'Results', 'N/A', 'Bacteriology Results', true);
-            call add_concept_set_members (@set_concept_id,@concept_id,5);
+            call bacteriology_add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Bacteriology Results', 'Results', 'N/A', 'Bacteriology Results', true);
+            call bacteriology_add_concept_set_members (@set_concept_id,@concept_id,5);
         </sql>
     </changeSet>
     <changeSet id="BACT-07012016103500" author="Bharat">
@@ -202,8 +212,8 @@
             select concept_map_type_id from concept_map_type where name='SAME-AS' into @concept_map_type_id;
             select concept_id from concept_name where name = 'BACTERIOLOGY CONCEPT SET' and concept_name_type='FULLY_SPECIFIED' into @set_concept_id;
 
-            call add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Sample Source NonCoded', 'Specimen Sample Source NonCoded', 'Text', 'Misc', false);
-            call add_concept_set_members (@set_concept_id,@concept_id,1);
+            call bacteriology_add_concept(@concept_id, @concept_name_short_id, @concept_name_full_id, 'Specimen Sample Source NonCoded', 'Specimen Sample Source NonCoded', 'Text', 'Misc', false);
+            call bacteriology_add_concept_set_members (@set_concept_id,@concept_id,1);
 
             select concept_source_id from concept_reference_source where name='org.openmrs.module.bacteriology' into @source_id;
 
@@ -219,5 +229,4 @@
 
         </sql>
     </changeSet>
-
 </databaseChangeLog>
