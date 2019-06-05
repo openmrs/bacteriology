@@ -4,13 +4,9 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
-	<changeSet id="BACT-07012916103501" author="Samuel34">
-		<comment>Adding add_concept procedure</comment>
+	<changeSet id="BAH-828-001" author="Samuel34">
+		<comment>Adding procedures</comment>
 		<sqlFile splitStatements="false" path="add_concept_procedure.sql"/>
-	</changeSet>
-	
-	<changeSet id="BACT-07012916100502" author="Samuel34">
-		<comment>Adding add_concept_set_members procedure</comment>
 		<sqlFile splitStatements="false" path="add_concept_set_members_procedure.sql"/>
 	</changeSet>
 	
