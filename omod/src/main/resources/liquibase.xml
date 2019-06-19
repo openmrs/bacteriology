@@ -4,6 +4,26 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
+	<changeSet id="BACT-201906071212" author="Samuel34">
+		<preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                 select count(*) from information_schema.routines  WHERE ROUTINE_SCHEMA =  DATABASE() AND ROUTINE_NAME =  'add_concept';
+            </sqlCheck>
+        </preConditions>
+		<comment>Adding add_concept procedure</comment>
+		<sqlFile splitStatements="false" path="add_concept_procedure.sql"/>
+	</changeSet>
+	
+	<changeSet id="BACT-201906071213" author="Samuel34">
+		<preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                 select count(*) from information_schema.routines  WHERE ROUTINE_SCHEMA =  DATABASE() AND ROUTINE_NAME =  'add_concept_set_members';
+            </sqlCheck>
+        </preConditions>
+		<comment>Adding add_concept_set_members procedure</comment>
+		<sqlFile splitStatements="false" path="add_concept_set_members_procedure.sql"/>
+	</changeSet>
+	
     <changeSet id="BACT-08102015044642" author="Hemanth">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
@@ -219,5 +239,4 @@
 
         </sql>
     </changeSet>
-
 </databaseChangeLog>
