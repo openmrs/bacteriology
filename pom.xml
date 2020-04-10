@@ -27,9 +27,9 @@
 	</organization>
 
 	<scm>
-		<connection>scm:svn:https://svn.openmrs.org/openmrs-modules/bacteriology/trunk/</connection>
-		<developerConnection>scm:svn:https://svn.openmrs.org/openmrs-modules/bacteriology/trunk/</developerConnection>
-		<url>https://svn.openmrs.org/openmrs-modules/bacteriology/trunk/</url>
+		<connection>scm:git:https://github.com/openmrs/bacteriology.git</connection>
+		<developerConnection>scm:git:git@github.com:openmrs/bacteriology.git</developerConnection>
+		<url>https://github.com/openmrs/bacteriology.git</url>
 	</scm>
 
 	<modules>
@@ -205,7 +205,7 @@
 		<repository>
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
-			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<url>https://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
 		</repository>
 	</repositories>
 
@@ -213,7 +213,7 @@
 		<pluginRepository>
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
-			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<url>https://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
@@ -224,12 +224,12 @@
 		<repository>
 			<id>openmrs-repo-modules</id>
 			<name>Modules</name>
-			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/modules/</url>
+			<url>https://mavenrepo.openmrs.org/nexus/content/repositories/modules/</url>
 		</repository>
 		<snapshotRepository>
 			<id>openmrs-repo-snapshots</id>
 			<name>OpenMRS Snapshots</name>
-			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/snapshots</url>
+			<url>https://mavenrepo.openmrs.org/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
