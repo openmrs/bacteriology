@@ -1,5 +1,8 @@
 package org.openmrs.module.bacteriology.web.v1_0.resource;
 
+import io.swagger.models.Model;
+import io.swagger.models.ModelImpl;
+import io.swagger.models.properties.StringProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.openmrs.Concept;
@@ -81,6 +84,19 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
     }
 
     @Override
+    public Model getCREATEModel(Representation rep) {
+        return new ModelImpl().property("dataCollected", new StringProperty())
+                .property("uuid", new StringProperty())
+                .property("report", new StringProperty())
+                .property("existingObs", new StringProperty())
+                .property("sample", new StringProperty())
+                .property("type", new StringProperty())
+                .property("typeFreeText", new StringProperty())
+                .property("identifier", new StringProperty())
+                .property("voided", new StringProperty());
+    }
+
+    @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
         if (rep instanceof DefaultRepresentation) {
             DelegatingResourceDescription description = new DelegatingResourceDescription();
@@ -122,6 +138,34 @@ public class SpecimenResource extends DelegatingCrudResource<Specimen> {
         }
         return null;
     }
+
+    @Override
+    public Model getGETModel(Representation rep) {
+        ModelImpl modelImpl = ((ModelImpl) super.getGETModel(rep));
+        if (rep instanceof DefaultRepresentation || rep instanceof FullRepresentation) {
+            modelImpl.property("dataCollected", new StringProperty())
+                    .property("uuid", new StringProperty())
+                    .property("report", new StringProperty())
+                    .property("existingObs", new StringProperty())
+                    .property("sample", new StringProperty())
+                    .property("type", new StringProperty())
+                    .property("typeFreeText", new StringProperty())
+                    .property("identifier", new StringProperty())
+                    .property("voided", new StringProperty());
+        }
+        if (rep instanceof RefRepresentation) {
+            modelImpl.property("uuid", new StringProperty())
+                    .property("report", new StringProperty())
+                    .property("existingObs", new StringProperty())
+                    .property("sample", new StringProperty())
+                    .property("type", new StringProperty())
+                    .property("typeFreeText", new StringProperty())
+                    .property("identifier", new StringProperty())
+                    .property("voided", new StringProperty());
+        }
+        return modelImpl;
+    }
+
 
     @PropertyGetter("report")
     public SimpleObject getReport(Specimen specimen) {
