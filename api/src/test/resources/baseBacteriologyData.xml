@@ -53,8 +53,8 @@
     <concept_set concept_set_id="20001" concept_id="511" concept_set="405" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
 
 
-    <concept_numeric concept_id="510" precise="false"/>
-    <concept_numeric concept_id="511" precise="false"/>
+    <concept_numeric concept_id="510" allow_decimal="false"/>
+    <concept_numeric concept_id="511" allow_decimal="false"/>
 
 
 </dataset>
