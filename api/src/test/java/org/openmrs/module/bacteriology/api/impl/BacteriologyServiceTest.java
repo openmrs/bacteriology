@@ -324,7 +324,7 @@ public class BacteriologyServiceTest extends BaseModuleContextSensitiveTest {
 
         Specimen specimen = bacteriologyService.getSpecimen(obsGroup);
         assertEquals("SAMPLE12345",specimen.getIdentifier());
-        assertNull(specimen.getReport());
+        assertNotNull(specimen.getReport());
         assertEquals("e26cea2c-1b9f-4afe-b211-f3ef6c88afaa",specimen.getUuid());
         assertEquals("e26cea2c-1b9f-4afe-b211-f3ef6c88afaa",specimen.getExistingObs());
     }
