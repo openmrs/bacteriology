@@ -86,7 +86,7 @@
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>providermanagement-api</artifactId>
-            <version>2.13.0</version>
+            <version>${providerManagementVersion}</version>
         </dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
