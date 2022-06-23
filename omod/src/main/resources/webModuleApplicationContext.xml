@@ -22,9 +22,7 @@
 
 	<!-- Add here beans related to the web context -->
 
-	
-<!--	<context:component-scan base-package="org.openmrs.module.bacteriology" />-->
     <context:component-scan base-package="org.openmrs.module.bacteriology.web"/>
- 
-		
+
+
 </beans>
