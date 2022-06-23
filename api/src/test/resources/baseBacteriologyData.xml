@@ -36,7 +36,7 @@
 
     <concept concept_id="406" retired="false" datatype_id="4" class_id="1001" is_set="true" creator="1" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="646dffce-5c48-49b7-8837-c40d4b6de5b3"/>
     <concept_name concept_id="406" concept_name_id="1406" name="BACTERIOLOGY RESULTS" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="646dcffe-5c48-49b7-8837-c40d4b6de5b3"/>
-    <concept_set concept_set_id="1006" concept_id="405" concept_set="401" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
+    <concept_set concept_set_id="1006" concept_id="406" concept_set="401" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
 
     <concept concept_id="407" retired="false" datatype_id="3" class_id="11" is_set="false" creator="501" date_created="2004-08-12 00:00:00.0" version="" changed_by="1" date_changed="2005-02-25 11:43:43.0" uuid="74a4c3d3-e6d0-407d-8ed3-3895e4b61f5c"/>
     <concept_name concept_id="407" concept_name_id="1407" name="SPECIMEN SAMPLE SOURCE FREE TEXT" locale="en" creator="1" date_created="2004-08-12 00:00:00.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="74a4c3d3-e6d0-407d-8ed3-3895e4b61f5c"/>
@@ -53,8 +53,8 @@
     <concept_set concept_set_id="20001" concept_id="511" concept_set="405" creator="1" date_created="2004-08-12 00:00:00.0" sort_weight="1"/>
 
 
-    <concept_numeric concept_id="510" precise="false"/>
-    <concept_numeric concept_id="511" precise="false"/>
+    <concept_numeric concept_id="510" allow_decimal="false"/>
+    <concept_numeric concept_id="511" allow_decimal="false"/>
 
 
 </dataset>

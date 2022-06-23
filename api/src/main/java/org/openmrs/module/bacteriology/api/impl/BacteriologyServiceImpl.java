@@ -57,8 +57,7 @@ public class BacteriologyServiceImpl extends BaseOpenmrsService implements Bacte
     @Autowired
     private SpecimenMapper specimenMapper;
 
-    @Autowired
-    private BacteriologyMapper bacteriologyMapper;
+    private BacteriologyMapper bacteriologyMapper = new BacteriologyMapper();
 
     @Autowired
     private ConceptMapper conceptMapper;
